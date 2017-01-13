@@ -1,0 +1,12 @@
+#init variables
+r = 0.1875;
+d = 0.0777;
+#create quads
+q = rect([r, -0.5, -(d), r, 0.5, d], [0, 0, 16, 8], "+uv");
+#render
+scaleUV(/([64, 64]));
+offsetUV([0, 0]);
+for(0 < i < 8){
+	rotate([0, 1, 0, 45]);
+	draw(q);
+}

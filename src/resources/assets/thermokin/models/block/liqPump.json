@@ -1,0 +1,41 @@
+{
+    "parent": "block/block",
+	"textures": {
+		"front": "automation:blocks/liqPump0",
+		"back": "automation:blocks/liqPump1",
+		"side": "automation:blocks/liqPump2",
+        "particle": "automation:blocks/liqPump2"
+    },
+    "elements": [
+        {
+			"from": [ 1, 1, 1 ], "to": [ 15, 15, 16 ],
+            "faces": {
+                "down":  { "uv": [ 1, 1, 16, 15 ], "texture": "#side", "rotation": 90},
+                "up":    { "uv": [ 1, 1, 16, 15 ], "texture": "#side", "rotation": 90},
+                "south": { "uv": [ 1, 1, 15, 15 ], "texture": "#back", "cullface": "south" },
+                "west":  { "uv": [ 1, 1, 16, 15 ], "texture": "#side"},
+                "east":  { "uv": [ 1, 1, 16, 15 ], "texture": "#side"}
+            }
+        }, {
+			"from": [ 0, 0, 0 ], "to": [ 16, 16, 1 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 1, 16 ], "texture": "#side", "rotation": 90, "cullface": "down" },
+                "up":    { "uv": [ 0, 0, 1, 16 ], "texture": "#side", "rotation": 90, "cullface": "up" },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#front", "cullface": "north" },
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#front"},
+                "west":  { "uv": [ 0, 0, 1, 16 ], "texture": "#side", "cullface": "west" },
+                "east":  { "uv": [ 0, 0, 1, 16 ], "texture": "#side", "cullface": "east" }
+            }
+        }, {
+			"from": [ 0, 0, 5 ], "to": [ 16, 16, 11 ],
+            "faces": {
+                "down":  { "uv": [ 5, 0, 11, 16 ], "texture": "#side", "rotation": 90, "cullface": "down" },
+                "up":    { "uv": [ 5, 0, 11, 16 ], "texture": "#side", "rotation": 90, "cullface": "up" },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#back"},
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#back"},
+                "west":  { "uv": [ 5, 0, 11, 16 ], "texture": "#side", "cullface": "west" },
+                "east":  { "uv": [ 5, 0, 11, 16 ], "texture": "#side", "cullface": "east" }
+            }
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"orient=n": { "model": "automation:liqPump" },
+		"orient=e": { "model": "automation:liqPump" , "y": 90 },
+		"orient=s": { "model": "automation:liqPump" , "y": 180 },
+		"orient=w": { "model": "automation:liqPump" , "y": 270 },
+		"orient=b": { "model": "automation:liqPump" , "x": 90 },
+		"orient=t": { "model": "automation:liqPump" , "x": 270 }
+	}
+}

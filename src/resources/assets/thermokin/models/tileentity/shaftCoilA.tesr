@@ -1,0 +1,11 @@
+shaft = script("automation:models/tileEntity/shaft"){};
+draw(shaft);
+scaleUV(/([64, 64]));
+offsetUV([24, 24]);
+draw(script("automation:models/tileEntity/magnets"){
+	N = 8;
+	r0 = shaft:r;
+	r1 = 0.25;
+	d = *(shaft:d, 2);
+	h = 0.5;
+});

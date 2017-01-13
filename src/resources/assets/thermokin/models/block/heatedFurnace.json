@@ -1,0 +1,11 @@
+{
+	"parent": "automation:block/base",
+	"textures": {
+		"top": "automation:blocks/thermIns",
+		"bot": "automation:blocks/thermIns",
+		"front": "automation:blocks/energyFurnace2",
+		"back": "automation:blocks/thermCon",
+		"left": "automation:blocks/thermIns",
+		"right": "automation:blocks/thermIns"
+	}
+}

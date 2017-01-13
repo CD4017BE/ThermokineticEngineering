@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"orient=n": { "model": "automation:evaporator" },
+		"orient=e": { "model": "automation:evaporator" , "y": 90 },
+		"orient=s": { "model": "automation:evaporator" , "y": 180 },
+		"orient=w": { "model": "automation:evaporator" , "y": 270 }
+	}
+}

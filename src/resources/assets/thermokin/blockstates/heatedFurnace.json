@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"orient=n": { "model": "automation:heatedFurnace" },
+		"orient=e": { "model": "automation:heatedFurnace" , "y": 90 },
+		"orient=s": { "model": "automation:heatedFurnace" , "y": 180 },
+		"orient=w": { "model": "automation:heatedFurnace" , "y": 270 }
+	}
+}

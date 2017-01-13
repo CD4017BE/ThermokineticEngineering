@@ -1,0 +1,21 @@
+shaft = script("automation:models/tileEntity/shaft"){};
+size = 2.5;
+p = [shaft:r, -0.5, -(shaft:d), 0, 0];
+a = [s(-(size, 1), [shaft:r, 0, -(shaft:d)]), 16, 0];
+b = [0, 0, *(2, shaft:d), 0, 8];
+c = [0, 0, *(2, size, shaft:d), 0, 8];
+side = quad(p, +(p, a), +(p, a, c), +(p, b), "xyzuv");
+push();
+scale([size, 1, size]);
+draw(shaft);
+pop();
+scaleUV(/([64, 64]));
+offsetUV([0, 0]);
+for (0 < i < 8) {
+	rotate([0, 1, 0, 45]);
+	push();
+	draw(side);
+	scale([1, -1, -1]);
+	draw(side);
+	pop();
+}

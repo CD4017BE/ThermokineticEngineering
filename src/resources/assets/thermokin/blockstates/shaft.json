@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"dir=0": { "model": "automation:shaft" },
+		"dir=1": { "model": "automation:shaft" },
+		"dir=2": { "model": "automation:shaft" },
+		"con0": { "model": "automation:shaft_bearing" }
+	}
+}

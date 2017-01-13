@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"normal": { "model": "automation:gasPipe" },
+		"core0": { "model": "automation:gasPipe_core" },
+		"con0": { "model": "automation:gasPipe_con" }
+	}
+}

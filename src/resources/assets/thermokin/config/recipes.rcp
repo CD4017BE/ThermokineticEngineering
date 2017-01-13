@@ -1,0 +1,25 @@
+#V:00000
+@PRE_INIT
+DefPressure = 101300;
+
+#define a new substance: (name, color[rrggbb], liqDensity[kg/m³], molarMass[g/mol], liqHeatCap[J/kg/K], evapHeat[J/kg], evapTemp[K])
+#IMPORTANT: the first substance defined here will be used as default for environment
+add("substance", "air", "fffcfa", 900, 30, 3000, 198000, 80);
+add("substance", "water", "2020ff", 1000, 18, 4186, 2196400, 373);
+
+@INIT
+
+#conversion between Forge Fluid and LiquidState: (substance, pressure[Pa], amount[m³], temperature[K], FluidStack)
+add("liqConv", "thermokin:water", 1.0, DefPressure, 300, fl("water", 1000));
+#melting items to liquid: (substance, amount[m³], meltHeat[J/kg], meltTemp[K], solidItem, castItem)
+add("melt", "thermokin:water", 1.0, 334000, 273, it("minecrarft:ice"), nil);
+
+#example for molten iron compatibility
+if (0) {
+	Vingot = /(1.0, 9.0);
+	Vnugget = /(1.0, 81.0);
+	add("liqConv", "thermokin:iron", 1.0, DefPressure, 1000, fl("moltenIron", 1296));
+	add("melt", "thermokin:iron", 1.0, 0, 1000, ore("blockIron"), nil);
+	add("melt", "thermokin:iron", Vingot, 0, 1000, ore("ingotIron"), it("m.castIngot"));
+	add("melt", "thermokin:iron", Vnugget, 0, 1000, ore("nuggetIron"), it("m.castNugget"));
+}

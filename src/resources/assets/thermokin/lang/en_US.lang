@@ -1,0 +1,73 @@
+#PARSE_ESCAPES
+
+# Creative Tab
+itemGroup.thermokin=Thermokinetic Engineering
+
+# Blocks
+# names
+tile.cd4017be.shaft.name=Kinetic Shaft
+tile.cd4017be.thermIns.name=Ceramic Heat Insulation
+tile.cd4017be.gasPipe.name=Gas Pipe
+tile.cd4017be.gasVent.name=Gas Vent
+tile.cd4017be.pneumaticPiston.name=Pneumatic Piston
+tile.cd4017be.solidFuelHeater.name=Solid Fueled Heater
+tile.cd4017be.heatedFurnace.name=External Heated Furnace
+tile.cd4017be.evaporator.name=Liquid Evaporation Boiler
+tile.cd4017be.liqReservoir.name=Liquid Reservoir
+tile.cd4017be.liqPump.name=Liquid Pressurization Pump
+tile.cd4017be.liqPipe.name=Pressurized Liquid Pipe
+# tooltips
+tile.cd4017be.shaft.tip=Connects to kinectic components next to it.\nMass = 1000kg default, 2000kg with component, 16000kg with iron block.\nLike pipes it can be covered with blocks.
+tile.cd4017be.thermIns.tip=Has high temperature resistance\nand low thermic conductivity.
+tile.cd4017be.solidFuelHeater.tip=Produces heat by burning furnace fuel.\n1 Ft Fuel -> 10 kJ heat\nBack side has best heat conductivity.
+tile.cd4017be.heatedFurnace.tip=Smelts items like normal furnace but requires\nexternal heat source with at least 927°C,\nhigher temperatures increase operating speed.
+tile.cd4017be.pneumaticPiston.tip=Moves gas from one reservoir (GasPipe) to another.\nPerforms adiabatic compression/expansion\non moved gas depending on pressure.\nMust be connected to a shaft.
+tile.cd4017be.gasPipe.tip=Transports and stores gas.\nCover block affects heat conductivity to neighbors.
+tile.cd4017be.gasVent.tip=Provides access to the\nenvironment gas atmosphere.
+
+#Substance names
+subst.air.name=Air
+subst.water.name=Water
+
+# Items
+# Material names
+item.cd4017be.m\:magnet.name=Permanent Magnet
+
+# Tool names
+item.cd4017be.rotationSensor.name=Rotation Sensor §e(%.2fr/s)
+item.cd4017be.thermometer.name=Thermometer §e(%.1fK)
+item.cd4017be.manometer.name=Pressure Sensor §e(%,.0fPa)
+# tooltips
+item.cd4017be.rotationSensor.tip=Measures shaft rotations per second.\nSneak-click on §3Shaft§7 to link.\n(§bAutomatedRedstone§7 compatible)
+item.cd4017be.thermometer.tip=Measures temperatures in Kelvin.\nSneak-click on machine or environment block to link.\n(§bAutomatedRedstone§7 compatible)
+item.cd4017be.manometer.tip=Measures gas pressure in Pascal (N/m²).\nSneak-click on §3Gas Pipe§7 to link.\n(§bAutomatedRedstone§7 compatible)
+
+# GUI
+# Inventory names
+gui.cd4017be.pneumaticPiston.name=Pneumatic Piston
+gui.cd4017be.gasPipe.name=Gas Properties
+gui.cd4017be.solidFuelHeater.name=Solid Fueled Heater
+gui.cd4017be.heatedFurnace.name=Furnace
+gui.cd4017be.evaporator.name=Evaporation
+gui.cd4017be.liqReservoir.name=Liquid Reservoir
+gui.cd4017be.liqPump.name=Liquid Pump
+# general resource amount formats
+gui.cd4017be.Estor1=%.0f kJ
+gui.cd4017be.Estor2=%.0f / %.0f kJ
+gui.cd4017be.Power=%.1f kW
+gui.cd4017be.percent=%.0f %%
+gui.cd4017be.Temp1=%.1f °C
+gui.cd4017be.Temp2=%.1f / %.0f °C
+gui.cd4017be.liqAll=Liquid %s\n%.3f / %.1f m³\nT= %.1f °C
+# Gui tooltips
+gui.cd4017be.recipe.euse=Used Energy:\n%.0f kJ
+gui.cd4017be.rstCtr=Redstone control mode
+gui.cd4017be.heat=Heat:\n%d / %d K
+gui.cd4017be.fuelHeat=Fuel:\n%d Ft
+gui.cd4017be.progress=Progress:\n%d / %d kJ
+gui.cd4017be.piston.stat=I: %.1f L/r\nO: %.1f L/r\nP: %.1f kW
+gui.cd4017be.pump.stat=Tgt: %.1f L/r\nCur: %.1f L/r\nP: %.1f kW
+gui.cd4017be.gas.stat=V: %s m³\nP: %s Pa\nT: %.1f °C\nn: %s mol
+gui.cd4017be.evap.mix=Gas: %.3fm³ %s\nPressure: %sPa\nLiquid: %.3fm³ %s
+gui.cd4017be.melt.stat=Solid %s\nV: %.3f / %.3f m³\nQ: %s / %s J\n@ T: %.1f °C
+gui.cd4017be.boiler.burnUp=Burnup Rate:\n%.0f Ft/tick

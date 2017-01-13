@@ -1,0 +1,6 @@
+{
+	"parent": "automation:block/pipeCon8",
+    "textures": {
+        "tex": "automation:blocks/pipes/gas"
+    }
+}

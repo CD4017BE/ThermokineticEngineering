@@ -1,0 +1,11 @@
+{
+	"parent": "automation:block/base",
+	"textures": {
+		"top": "automation:blocks/liqReservoir0",
+		"bot": "automation:blocks/liqReservoir1",
+		"front": "automation:blocks/liqReservoir2",
+		"back": "automation:blocks/liqReservoir2",
+		"left": "automation:blocks/liqReservoir2",
+		"right": "automation:blocks/liqReservoir2"
+	}
+}

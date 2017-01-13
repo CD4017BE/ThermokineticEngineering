@@ -1,0 +1,6 @@
+{
+	"parent": "automation:block/CUBE",
+	"textures": {
+		"tex": "automation:blocks/thermIns"
+	}
+}

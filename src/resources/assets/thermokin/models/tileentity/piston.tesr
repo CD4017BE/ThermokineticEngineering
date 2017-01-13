@@ -1,0 +1,23 @@
+#Cuboids & Textures
+Q1 = [-6, -6, -2, 6, 6, 0];
+Q2 = [-1, -1, -16, 1, 1, -2];
+T1 = [0, 0, 12, 12];
+T2 = [12, 0, 14, 12];
+T3 = [14, 14, 16, 16];
+T4 = [14, 0, 16, 14];
+#texture & vertex scale
+scale(/([16, 16, 16]));
+scaleUV(/([16, 16]));
+#Piston head
+draw(rect(Q1, T1, "uv+"));
+draw(rect(Q1, T1, "uv-"));
+draw(rect(Q1, T2, "v+u"));
+draw(rect(Q1, T2, "v-u"));
+draw(rect(Q1, T2, "-vu"));
+draw(rect(Q1, T2, "+vu"));
+#Piston shaft
+draw(rect(Q2, T3, "uv-"));
+draw(rect(Q2, T4, "u+v"));
+draw(rect(Q2, T4, "u-v"));
+draw(rect(Q2, T4, "+uv"));
+draw(rect(Q2, T4, "-uv"));

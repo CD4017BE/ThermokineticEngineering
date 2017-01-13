@@ -1,0 +1,11 @@
+{
+	"parent": "automation:block/base",
+	"textures": {
+		"top": "automation:blocks/evaporator0",
+		"bot": "automation:blocks/evaporator1",
+		"front": "automation:blocks/evaporator2",
+		"back": "automation:blocks/evaporator3",
+		"left": "automation:blocks/evaporator3",
+		"right": "automation:blocks/evaporator3"
+	}
+}
