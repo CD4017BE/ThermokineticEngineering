@@ -95,8 +95,8 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 	 * @param comp
 	 */
 	public void addCon(ShaftComponent comp, IKineticComp con) {
+		if (!con.setShaft(comp)) return;
 		byte side = (byte)(con.getConSide()^1);
-		con.setShaft(comp);
 		connectors.put(SharedNetwork.SidedPosUID(comp.getUID(), side), con);
 		comp.setCon(side, true);
 	}
@@ -109,7 +109,7 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 		for (byte i = 0; i < 6; i++) {
 			ICapabilityProvider te = comp.tile.getTileOnSide(EnumFacing.VALUES[i]);
 			if (te == null) continue;
-			if (te instanceof IKineticComp && (con = (IKineticComp)te).getConSide() == (i^1) && comp.supports(con, i))
+			if (te instanceof IKineticComp && (con = (IKineticComp)te).getConSide() == (i^1))
 				this.addCon(comp, con);
 		}
 	}
@@ -122,6 +122,7 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 		components.remove(uid);
 		newOne.network = this;
 		newOne.setUID(uid);
+		newOne.updateCon = true;
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 	public interface IKineticComp {
 		public byte getConSide();
 		public ShaftComponent getShaft();
-		public void setShaft(ShaftComponent shaft);
+		public boolean setShaft(ShaftComponent shaft);
 		public boolean valid();
 		/**
 		 * calculate the estimated force of this part on the shaft. 

@@ -1,10 +1,9 @@
 package cd4017be.thermokin.tileentity;
 
 import java.util.ArrayList;
+import java.util.function.BiFunction;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -12,37 +11,33 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import cd4017be.api.Capabilities;
-import cd4017be.api.automation.PipeEnergy;
-import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.ShaftComponent;
 import cd4017be.thermokin.multiblock.ShaftPhysics;
-import cd4017be.lib.BlockItemRegistry;
+import cd4017be.lib.ModTileEntity;
 import cd4017be.lib.templates.IPipe;
 import cd4017be.lib.templates.MultiblockTile;
 import cd4017be.lib.util.Utils;
 
 public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implements IPipe {
 
-	public static final ArrayList<IShaftMountHandler> handlers = new ArrayList<IShaftMountHandler>();
+	public static final ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>> handlers = new ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>>();//TODO add some shaft mount handler
 
-	public interface IShaftMountHandler {
-		public ShaftComponent create(Shaft tile, ItemStack item);
-		public ShaftComponent create(Shaft tile, int id);
+	private ShaftComponent create(Shaft tile, ItemStack item) {
+		if (item != null) {
+			ShaftComponent newComp;
+			for (BiFunction<ModTileEntity, ItemStack, ShaftComponent> h : handlers)
+				if ((newComp = h.apply(this, item)) != null)
+					return newComp;
+		}
+		return null;
 	}
 
 	private Cover cover;
 
 	public Shaft() {
 		this.comp = new ShaftComponent(this, 1000F);
-	}
-
-	@Override
-	public void update() {
-		super.update();//TODO Add update for (comps implements ITickable) in super class
 	}
 
 	@Override
@@ -67,18 +62,15 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 	}
 
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
-		ShaftComponent newComp = null;
-		if (player.isSneaking() && item == null && comp.type != null) {
+		ShaftComponent newComp;
+		if (player.isSneaking() && comp.type != null && item == null) {
 			comp.onRemove();
 			newComp = new ShaftComponent(this, 1000F);
-		} else if (!player.isSneaking() && item != null && comp.type == null) {
-			for (IShaftMountHandler h : handlers)
-				if ((newComp = h.create(this, item)) != null) {
-					player.setHeldItem(hand, --item.stackSize <= 0 ? null : item);
-					break;
-				}
+		} else if (!player.isSneaking() && comp.type == null) {
+			newComp = create(this, item);
+			if (newComp == null) return false;
+			player.setHeldItem(hand, --item.stackSize <= 0 ? null : item);
 		} else return false;
-		if (newComp == null) return false;
 		comp.network.exchangeComponent(comp, newComp);
 		markUpdate();
 		return true;
@@ -101,8 +93,10 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 	@Override
 	public void handleUpdateTag(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		ShaftComponent nc = ShaftComponent.readFromNBT(this, nbt);
+		if (comp.network == null) comp = nc; 
+		else comp.network.exchangeComponent(comp, nc);
 		cover = Cover.read(nbt, "cover");
-		//TODO handle shaft update
 	}
 
 	@Override
@@ -113,12 +107,11 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 		}
 		if (nbt.hasKey("type")) {
 			cover = Cover.read(nbt, "cover");
-			//byte con = nbt.getByte("con");
-			//if (con != shaft.con) {
-			//	shaft.con = con;
-			//	shaft.updateCon = true;
-			//}
-			//TODO handle shaft update
+			NBTTagCompound tag = nbt.getCompoundTag("type");
+			ItemStack type = tag.hasNoTags() ? null : ItemStack.loadItemStackFromNBT(tag);
+			ShaftComponent nc;
+			if (!ItemStack.areItemsEqual(type, comp.type) && (nc = create(this, type)) != null)
+				comp.network.exchangeComponent(comp, nc);
 			this.markUpdate();
 		}
 	}
@@ -127,8 +120,8 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		if (cover != null) cover.write(nbt, "cover");
-		nbt.setByte("type", comp.type);
-		//nbt.setByte("con", shaft.con);
+		NBTTagCompound tag = new NBTTagCompound();
+		nbt.setTag("type", comp.type != null ? comp.type.writeToNBT(tag) : tag);
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
@@ -162,20 +155,6 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 
 	public ShaftPhysics physics() {
 		return comp.network;
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
-		//TODO Add capability check for (comps implements ICapabilityProvider) in super class
-		if (cap == Capabilities.ELECTRIC_CAPABILITY) return energy != null;
-		else return super.hasCapability(cap, s);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
-		if (cap == Capabilities.ELECTRIC_CAPABILITY) return (T)energy;
-		else return super.getCapability(cap, s);
 	}
 
 	@SideOnly(Side.CLIENT)

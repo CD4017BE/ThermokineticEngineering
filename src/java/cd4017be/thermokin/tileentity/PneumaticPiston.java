@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.multiblock.GasContainer;
+import cd4017be.thermokin.multiblock.IGear;
 import cd4017be.thermokin.multiblock.GasPhysics.IGasCon;
 import cd4017be.thermokin.multiblock.ShaftComponent;
 import cd4017be.thermokin.multiblock.ShaftPhysics.IKineticComp;
@@ -68,8 +69,10 @@ public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGas
 	}
 
 	@Override
-	public void setShaft(ShaftComponent shaft) {
-		link = shaft;
+	public boolean setShaft(ShaftComponent shaft) {
+		if (link == null && !(shaft instanceof IGear)) return false;//TODO make use of gear
+		this.link = shaft;
+		return true;
 	}
 
 	@Override

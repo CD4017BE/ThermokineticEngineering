@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.physics.LiquidState;
+import cd4017be.thermokin.multiblock.IGear;
 import cd4017be.thermokin.multiblock.LiquidComponent;
 import cd4017be.thermokin.multiblock.LiquidPhysics;
 import cd4017be.thermokin.multiblock.LiquidPhysics.ILiquidCon;
@@ -63,8 +64,10 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 	}
 
 	@Override
-	public void setShaft(ShaftComponent shaft) {
+	public boolean setShaft(ShaftComponent shaft) {
+		if (link == null && !(shaft instanceof IGear)) return false;//TODO make use of gear
 		this.link = shaft;
+		return true;
 	}
 
 	@Override
