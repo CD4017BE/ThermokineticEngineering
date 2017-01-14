@@ -114,11 +114,14 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 		}
 	}
 
-	public void changeMass(ShaftComponent shaft, float mass) {
-		mass -= shaft.m;
+	public void exchangeComponent(ShaftComponent original, ShaftComponent newOne) {
+		float mass = newOne.m - original.m;
 		if (mass > 0) v *= m / (m + mass);
-		shaft.m += mass;
 		m += mass;
+		long uid = original.getUID();
+		components.remove(uid);
+		newOne.network = this;
+		newOne.setUID(uid);
 	}
 
 	@Override

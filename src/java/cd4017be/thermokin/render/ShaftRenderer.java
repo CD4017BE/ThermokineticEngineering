@@ -63,7 +63,7 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<Shaft> {
 					BlockPos pos = ((TileEntity)comp.tile).getPos();
 					int l = world.getCombinedLight(pos, 0);
 					pos = pos.subtract(shaft.pos);
-					String model = models[comp.type];
+					String model = comp.model;
 					if (shaft.axis == 1) TESRModelParser.renderWithOffsetAndBrightness(render, model, pos.getX(), pos.getZ(), -pos.getY(), l);
 					else if (shaft.axis == 2) TESRModelParser.renderWithOffsetAndBrightness(render, model, pos.getY(), -pos.getX(), pos.getZ(), l);
 					else TESRModelParser.renderWithOffsetAndBrightness(render, model, pos.getX(), pos.getY(), pos.getZ(), l);
