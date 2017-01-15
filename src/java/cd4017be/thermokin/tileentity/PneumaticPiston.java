@@ -70,9 +70,13 @@ public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGas
 
 	@Override
 	public boolean setShaft(ShaftComponent shaft) {
-		if (link == null && !(shaft instanceof IGear)) return false;//TODO make use of gear
-		this.link = shaft;
-		return true;
+		if (shaft instanceof IGear) {//TODO make use of gear
+			this.link = shaft;
+			return true;
+		} else {
+			this.link = null;
+			return false;
+		}
 	}
 
 	@Override

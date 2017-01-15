@@ -95,10 +95,14 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 	 * @param comp
 	 */
 	public void addCon(ShaftComponent comp, IKineticComp con) {
-		if (!con.setShaft(comp)) return;
 		byte side = (byte)(con.getConSide()^1);
-		connectors.put(SharedNetwork.SidedPosUID(comp.getUID(), side), con);
-		comp.setCon(side, true);
+		if (con.setShaft(comp)) {
+			connectors.put(SharedNetwork.SidedPosUID(comp.getUID(), side), con);
+			comp.setCon(side, true);
+		} else {
+			connectors.remove(SharedNetwork.SidedPosUID(comp.getUID(), side));
+			comp.setCon(side, false);
+		}
 	}
 	
 	@Override
