@@ -7,11 +7,15 @@ import java.util.Map.Entry;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import cd4017be.thermokin.Objects;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
+import cd4017be.thermokin.multiblock.GasContainer.HeatWrapper;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
+import cd4017be.thermokin.recipe.Substances;
+import cd4017be.thermokin.recipe.Substances.Environment;
 import cd4017be.lib.templates.SharedNetwork;
 
 /**
@@ -26,14 +30,12 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 	public HashSet<GasContainer> spread = new HashSet<GasContainer>();
 	
 	static class HeatExchCon {
-		HeatExchCon(GasContainer pipe, IHeatStorage other, byte dir) {
+		HeatExchCon(HeatWrapper pipe, IHeatReservoir other) {
 			this.pipe = pipe;
 			this.other = other;
-			this.dir = dir;
 		}
-		final GasContainer pipe;
-		final IHeatStorage other;
-		final byte dir;
+		final HeatWrapper pipe;
+		final IHeatReservoir other;
 	}
 	
 	public GasPhysics(GasContainer core, GasState gas) {
@@ -61,7 +63,7 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 		gp.refTemp = T;
 		for (Iterator<Entry<Long, HeatExchCon>> it = heatExch.entrySet().iterator(); it.hasNext();) {
 			Entry<Long, HeatExchCon> e = it.next();
-			if (e.getValue().pipe.network == gp) {
+			if (e.getValue().pipe.owner().network == gp) {
 				gp.heatExch.put(e.getKey(), e.getValue());
 				it.remove();
 			}
@@ -104,23 +106,25 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 		}
 		comp.updateCon = false;
 		ICapabilityProvider te;
-		byte con = 0;
-		if (!(comp.tile instanceof IHeatStorage) || ((IHeatStorage)comp.tile).getHeat((byte)-1) instanceof GasContainer)
-			for (byte i = 0; i < 6; i++) 
-				if ((te = comp.tile.getTileOnSide(EnumFacing.VALUES[i])) != null && te instanceof IHeatStorage) {
-					con |= 1 << i;
-					GasContainer cont;
-					if (i % 2 == 0 && !((cont = te.getCapability(Objects.GAS_CAP, EnumFacing.VALUES[i^1])) != null && cont.network == this)) {
-						HeatExchCon entr = new HeatExchCon(comp, (IHeatStorage)te, i);
-						heatExch.put(SharedNetwork.SidedPosUID(comp.getUID(), i), entr);
-					}
-				}
 		TileEntity tile = (TileEntity)comp.tile;
-		con ^= 0x3f;
-		float dC = HeatReservoir.getEnvHeatCond((IHeatStorage)comp.tile, tile.getWorld(), tile.getPos(), con) - comp.heatCond;
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		Environment env = Substances.getEnvFor(world);
+		float dC = -comp.heatCond;
+		for (EnumFacing s : EnumFacing.VALUES) {
+			int i = s.ordinal();
+			IHeatReservoir hr = comp.tile.getCapability(Objects.HEAT_CAP, s);
+			if (!(hr instanceof HeatWrapper)) continue;
+			HeatWrapper gh = (HeatWrapper)hr;
+			if ((te = comp.tile.getTileOnSide(s)) == null || (hr = te.getCapability(Objects.HEAT_CAP, s.getOpposite())) == null) {
+				dC += env.getCond(world.getBlockState(pos), comp.R[i]);
+			} else if ((i & 1) == 0 && !(hr instanceof HeatWrapper && ((HeatWrapper)hr).owner().network == this)) {
+				heatExch.put(SharedNetwork.SidedPosUID(comp.getUID(), i), new HeatExchCon(gh, hr));
+			}
+		}
 		comp.heatCond += dC;
 		this.heatCond += dC;
-		float dT = HeatReservoir.getEnvironmentTemp(tile.getWorld(), tile.getPos()) * comp.heatCond - comp.refTemp;
+		float dT = env.getTemp(world, pos) * comp.heatCond - comp.refTemp;
 		comp.refTemp += dT;
 		this.refTemp += dT;
 	}
@@ -134,13 +138,11 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 		if (!heatExch.isEmpty())
 			for (Iterator<HeatExchCon> it = heatExch.values().iterator(); it.hasNext();) {
 				HeatExchCon hc = it.next();
-				if (((TileEntity)hc.other).isInvalid() || (hc.other instanceof GasContainer && ((GasContainer)hc.other).network == this)) {
+				if (hc.other.invalid() || (hc.other instanceof HeatWrapper && ((HeatWrapper)hc.other).owner().network == this)) {
 					it.remove();
 					continue;
 				}
-				IHeatReservoir hr = hc.other.getHeat((byte)(hc.dir | 1));
-				R = hc.other.getHeatRes((byte)(hc.dir | 1)) + ((IHeatStorage)hc.pipe.tile).getHeatRes((byte)(hc.dir));
-				HeatReservoir.exchangeHeat(hc.pipe, hr, R);
+				HeatReservoir.exchangeHeat(hc.pipe, hc.other);
 			}
 		if (!spread.isEmpty())
 			for (Iterator<GasContainer> it = spread.iterator(); it.hasNext();) {

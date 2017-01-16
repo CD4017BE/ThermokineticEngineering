@@ -3,9 +3,12 @@
 DefPressure = 101300;
 
 #define a new substance: (name, color[rrggbb], liqDensity[kg/m³], molarMass[g/mol], liqHeatCap[J/kg/K], evapHeat[J/kg], evapTemp[K])
-#IMPORTANT: the first substance defined here will be used as default for environment
 add("substance", "air", "fffcfa", 900, 30, 3000, 198000, 80);
 add("substance", "water", "2020ff", 1000, 18, 4186, 2196400, 373);
+
+#define a dimension's environment: (dimId, substance, pressure[Pa], baseTemp[K], biomeTempMult[K], heatResistance[K/W])
+#actual temperature is baseTemp + biomeTempMult * (coldTaiga:-0.6, icePlains:0, plains:0.8, jungle:1.2, savanna:1.5, desert:2.4
+add("environment", 0, "thermokin:air", DefPressure, 270, 25, 0.8);
 
 @INIT
 

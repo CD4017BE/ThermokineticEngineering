@@ -9,6 +9,7 @@ import cd4017be.lib.templates.BlockPipe;
 import cd4017be.thermokin.block.*;
 import cd4017be.thermokin.item.*;
 import cd4017be.thermokin.multiblock.GasContainer;
+import cd4017be.thermokin.multiblock.IHeatReservoir;
 import cd4017be.thermokin.multiblock.LiquidComponent;
 import cd4017be.thermokin.multiblock.ShaftComponent;
 import net.minecraft.block.SoundType;
@@ -43,6 +44,8 @@ public class Objects {
 	public static Capability<GasContainer> GAS_CAP;
 	@CapabilityInject(LiquidComponent.class)
 	public static Capability<LiquidComponent> LIQUID_CAP;
+	@CapabilityInject(IHeatReservoir.class)
+	public static Capability<IHeatReservoir> HEAT_CAP;
 
 	public static void init() {
 		tabThermokin = new CreativeTabThermokin("thermokin");
@@ -68,6 +71,7 @@ public class Objects {
 		CapabilityManager.INSTANCE.register(ShaftComponent.class, new EmptyStorage<ShaftComponent>(), new EmptyCallable<ShaftComponent>());
 		CapabilityManager.INSTANCE.register(GasContainer.class, new EmptyStorage<GasContainer>(), new EmptyCallable<GasContainer>());
 		CapabilityManager.INSTANCE.register(LiquidComponent.class, new EmptyStorage<LiquidComponent>(), new EmptyCallable<LiquidComponent>());
+		CapabilityManager.INSTANCE.register(IHeatReservoir.class, new EmptyStorage<IHeatReservoir>(), new EmptyCallable<IHeatReservoir>());
 	}
 
 }

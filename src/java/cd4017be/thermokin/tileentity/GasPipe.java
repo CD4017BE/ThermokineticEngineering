@@ -1,7 +1,7 @@
 package cd4017be.thermokin.tileentity;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -18,13 +18,11 @@ import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.multiblock.GasContainer;
 import cd4017be.thermokin.multiblock.GasPhysics;
 import cd4017be.thermokin.multiblock.GasPhysics.IGasCon;
-import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.Substance;
+import cd4017be.thermokin.recipe.Substances;
 
-public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements IHeatStorage, IGasCon, IPipe, IGuiData {
+public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, IPipe, IGuiData {
 
 	public static final float size = 0.25F;
 	private Cover cover = null;
@@ -44,7 +42,7 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 		if (!player.isSneaking() && item == null) return super.onActivated(player, hand, item, dir, X, Y, Z);
 		if (cover != null) {
 			if (player.isSneaking() && item == null) {
-				
+				comp.setResistance(Substances.getResistanceFor(Blocks.AIR.getDefaultState())); 
 				this.dropStack(cover.item);
 				cover = null;
 				this.markUpdate();
@@ -68,6 +66,7 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 		} 
 		if (player.isSneaking()) return false;
 		if (item != null && (cover = Cover.create(item)) != null) {
+			comp.setResistance(Substances.getResistanceFor(cover.block));
 			if (--item.stackSize <= 0) item = null;
 			player.setHeldItem(hand, item);
 			this.markUpdate();
@@ -83,8 +82,7 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) 
-	{
+	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		cover = Cover.read(nbt, "cover");
 		comp = GasContainer.readFromNBT(this, nbt, "gas", size);
@@ -114,14 +112,12 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 	}
 
 	@Override
-	public Cover getCover() 
-	{
+	public Cover getCover() {
 		return cover;
 	}
-	
+
 	@Override
-	public void breakBlock() 
-	{
+	public void breakBlock() {
 		super.breakBlock();
 		if (cover != null) this.dropStack(cover.item);
 	}
@@ -152,17 +148,6 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 		gas.V = dis.readFloat();
 		gas.nR = dis.readFloat();
 		gas.T = dis.readFloat();
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return comp;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		Float r = HeatReservoir.blocks.get(cover == null ? Material.AIR : cover.block.getMaterial());
-		return r == null ? HeatReservoir.def_block : r.floatValue();
 	}
 
 }

@@ -18,8 +18,6 @@ import cd4017be.lib.util.OreDictStack;
 import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
 import cd4017be.thermokin.multiblock.LiquidContainer;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
@@ -29,7 +27,7 @@ import cd4017be.thermokin.recipe.Converting;
 import cd4017be.thermokin.recipe.Converting.SolEntry;
 import cd4017be.thermokin.recipe.Substances;
 
-public class Crystallizer extends AutomatedTile implements IHeatStorage, IGuiData, IAccessHandler {
+public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHandler {
 
 	public static final double SizeL = 1.0, SizeG = 4.0;
 
@@ -42,7 +40,7 @@ public class Crystallizer extends AutomatedTile implements IHeatStorage, IGuiDat
 	public Crystallizer() {
 		inventory = new Inventory(2, 2, this).group(0, 0, 1, Utils.ACC).group(1, 1, 2, Utils.ACC);
 		liq = new LiquidContainer(this, SizeL, new GasState(Substance.Default, SizeG, ThermodynamicUtil.NormalPressure, SizeG));
-		heat = new HeatReservoir(5000);
+		heat = new HeatReservoir(5000, Substances.def_con);
 	}
 
 	@Override
@@ -132,7 +130,7 @@ public class Crystallizer extends AutomatedTile implements IHeatStorage, IGuiDat
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
-		if (cap == Objects.LIQUID_CAP) return true;
+		if (cap == Objects.LIQUID_CAP || cap == Objects.HEAT_CAP) return true;
 		return super.hasCapability(cap, s);
 	}
 
@@ -140,6 +138,7 @@ public class Crystallizer extends AutomatedTile implements IHeatStorage, IGuiDat
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
 		if (cap == Objects.LIQUID_CAP) return (T)liq;
+		else if (cap == Objects.HEAT_CAP) return (T)heat.getCapability(this, s);
 		return super.getCapability(cap, s);
 	}
 
@@ -161,16 +160,6 @@ public class Crystallizer extends AutomatedTile implements IHeatStorage, IGuiDat
 		cont.addItemSlot(new SlotItemHandler(inventory, 1, 71, 16));
 		cont.addPlayerInventory(8, 68);
 		if (worldObj.isRemote && rcp == null) rcp = new SolEntry(null, new LiquidState(null, 0, 0, 0), 0, null); 
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return heat;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		return HeatReservoir.def_con;
 	}
 
 	@Override

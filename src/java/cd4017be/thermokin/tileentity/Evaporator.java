@@ -15,8 +15,6 @@ import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.GasContainer;
 import cd4017be.thermokin.multiblock.GasPhysics.IGasCon;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
 import cd4017be.thermokin.multiblock.LiquidContainer;
 import cd4017be.thermokin.multiblock.LiquidPhysics;
 import cd4017be.thermokin.multiblock.LiquidPhysics.ILiquidCon;
@@ -24,8 +22,9 @@ import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
+import cd4017be.thermokin.recipe.Substances;
 
-public class Evaporator extends ModTileEntity implements ITickable, IHeatStorage, IGuiData, IGasCon, ILiquidCon {
+public class Evaporator extends ModTileEntity implements ITickable, IGuiData, IGasCon, ILiquidCon {
 
 	public static final double SizeL = 0.8, SizeG = 1.0;
 
@@ -37,7 +36,7 @@ public class Evaporator extends ModTileEntity implements ITickable, IHeatStorage
 	public Evaporator() {
 		gas = new GasContainer(this, SizeG);
 		liq = new LiquidContainer(this, SizeL, gas);
-		heat = new HeatReservoir(5000);
+		heat = new HeatReservoir(5000, Substances.def_con);
 	}
 
 	@Override
@@ -93,7 +92,7 @@ public class Evaporator extends ModTileEntity implements ITickable, IHeatStorage
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
-		if (cap == Objects.LIQUID_CAP || cap == Objects.GAS_CAP) return true;
+		if (cap == Objects.LIQUID_CAP || cap == Objects.GAS_CAP || cap == Objects.HEAT_CAP) return true;
 		return super.hasCapability(cap, s);
 	}
 
@@ -102,6 +101,7 @@ public class Evaporator extends ModTileEntity implements ITickable, IHeatStorage
 	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
 		if (cap == Objects.LIQUID_CAP) return (T)liq;
 		if (cap == Objects.GAS_CAP) return (T)gas;
+		if (cap == Objects.HEAT_CAP) return (T)heat.getCapability(this, s);
 		return super.getCapability(cap, s);
 	}
 
@@ -137,16 +137,6 @@ public class Evaporator extends ModTileEntity implements ITickable, IHeatStorage
 		super.onChunkUnload();
 		if (liq.network != null) liq.network.remove(liq);
 		if (gas.network != null) gas.network.remove(gas);
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return heat;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		return HeatReservoir.def_con;
 	}
 
 	@Override

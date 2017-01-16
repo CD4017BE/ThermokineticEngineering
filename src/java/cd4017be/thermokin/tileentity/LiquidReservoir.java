@@ -12,10 +12,9 @@ import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
 import cd4017be.thermokin.recipe.Converting;
 import cd4017be.thermokin.recipe.Converting.LiqEntry;
+import cd4017be.thermokin.recipe.Substances;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
 import cd4017be.thermokin.multiblock.LiquidContainer;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
 import cd4017be.thermokin.multiblock.LiquidPhysics.ILiquidCon;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
@@ -28,7 +27,7 @@ import cd4017be.lib.templates.SharedNetwork;
 import cd4017be.lib.templates.TankContainer;
 import cd4017be.lib.util.Utils;
 
-public class LiquidReservoir extends AutomatedTile implements IHeatStorage, IGuiData, ILiquidCon {
+public class LiquidReservoir extends AutomatedTile implements IGuiData, ILiquidCon {
 
 	public static final double SizeL = 1.0, SizeG = 4;
 
@@ -37,7 +36,7 @@ public class LiquidReservoir extends AutomatedTile implements IHeatStorage, IGui
 
 	public LiquidReservoir() {
 		liq = new LiquidContainer(this, SizeL, new GasState(Substance.Default, SizeG, ThermodynamicUtil.NormalPressure, SizeG));
-		heat = new HeatReservoir(5000);
+		heat = new HeatReservoir(5000, Substances.def_con);
 		tanks = new TankContainer(1, 1).tank(0, 1000, Utils.ACC, 0, 1);
 		inventory = new Inventory(2, 0, null);
 	}
@@ -81,7 +80,7 @@ public class LiquidReservoir extends AutomatedTile implements IHeatStorage, IGui
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
-		if (cap == Objects.LIQUID_CAP) return true;
+		if (cap == Objects.LIQUID_CAP || cap == Objects.HEAT_CAP) return true;
 		return super.hasCapability(cap, s);
 	}
 
@@ -89,6 +88,7 @@ public class LiquidReservoir extends AutomatedTile implements IHeatStorage, IGui
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
 		if (cap == Objects.LIQUID_CAP) return (T)liq;
+		if (cap == Objects.HEAT_CAP) return (T)heat;
 		return super.getCapability(cap, s);
 	}
 
@@ -119,16 +119,6 @@ public class LiquidReservoir extends AutomatedTile implements IHeatStorage, IGui
 	public void onChunkUnload() {
 		super.onChunkUnload();
 		if (liq.network != null) liq.network.remove(liq);
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return heat;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		return HeatReservoir.def_con;
 	}
 
 	@Override

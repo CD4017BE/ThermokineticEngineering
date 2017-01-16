@@ -8,9 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import cd4017be.api.circuits.ItemBlockSensor;
 import cd4017be.thermokin.Objects;
-import cd4017be.thermokin.multiblock.HeatReservoir;
 import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
+import cd4017be.thermokin.recipe.Substances;
 
 public class ItemThermometer extends ItemBlockSensor {
 
@@ -22,8 +21,8 @@ public class ItemThermometer extends ItemBlockSensor {
 	@Override
 	protected float measure(ItemStack sensor, NBTTagCompound nbt, World world, BlockPos pos, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		IHeatReservoir heat = te != null && te instanceof IHeatStorage ? ((IHeatStorage)te).getHeat((byte)side.ordinal()) : null;
-		return heat != null ? heat.T() : HeatReservoir.getEnvironmentTemp(world, pos);
+		IHeatReservoir heat = te != null ? te.getCapability(Objects.HEAT_CAP, side) : null;
+		return heat != null ? heat.T() : Substances.getEnvFor(world).getTemp(world, pos);
 	}
 
 }

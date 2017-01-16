@@ -75,17 +75,13 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 	}
 
 	@Override
-	public boolean valid() {
-		return !tileEntityInvalid;
-	}
-
-	@Override
 	public float estimatedForce(float ds) {
-		if (input != null && ((TileEntity)input.tile).isInvalid()) {input = null; updateCon = true;}
-		if (output != null && ((TileEntity)output.tile).isInvalid()) {output = null; updateCon = true;}
-		if (input == null || output == null || ((cfg & 0x100) == 0 ^ ((cfg & 0x200) != 0 && worldObj.getStrongPower(pos) > 0))) {
-			run = false; return 0;
-		}
+		run = (cfg & 0x100) != 0 ^ ((cfg & 0x200) != 0 && worldObj.getStrongPower(pos) > 0);
+		if (input == null) run = false;
+		else if (input.invalid()) {input = null; updateCon = true; run = false;}
+		if (output == null) run = false;
+		else if (output.invalid()) {output = null; updateCon = true; run = false;}
+		if (!run) return 0;
 		LiquidPhysics in = input.network, out = output.network;
 		if (in.content.type == null || (out.content.type != null && in.content.type != out.content.type)) {run = false; return 0;}
 		LiquidState liq = new LiquidState(null, dA * ds, 0, 0);

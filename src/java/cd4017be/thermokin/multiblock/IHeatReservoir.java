@@ -1,11 +1,10 @@
 package cd4017be.thermokin.multiblock;
 
-public interface IHeatReservoir {
+import cd4017be.lib.util.ICachableInstance;
+
+public interface IHeatReservoir extends ICachableInstance{
 	public float T();
 	public float C();
+	public float R();
 	public void addHeat(float dQ);
-	public static interface IHeatStorage {
-		public IHeatReservoir getHeat(byte side);
-		public float getHeatRes(byte side);
-	}
 }

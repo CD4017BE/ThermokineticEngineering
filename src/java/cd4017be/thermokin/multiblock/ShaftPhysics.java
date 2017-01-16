@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import cd4017be.lib.ModTileEntity;
 import cd4017be.lib.templates.SharedNetwork;
+import cd4017be.lib.util.ICachableInstance;
 
 public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 
@@ -141,11 +142,10 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 		Iterator<IKineticComp> it = connectors.values().iterator();
 		while (it.hasNext()) {//get the estimated total force of all components on the shaft
 			IKineticComp comp = it.next();
-			if (comp.valid()) F += comp.estimatedForce(ds);
-			else {
+			if (comp.invalid()) {
 				it.remove();
 				if (comp.getShaft() != null) comp.getShaft().setCon(comp.getConSide() ^ 1, false);
-			}
+			} else F += comp.estimatedForce(ds);
 		}
 		if (v == 0 && F <= 0) return; //can't slow down any further if already stopped
 		a = F / m; //convert to acceleration
@@ -171,11 +171,10 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 		((WorldServer)tile.getWorld()).getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 64D, tile.dimensionId, new SPacketUpdateTileEntity(pos, -1, nbt));
 	}
 
-	public interface IKineticComp {
+	public interface IKineticComp extends ICachableInstance{
 		public byte getConSide();
 		public ShaftComponent getShaft();
 		public boolean setShaft(ShaftComponent shaft);
-		public boolean valid();
 		/**
 		 * calculate the estimated force of this part on the shaft. 
 		 * This value doesn't need to be exact, but it shouldn't be greater than the actual force added during work().

@@ -9,12 +9,9 @@ import cd4017be.thermokin.recipe.Substances.Environment;
 import cd4017be.thermokin.multiblock.GasContainer;
 import cd4017be.thermokin.multiblock.GasPhysics;
 import cd4017be.thermokin.multiblock.GasPhysics.IGasCon;
-import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
 import cd4017be.lib.templates.MultiblockTile;
 
-public class GasVent extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, IHeatStorage, ITickable {
+public class GasVent extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, ITickable {
 
 	private Environment env;
 
@@ -25,16 +22,6 @@ public class GasVent extends MultiblockTile<GasContainer, GasPhysics> implements
 	@Override
 	public boolean conGas(byte side) {
 		return side == this.getOrientation();
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return comp;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		return HeatReservoir.def_env;
 	}
 
 	@Override

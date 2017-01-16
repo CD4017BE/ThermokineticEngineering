@@ -11,8 +11,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
+import cd4017be.thermokin.recipe.Substances;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer;
@@ -20,7 +19,7 @@ import cd4017be.lib.templates.AutomatedTile;
 import cd4017be.lib.templates.Inventory;
 import cd4017be.lib.util.Utils;
 
-public class SolidFuelHeater extends AutomatedTile implements IHeatStorage, IGuiData {
+public class SolidFuelHeater extends AutomatedTile implements IGuiData {
 
 	private static final float FuelEnergy = 10000F;
 	private static final int BurnRate = 8;
@@ -30,7 +29,7 @@ public class SolidFuelHeater extends AutomatedTile implements IHeatStorage, IGui
 
 	public SolidFuelHeater() {
 		//ints: maxFuel, curFuel, burn; floats: targetTemp, Temp
-		heat = new HeatReservoir(10000F);
+		heat = new HeatReservoir(10000F, Substances.def_con);
 		inventory = new Inventory(2, 1, null).group(0, 0, 2, Utils.IN);
 		speed = 1;
 		Tref = 300F;
@@ -75,16 +74,6 @@ public class SolidFuelHeater extends AutomatedTile implements IHeatStorage, IGui
 	@Override
 	public void onNeighborTileChange(BlockPos pos) {
 		heat.check = true;
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return heat;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		return (side^1) == this.getOrientation() ? HeatReservoir.def_con : HeatReservoir.def_discon;
 	}
 
 	@Override

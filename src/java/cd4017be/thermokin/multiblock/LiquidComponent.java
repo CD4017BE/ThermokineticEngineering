@@ -21,10 +21,6 @@ public class LiquidComponent extends MultiblockComp<LiquidComponent, LiquidPhysi
 		if (network == null) new LiquidPhysics(this);
 	}
 
-	public void remove() {
-		if (network != null) network.remove(this);
-	}
-
 	@Override
 	public Capability<LiquidComponent> getCap() {
 		return Objects.LIQUID_CAP;

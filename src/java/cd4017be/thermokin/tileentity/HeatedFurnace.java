@@ -7,8 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir;
-import cd4017be.thermokin.multiblock.IHeatReservoir.IHeatStorage;
+import cd4017be.thermokin.recipe.Substances;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.SlotItemType;
@@ -17,7 +16,7 @@ import cd4017be.lib.templates.AutomatedTile;
 import cd4017be.lib.templates.Inventory;
 import cd4017be.lib.util.Utils;
 
-public class HeatedFurnace extends AutomatedTile implements IHeatStorage, IGuiData {
+public class HeatedFurnace extends AutomatedTile implements IGuiData {
 
 	public static final float NeededTemp = 1200F, TRwork = 20, Energy = 250000F;
 	public HeatReservoir heat;
@@ -27,7 +26,7 @@ public class HeatedFurnace extends AutomatedTile implements IHeatStorage, IGuiDa
 
 	public HeatedFurnace() {
 		inventory = new Inventory(3, 2, null).group(0, 0, 1, Utils.IN).group(1, 1, 2, Utils.OUT);
-		heat = new HeatReservoir(10000F);
+		heat = new HeatReservoir(10000F, Substances.def_con);
 	}
 
 	@Override
@@ -113,16 +112,6 @@ public class HeatedFurnace extends AutomatedTile implements IHeatStorage, IGuiDa
 		if (s < container.invPlayerS) container.mergeItemStack(item, container.invPlayerS, container.invPlayerE, false);
 		else container.mergeItemStack(item, 0, 1, false);
 		return true;
-	}
-
-	@Override
-	public IHeatReservoir getHeat(byte side) {
-		return heat;
-	}
-
-	@Override
-	public float getHeatRes(byte side) {
-		return (side^1) == this.getOrientation() ? HeatReservoir.def_con : HeatReservoir.def_discon;
 	}
 
 	public float getProgress() {
