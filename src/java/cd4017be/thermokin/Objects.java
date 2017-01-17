@@ -37,6 +37,7 @@ public class Objects {
 	public static TileBlock liqReservoir;
 	public static TileBlock liqPump;
 	public static BlockPipe liqPipe;
+	public static TileBlock crystallizer;
 
 	@CapabilityInject(ShaftComponent.class)
 	public static Capability<ShaftComponent> SHAFT_CAP;
