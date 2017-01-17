@@ -67,7 +67,7 @@ public class GasContainer extends MultiblockComp<GasContainer, GasPhysics> imple
 		return Objects.GAS_CAP;
 	}
 
-	public void setResistance(float R) {//TODO use this
+	public void setResistance(float R) {
 		Arrays.fill(this.R, R);
 	}
 

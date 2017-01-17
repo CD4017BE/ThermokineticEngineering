@@ -28,10 +28,11 @@ import cd4017be.lib.util.Utils;
  */
 public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGasCon, IGuiData {
 
+	public static float Amin, Amax;
 	private ShaftComponent link;
 	private GasContainer input, output;
-	public static final float Amin = 0.001F, Amax = 0.1F;
 	private boolean updateCon = false, run = false;
+	private float x;
 	public int cfg;
 	public float Ain = Amin, Aout = Amin, power;
 
@@ -70,8 +71,9 @@ public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGas
 
 	@Override
 	public boolean setShaft(ShaftComponent shaft) {
-		if (shaft instanceof IGear) {//TODO make use of gear
+		if (shaft instanceof IGear) {
 			this.link = shaft;
+			this.x = ((IGear)shaft).translationFactor();
 			return true;
 		} else {
 			this.link = null;
@@ -94,7 +96,7 @@ public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGas
 		else run = true;
 		double x0 = Ain / in.V;
 		x0 *= 2F - Ain / Aout;
-		return (float)(in.E() * x0 - out.E() * Aout / out.V);
+		return (float)(in.E() * x0 - out.E() * Aout / out.V) * x;
 		/*
 		float x0;
 		if (ds <= 0) {
@@ -115,6 +117,7 @@ public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGas
 	@Override
 	public float work(float ds, float v) {
 		if (!run) return power = 0;
+		ds *= x;
 		GasState in = input.network.gas, out = output.network.gas;
 		double E = in.E() + out.E();
 		GasState s = in.extract(Ain * ds);

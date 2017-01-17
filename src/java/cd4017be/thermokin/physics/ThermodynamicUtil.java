@@ -2,25 +2,22 @@ package cd4017be.thermokin.physics;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.RegistryNamespaced;
-import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
+import net.minecraftforge.fml.common.registry.RegistryBuilder;
 
 public class ThermodynamicUtil {
 
 	public static final ResourceLocation substanceRegistry = new ResourceLocation("cd4017be_lib:substances");
 
-	public static final double NormalPressure = 101300;
+	public static final double Pn = 101250;
 	public static final double R = 8.314472;
 
+	@SuppressWarnings("unchecked")
 	public static RegistryNamespaced<ResourceLocation, Substance> getSubstanceRegistry() {
-		/*TODO use this instead as soon as 'optionalDefaultKey' has a setter method
 		RegistryBuilder<Substance> builder = new RegistryBuilder<Substance>();
 		builder.setType(Substance.class);
 		builder.setName(substanceRegistry);
 		builder.setIDRange(0, 255);
-		builder.setOptionalDefaultKey(new ResourceLocation("cd4017be_lib:air"));
 		return (RegistryNamespaced<ResourceLocation, Substance>)builder.create();
-		*/
-		return PersistentRegistryManager.createRegistry(substanceRegistry, Substance.class, new ResourceLocation("cd4017be_lib:air"), 0, 255, false, null, null, null);
 	}
 
 	/**

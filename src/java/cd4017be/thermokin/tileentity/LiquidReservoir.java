@@ -9,10 +9,8 @@ import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
-import cd4017be.thermokin.physics.ThermodynamicUtil;
 import cd4017be.thermokin.recipe.Converting;
 import cd4017be.thermokin.recipe.Converting.LiqEntry;
-import cd4017be.thermokin.recipe.Substances;
 import cd4017be.thermokin.multiblock.HeatReservoir;
 import cd4017be.thermokin.multiblock.LiquidContainer;
 import cd4017be.thermokin.multiblock.LiquidPhysics.ILiquidCon;
@@ -29,14 +27,15 @@ import cd4017be.lib.util.Utils;
 
 public class LiquidReservoir extends AutomatedTile implements IGuiData, ILiquidCon {
 
-	public static final double SizeL = 1.0, SizeG = 4;
+	public static double SizeL, SizeG, P0;
+	public static float C0, R0;
 
 	public HeatReservoir heat;
 	public LiquidContainer liq;
 
 	public LiquidReservoir() {
-		liq = new LiquidContainer(this, SizeL, new GasState(Substance.Default, SizeG, ThermodynamicUtil.NormalPressure, SizeG));
-		heat = new HeatReservoir(5000, Substances.def_con);
+		liq = new LiquidContainer(this, SizeL, new GasState(Substance.Default, SizeG, P0, SizeG));
+		heat = new HeatReservoir(C0, R0);
 		tanks = new TankContainer(1, 1).tank(0, 1000, Utils.ACC, 0, 1);
 		inventory = new Inventory(2, 0, null);
 	}
@@ -57,7 +56,7 @@ public class LiquidReservoir extends AutomatedTile implements IGuiData, ILiquidC
 				tanks.drain(0, am, true);
 				liq.setLiquid(ls);
 			}
-		}
+		}//TODO add the other way around
 		if (ls.V > 0) {
 			double T = (heat.T * heat.C + ls.E()) / (heat.C + ls.C());
 			heat.T = (float)(liq.liquid.T = T);
@@ -67,7 +66,7 @@ public class LiquidReservoir extends AutomatedTile implements IGuiData, ILiquidC
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		liq = LiquidContainer.readFromNBT(this, nbt, "liq", SizeL, SizeG, ThermodynamicUtil.NormalPressure);
+		liq = LiquidContainer.readFromNBT(this, nbt, "liq", SizeL, SizeG, P0);
 		heat.load(nbt, "cas");
 	}
 

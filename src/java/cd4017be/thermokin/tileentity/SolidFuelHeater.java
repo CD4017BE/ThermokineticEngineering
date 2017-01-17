@@ -11,7 +11,6 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.recipe.Substances;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer;
@@ -21,7 +20,7 @@ import cd4017be.lib.util.Utils;
 
 public class SolidFuelHeater extends AutomatedTile implements IGuiData {
 
-	private static final float FuelEnergy = 10000F;
+	public static float FuelEnergy, C0, R0;
 	private static final int BurnRate = 8;
 	public int fuel, burn, speed;
 	public float Tref, temp;
@@ -29,7 +28,7 @@ public class SolidFuelHeater extends AutomatedTile implements IGuiData {
 
 	public SolidFuelHeater() {
 		//ints: maxFuel, curFuel, burn; floats: targetTemp, Temp
-		heat = new HeatReservoir(10000F, Substances.def_con);
+		heat = new HeatReservoir(C0, R0);
 		inventory = new Inventory(2, 1, null).group(0, 0, 2, Utils.IN);
 		speed = 1;
 		Tref = 300F;

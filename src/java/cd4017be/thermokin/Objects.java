@@ -26,8 +26,9 @@ public class Objects {
 	public static ItemThermometer thermometer;
 	public static ItemManometer manometer;
 
+	public static DefaultBlock thermIns;
+	public static DefaultBlock heatSink;
 	public static BlockShaft shaft;
-	public static DefaultBlock thermIns;//TODO also add a heat sink block
 	public static TileBlock pneumaticPiston;
 	public static BlockPipe gasPipe;
 	public static TileBlock solidFuelHeater;
@@ -55,8 +56,9 @@ public class Objects {
 		thermometer = new ItemThermometer("thermometer");
 		manometer = new ItemManometer("manometer");
 		
+		new DefaultItemBlock((thermIns = new DefaultBlock("thermIns", Material.ROCK)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
+		new DefaultItemBlock((heatSink = TileBlock.create("heatSink", Material.IRON, SoundType.METAL, 0x22)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((shaft = new BlockShaft("shaft", Material.IRON, 0x20)).setCreativeTab(tabThermokin).setHardness(2.0F).setResistance(10F));
-		new DefaultItemBlock((thermIns = new DefaultBlock("thermIns", Material.ROCK)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));//TODO define as IHeatBlock
 		new DefaultItemBlock((pneumaticPiston = TileBlock.create("pneumaticPiston", Material.IRON, SoundType.METAL, 0x22)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((gasPipe = new BlockPipe("gasPipe", Material.IRON, SoundType.METAL, 0x20)).setCreativeTab(tabThermokin).setHardness(1.0F).setResistance(20F));
 		new DefaultItemBlock((solidFuelHeater = TileBlock.create("solidFuelHeater", Material.ROCK, SoundType.STONE, 1)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));

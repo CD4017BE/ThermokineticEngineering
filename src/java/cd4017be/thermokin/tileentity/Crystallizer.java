@@ -22,14 +22,14 @@ import cd4017be.thermokin.multiblock.LiquidContainer;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
-import cd4017be.thermokin.physics.ThermodynamicUtil;
 import cd4017be.thermokin.recipe.Converting;
 import cd4017be.thermokin.recipe.Converting.SolEntry;
 import cd4017be.thermokin.recipe.Substances;
 
 public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHandler {
 
-	public static final double SizeL = 1.0, SizeG = 4.0;
+	public static double SizeL, SizeG;
+	public static float C0, R0;
 
 	private double P0;
 	public LiquidContainer liq;
@@ -39,8 +39,8 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 
 	public Crystallizer() {
 		inventory = new Inventory(2, 2, this).group(0, 0, 1, Utils.ACC).group(1, 1, 2, Utils.ACC);
-		liq = new LiquidContainer(this, SizeL, new GasState(Substance.Default, SizeG, ThermodynamicUtil.NormalPressure, SizeG));
-		heat = new HeatReservoir(5000, Substances.def_con);
+		liq = new LiquidContainer(this, SizeL, new GasState(Substance.Default, SizeG, Substances.defaultEnv.P, SizeG));
+		heat = new HeatReservoir(C0, R0);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		liq = LiquidContainer.readFromNBT(this, nbt, "liq", SizeL, SizeG, ThermodynamicUtil.NormalPressure);
+		liq = LiquidContainer.readFromNBT(this, nbt, "liq", SizeL, SizeG, Substances.defaultEnv.P);
 		heat.load(nbt, "cas");
 		if (nbt.hasKey("rcp", 10)) rcp = Converting.readFromNBT(nbt.getCompoundTag("rcp"));
 		else {rcp = null; recipeUpdate = true;}

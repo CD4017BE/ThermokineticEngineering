@@ -23,10 +23,11 @@ import cd4017be.lib.util.Utils;
 
 public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp, ILiquidCon, IGuiData {
 
+	public static float Amin, Amax;
 	private ShaftComponent link;
 	private LiquidComponent input, output;
-	public static final float Amin = 0.0001F, Amax = 0.01F;
 	private boolean updateCon = false, run = false;
+	private float x;
 	public int cfg;
 	public float dA = Amin, speed, power;
 
@@ -65,8 +66,9 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 
 	@Override
 	public boolean setShaft(ShaftComponent shaft) {
-		if (shaft instanceof IGear) {//TODO make use of gear
+		if (shaft instanceof IGear) {
 			this.link = shaft;
+			this.x = ((IGear)shaft).translationFactor();
 			return true;
 		} else {
 			this.link = null;
@@ -84,13 +86,14 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 		if (!run) return 0;
 		LiquidPhysics in = input.network, out = output.network;
 		if (in.content.type == null || (out.content.type != null && in.content.type != out.content.type)) {run = false; return 0;}
+		ds *= x;
 		LiquidState liq = new LiquidState(null, dA * ds, 0, 0);
 		double P = in.drainLiquid(liq, false) / liq.Vmax;
 		if (liq.V == 0) {run = false; return 0;}
 		P += out.fillLiquid(liq, false) / liq.V;
 		if (liq.V == 0) {run = false; return 0;}
 		run = true;
-		return -(float)P * dA;
+		return -(float)P * dA * x;
 	}
 
 	@Override
@@ -99,6 +102,7 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 		LiquidPhysics in = input.network, out = output.network;
 		double Vmax = Math.min(in.content.V, out.content.Vrem());
 		if (Vmax == 0 || (out.content.type != null && in.content.type != out.content.type)) return speed = power = 0;
+		ds *= x;
 		LiquidState liq = new LiquidState(null, Math.min(dA * ds, Vmax), 0, 0);
 		speed = (float)liq.Vmax / ds;
 		return power = -(float)(in.drainLiquid(liq, true) + out.fillLiquid(liq, true));

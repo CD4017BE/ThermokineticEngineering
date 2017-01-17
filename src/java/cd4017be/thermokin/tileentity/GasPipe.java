@@ -24,11 +24,12 @@ import cd4017be.thermokin.recipe.Substances;
 
 public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, IPipe, IGuiData {
 
-	public static final float size = 0.25F;
+	public static double size;
 	private Cover cover = null;
 
 	public GasPipe() {
 		comp = new GasContainer(this, size);
+		comp.setResistance(Substances.getResistanceFor(Blocks.AIR.getDefaultState()));
 	}
 
 	@Override

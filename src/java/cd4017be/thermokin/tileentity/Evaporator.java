@@ -22,11 +22,11 @@ import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
-import cd4017be.thermokin.recipe.Substances;
 
 public class Evaporator extends ModTileEntity implements ITickable, IGuiData, IGasCon, ILiquidCon {
 
-	public static final double SizeL = 0.8, SizeG = 1.0;
+	public static double SizeL, SizeG;
+	public static float C0, R0;
 
 	public HeatReservoir heat;
 	public LiquidContainer liq;
@@ -36,7 +36,7 @@ public class Evaporator extends ModTileEntity implements ITickable, IGuiData, IG
 	public Evaporator() {
 		gas = new GasContainer(this, SizeG);
 		liq = new LiquidContainer(this, SizeL, gas);
-		heat = new HeatReservoir(5000, Substances.def_con);
+		heat = new HeatReservoir(C0, R0);
 	}
 
 	@Override

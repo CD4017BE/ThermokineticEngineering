@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
 import cd4017be.thermokin.multiblock.HeatReservoir;
-import cd4017be.thermokin.recipe.Substances;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.SlotItemType;
@@ -18,7 +17,7 @@ import cd4017be.lib.util.Utils;
 
 public class HeatedFurnace extends AutomatedTile implements IGuiData {
 
-	public static final float NeededTemp = 1200F, TRwork = 20, Energy = 250000F;
+	public static float NeededTemp, TRwork, Energy, C0, R0;
 	public HeatReservoir heat;
 	private boolean done = true;
 	public int num;
@@ -26,7 +25,7 @@ public class HeatedFurnace extends AutomatedTile implements IGuiData {
 
 	public HeatedFurnace() {
 		inventory = new Inventory(3, 2, null).group(0, 0, 1, Utils.IN).group(1, 1, 2, Utils.OUT);
-		heat = new HeatReservoir(10000F, Substances.def_con);
+		heat = new HeatReservoir(C0, R0);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package cd4017be.thermokin.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.recipe.Substances;
 import cd4017be.thermokin.recipe.Substances.Environment;
@@ -13,10 +14,12 @@ import cd4017be.lib.templates.MultiblockTile;
 
 public class GasVent extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, ITickable {
 
+	public static double size;
 	private Environment env;
 
 	public GasVent() {
-		comp = new GasContainer(this, 5F);
+		comp = new GasContainer(this, size);
+		comp.setResistance(Substances.getResistanceFor(Objects.gasVent.getDefaultState()));
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class GasVent extends MultiblockTile<GasContainer, GasPhysics> implements
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		comp = GasContainer.readFromNBT(this, nbt, "gas", 5F);
+		comp = GasContainer.readFromNBT(this, nbt, "gas", size);
 	}
 
 	@Override

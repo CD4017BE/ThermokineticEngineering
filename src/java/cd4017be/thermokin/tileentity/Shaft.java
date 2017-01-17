@@ -22,7 +22,8 @@ import cd4017be.lib.util.Utils;
 
 public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implements IPipe {
 
-	public static final ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>> handlers = new ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>>();//TODO add some shaft mount handler
+	public static float M0;
+	public static final ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>> handlers = new ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>>();
 
 	private ShaftComponent create(Shaft tile, ItemStack item) {
 		if (item != null) {
@@ -37,7 +38,7 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 	private Cover cover;
 
 	public Shaft() {
-		this.comp = new ShaftComponent(this, 1000F);
+		this.comp = new ShaftComponent(this, M0);
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 		ShaftComponent newComp;
 		if (player.isSneaking() && comp.type != null && item == null) {
 			comp.onRemove();
-			newComp = new ShaftComponent(this, 1000F);
+			newComp = new ShaftComponent(this, M0);
 		} else if (!player.isSneaking() && comp.type == null) {
 			newComp = create(this, item);
 			if (newComp == null) return false;

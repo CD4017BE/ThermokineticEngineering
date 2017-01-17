@@ -89,6 +89,10 @@ public class Converting implements IRecipeHandler {
 		return null;
 	}
 
+	public static int hashItem(ItemStack item) {
+		return Item.getIdFromItem(item.getItem()) | item.getItemDamage() << 16;
+	}
+
 	public static int hashIngred(Object obj) {
 		if (obj instanceof OreDictStack) {
 			return -((OreDictStack)obj).ID;
