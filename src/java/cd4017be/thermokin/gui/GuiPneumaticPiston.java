@@ -17,7 +17,7 @@ public class GuiPneumaticPiston extends GuiMachine {
 	public GuiPneumaticPiston(PneumaticPiston tileEntity, EntityPlayer player) {
 		super(new TileContainer(tileEntity, player));
 		this.tile = tileEntity;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/tesla.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/misc.png");
 		this.bgTexY = 128;
 	}
 

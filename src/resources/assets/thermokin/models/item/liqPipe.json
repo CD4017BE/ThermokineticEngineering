@@ -1,7 +1,7 @@
 {
 	"parent": "block/block",
 	"textures": {
-		"tex": "automation:blocks/pipes/liq"
+		"tex": "thermokin:block/liq"
 	},
 	"elements": [
 		{

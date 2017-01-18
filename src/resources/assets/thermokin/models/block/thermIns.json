@@ -1,6 +1,6 @@
 {
-	"parent": "automation:block/CUBE",
+	"parent": "thermokin:block/CUBE",
 	"textures": {
-		"tex": "automation:blocks/thermIns"
+		"tex": "thermokin:block/thermIns"
 	}
 }

@@ -1,6 +1,6 @@
 {
-	"parent": "automation:block/pipeCon8",
+	"parent": "thermokin:block/pipeCon8",
     "textures": {
-        "tex": "automation:blocks/pipes/gas"
+        "tex": "thermokin:block/gas"
     }
 }

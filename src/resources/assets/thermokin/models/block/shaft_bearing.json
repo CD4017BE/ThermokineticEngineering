@@ -1,7 +1,7 @@
 {
     "textures": {
-        "particle": "automation:blocks/pipes/shaftB",
-		"tex": "automation:blocks/pipes/shaftB"
+        "particle": "thermokin:block/shaftB",
+		"tex": "thermokin:block/shaftB"
     },
     "elements": [
         {   "from": [ 1, 1, 0 ],

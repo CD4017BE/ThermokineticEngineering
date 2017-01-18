@@ -16,7 +16,7 @@ public class GuiLiquidPump extends GuiMachine {
 	public GuiLiquidPump(LiquidPump tile, EntityPlayer player) {
 		super(new TileContainer(tile, player));
 		this.tile = tile;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/tesla.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/misc.png");
 		this.bgTexY = 192;
 	}
 

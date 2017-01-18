@@ -16,7 +16,7 @@ public class GuiSolidFuelHeater extends GuiMachine {
 	public GuiSolidFuelHeater(SolidFuelHeater tileEntity, EntityPlayer player) {
 		super(new TileContainer(tileEntity, player));
 		this.tile = tileEntity;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/heater.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/heater.png");
 	}
 
 	@Override

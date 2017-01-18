@@ -56,14 +56,14 @@ public class ClientProxy extends CommonProxy {
 		TileBlockRegistry.registerGui(evaporator, GuiEvaporator.class);
 		TileBlockRegistry.registerGui(liqReservoir, GuiLiquidReservoir.class);
 		TileBlockRegistry.registerGui(crystallizer, GuiCrystallizer.class);
+		TileBlockRegistry.registerGui(liqPump, GuiLiquidPump.class);
 		//set block transparencies
 		Objects.pneumaticPiston.setBlockLayer(BlockRenderLayer.CUTOUT);
-		//fluids
-		SpecialModelLoader.setMod("thermokin");
 		//pipe models
-		SpecialModelLoader.registerBlockModel(Objects.shaft, new ModelPipe("automation:shaft", 0, 1));
-		SpecialModelLoader.registerBlockModel(Objects.gasPipe, new ModelPipe("automation:gasPipe", 1, 1));
-		
+		SpecialModelLoader.setMod("thermokin");
+		SpecialModelLoader.registerBlockModel(Objects.shaft, new ModelPipe("thermokin:shaft", 0, 1));
+		SpecialModelLoader.registerBlockModel(Objects.gasPipe, new ModelPipe("thermokin:gasPipe", 1, 1));
+		SpecialModelLoader.registerBlockModel(Objects.liqPipe, new ModelPipe("thermokin:liqPipe", 1, 1));
 	}
 
 }

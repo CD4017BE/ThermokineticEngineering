@@ -14,7 +14,7 @@ public class GuiLiquidReservoir extends GuiMachine {
 	public GuiLiquidReservoir(LiquidReservoir tile, EntityPlayer player) {
 		super(new TileContainer(tile, player));
 		this.tile = tile;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/evaporator.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/evaporator.png");
 	}
 
 	@Override

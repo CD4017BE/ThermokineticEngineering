@@ -1,8 +1,8 @@
-shaft = script("automation:models/tileEntity/shaft"){};
+shaft = script("thermokin:models/tileEntity/shaft"){};
 draw(shaft);
 scaleUV(/([64, 64]));
 offsetUV([24, 32]);
-draw(script("automation:models/tileEntity/magnets"){
+draw(script("thermokin:models/tileEntity/magnets"){
 	N = 8;
 	r0 = shaft:r;
 	r1 = 0.25;

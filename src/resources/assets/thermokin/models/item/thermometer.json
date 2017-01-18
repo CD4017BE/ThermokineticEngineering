@@ -1,5 +1,5 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "automation:items/tools/thermometer"
+        "layer0": "thermokin:item/thermometer"
     }}

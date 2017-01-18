@@ -1,7 +1,7 @@
 {
     "textures": {
-		"tex": "automation:blocks/pipes/liq",
-        "particle": "automation:blocks/pipes/liq"
+		"tex": "thermokin:block/liq",
+        "particle": "thermokin:block/liq"
     },
     "elements": [
         {   "from": [ 6, 6, 6 ],

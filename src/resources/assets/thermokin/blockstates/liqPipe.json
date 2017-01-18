@@ -1,7 +1,7 @@
 {
 	"variants": {
-		"normal": { "model": "automation:liqPipe" },
-		"core0": { "model": "automation:liqPipe_core" },
-		"con0": { "model": "automation:liqPipe_con" }
+		"normal": { "model": "thermokin:liqPipe" },
+		"core0": { "model": "thermokin:liqPipe_core" },
+		"con0": { "model": "thermokin:liqPipe_con" }
 	}
 }

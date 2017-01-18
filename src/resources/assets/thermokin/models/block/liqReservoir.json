@@ -1,11 +1,11 @@
 {
-	"parent": "automation:block/base",
+	"parent": "thermokin:block/base",
 	"textures": {
-		"top": "automation:blocks/liqReservoir0",
-		"bot": "automation:blocks/liqReservoir1",
-		"front": "automation:blocks/liqReservoir2",
-		"back": "automation:blocks/liqReservoir2",
-		"left": "automation:blocks/liqReservoir2",
-		"right": "automation:blocks/liqReservoir2"
+		"top": "thermokin:block/liqReservoir0",
+		"bot": "thermokin:block/liqReservoir1",
+		"front": "thermokin:block/liqReservoir2",
+		"back": "thermokin:block/liqReservoir2",
+		"left": "thermokin:block/liqReservoir2",
+		"right": "thermokin:block/liqReservoir2"
 	}
 }

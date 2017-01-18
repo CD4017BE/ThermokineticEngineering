@@ -1,4 +1,4 @@
-shaft = script("automation:models/tileEntity/shaft"){};
+shaft = script("thermokin:models/tileEntity/shaft"){};
 h = 0.1; r = 0.5; d = *(shaft:d, 0.5);
 P = [shaft:r, -(h), -(shaft:d)];
 Px = [r, P:1, -(d)];

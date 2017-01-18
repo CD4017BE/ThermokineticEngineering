@@ -1,0 +1,11 @@
+{
+	"parent": "thermokin:block/base",
+	"textures": {
+		"top": "thermokin:block/crystallizer0",
+		"bot": "thermokin:block/crystallizer1",
+		"front": "thermokin:block/crystallizer2",
+		"back": "thermokin:block/crystallizer2",
+		"left": "thermokin:block/crystallizer2",
+		"right": "thermokin:block/crystallizer2"
+	}
+}

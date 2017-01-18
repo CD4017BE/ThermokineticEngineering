@@ -1,4 +1,4 @@
-shaft = script("automation:models/tileEntity/shaft"){};
+shaft = script("thermokin:models/tileEntity/shaft"){};
 size = 2.5;
 p = [shaft:r, -0.5, -(shaft:d), 0, 0];
 a = [s(-(size, 1), [shaft:r, 0, -(shaft:d)]), 16, 0];

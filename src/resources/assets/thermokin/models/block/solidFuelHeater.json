@@ -1,11 +1,11 @@
 {
-	"parent": "automation:block/base",
+	"parent": "thermokin:block/base",
 	"textures": {
-		"top": "automation:blocks/thermIns",
-		"bot": "automation:blocks/thermIns",
-		"front": "automation:blocks/furnaceHeater",
-		"back": "automation:blocks/thermCon",
-		"left": "automation:blocks/thermIns",
-		"right": "automation:blocks/thermIns"
+		"top": "thermokin:block/thermIns",
+		"bot": "thermokin:block/thermIns",
+		"front": "thermokin:block/furnaceHeater",
+		"back": "thermokin:block/thermCon",
+		"left": "thermokin:block/thermIns",
+		"right": "thermokin:block/thermIns"
 	}
 }

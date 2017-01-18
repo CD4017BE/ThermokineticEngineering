@@ -14,7 +14,7 @@ public class GuiHeatedFurnace extends GuiMachine {
 	public GuiHeatedFurnace(HeatedFurnace tile, EntityPlayer player) {
 		super(new TileContainer(tile, player));
 		this.tile = tile;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/heatedFurnace.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/heatedFurnace.png");
 	}
 
 	@Override

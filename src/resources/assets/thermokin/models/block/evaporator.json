@@ -1,11 +1,11 @@
 {
-	"parent": "automation:block/base",
+	"parent": "thermokin:block/base",
 	"textures": {
-		"top": "automation:blocks/evaporator0",
-		"bot": "automation:blocks/evaporator1",
-		"front": "automation:blocks/evaporator2",
-		"back": "automation:blocks/evaporator3",
-		"left": "automation:blocks/evaporator3",
-		"right": "automation:blocks/evaporator3"
+		"top": "thermokin:block/evaporator0",
+		"bot": "thermokin:block/evaporator1",
+		"front": "thermokin:block/evaporator2",
+		"back": "thermokin:block/evaporator3",
+		"left": "thermokin:block/evaporator3",
+		"right": "thermokin:block/evaporator3"
 	}
 }

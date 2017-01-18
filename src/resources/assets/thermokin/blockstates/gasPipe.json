@@ -1,7 +1,7 @@
 {
 	"variants": {
-		"normal": { "model": "automation:gasPipe" },
-		"core0": { "model": "automation:gasPipe_core" },
-		"con0": { "model": "automation:gasPipe_con" }
+		"normal": { "model": "thermokin:gasPipe" },
+		"core0": { "model": "thermokin:gasPipe_core" },
+		"con0": { "model": "thermokin:gasPipe_con" }
 	}
 }

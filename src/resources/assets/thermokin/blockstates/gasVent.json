@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"orient=n": { "model": "automation:gasVent" },
-		"orient=e": { "model": "automation:gasVent" , "y": 90 },
-		"orient=s": { "model": "automation:gasVent" , "y": 180 },
-		"orient=w": { "model": "automation:gasVent" , "y": 270 },
-		"orient=b": { "model": "automation:gasVent" , "x": 90 },
-		"orient=t": { "model": "automation:gasVent" , "x": 270 }
+		"orient=n": { "model": "thermokin:gasVent" },
+		"orient=e": { "model": "thermokin:gasVent" , "y": 90 },
+		"orient=s": { "model": "thermokin:gasVent" , "y": 180 },
+		"orient=w": { "model": "thermokin:gasVent" , "y": 270 },
+		"orient=b": { "model": "thermokin:gasVent" , "x": 90 },
+		"orient=t": { "model": "thermokin:gasVent" , "x": 270 }
 	}
 }

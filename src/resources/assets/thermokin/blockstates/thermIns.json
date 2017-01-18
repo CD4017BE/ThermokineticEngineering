@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": { "model": "automation:thermIns" }
+		"normal": { "model": "thermokin:thermIns" }
 	}
 }

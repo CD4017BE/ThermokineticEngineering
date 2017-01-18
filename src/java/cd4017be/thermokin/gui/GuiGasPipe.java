@@ -14,7 +14,7 @@ public class GuiGasPipe extends GuiMachine {
 
 	public GuiGasPipe(GasPipe tileEntity, EntityPlayer player) {
 		super(new TileContainer(tileEntity, player));
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/tesla.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/misc.png");
 		this.bgTexX = 176; this.bgTexY = 80;
 	}
 

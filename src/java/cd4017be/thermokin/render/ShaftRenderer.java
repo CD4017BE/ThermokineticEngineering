@@ -27,14 +27,14 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<Shaft> {
 		if (phys.lastRendered != Util.RenderFrame) this.renderShaft(te.getWorld(), phys, x - te.getPos().getX(), y - te.getPos().getY(), z - te.getPos().getZ(), partialTicks);
 	}
 
-	private static final ResourceLocation texture = new ResourceLocation("automation:textures/tileentity/shaft.png");
+	private static final ResourceLocation texture = new ResourceLocation("thermokin:textures/tileentity/shaft.png");
 	private static final String[] models = {
-		"automation:models/tileentity/shaft",
-		"automation:models/tileentity/shaftPermMag",
-		"automation:models/tileentity/shaftCoilC",
-		"automation:models/tileentity/shaftCoilA",
-		"automation:models/tileentity/shaftCoilH",
-		"automation:models/tileentity/shaftGear" //Mass
+		"thermokin:models/tileentity/shaft",
+		"thermokin:models/tileentity/shaftPermMag",
+		"thermokin:models/tileentity/shaftCoilC",
+		"thermokin:models/tileentity/shaftCoilA",
+		"thermokin:models/tileentity/shaftCoilH",
+		"thermokin:models/tileentity/shaftGear" //Mass
 		};
 	
 	private void renderShaft(World world, ShaftPhysics shaft, double x, double y, double z, float t) {

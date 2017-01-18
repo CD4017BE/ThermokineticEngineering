@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"orient=n": { "model": "automation:liqPump" },
-		"orient=e": { "model": "automation:liqPump" , "y": 90 },
-		"orient=s": { "model": "automation:liqPump" , "y": 180 },
-		"orient=w": { "model": "automation:liqPump" , "y": 270 },
-		"orient=b": { "model": "automation:liqPump" , "x": 90 },
-		"orient=t": { "model": "automation:liqPump" , "x": 270 }
+		"orient=n": { "model": "thermokin:liqPump" },
+		"orient=e": { "model": "thermokin:liqPump" , "y": 90 },
+		"orient=s": { "model": "thermokin:liqPump" , "y": 180 },
+		"orient=w": { "model": "thermokin:liqPump" , "y": 270 },
+		"orient=b": { "model": "thermokin:liqPump" , "x": 90 },
+		"orient=t": { "model": "thermokin:liqPump" , "x": 270 }
 	}
 }

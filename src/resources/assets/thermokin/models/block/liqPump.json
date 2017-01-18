@@ -1,10 +1,10 @@
 {
     "parent": "block/block",
 	"textures": {
-		"front": "automation:blocks/liqPump0",
-		"back": "automation:blocks/liqPump1",
-		"side": "automation:blocks/liqPump2",
-        "particle": "automation:blocks/liqPump2"
+		"front": "thermokin:block/liqPump0",
+		"back": "thermokin:block/liqPump1",
+		"side": "thermokin:block/liqPump2",
+        "particle": "thermokin:block/liqPump2"
     },
     "elements": [
         {

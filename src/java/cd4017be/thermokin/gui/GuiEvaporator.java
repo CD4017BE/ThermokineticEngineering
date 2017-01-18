@@ -15,7 +15,7 @@ public class GuiEvaporator extends GuiMachine {
 	public GuiEvaporator(Evaporator tile, EntityPlayer player) {
 		super(new DataContainer(tile, player));
 		this.cont = (DataContainer)inventorySlots;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/evaporator.png");
+		this.MAIN_TEX = new ResourceLocation("thermokin", "textures/gui/evaporator.png");
 		this.bgTexX = 176;
 	}
 

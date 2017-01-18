@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"orient=n": { "model": "automation:heatedFurnace" },
-		"orient=e": { "model": "automation:heatedFurnace" , "y": 90 },
-		"orient=s": { "model": "automation:heatedFurnace" , "y": 180 },
-		"orient=w": { "model": "automation:heatedFurnace" , "y": 270 }
+		"orient=n": { "model": "thermokin:heatedFurnace" },
+		"orient=e": { "model": "thermokin:heatedFurnace" , "y": 90 },
+		"orient=s": { "model": "thermokin:heatedFurnace" , "y": 180 },
+		"orient=w": { "model": "thermokin:heatedFurnace" , "y": 270 }
 	}
 }

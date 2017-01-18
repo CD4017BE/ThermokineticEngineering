@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "automation:blocks/pipes/shaft"
+        "layer0": "thermokin:block/shaft"
     },
     "display": {
         "thirdperson": {

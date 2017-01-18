@@ -19,8 +19,8 @@ import cd4017be.lib.util.Utils;
 
 public class PistonRenderer extends TileEntitySpecialRenderer<PneumaticPiston> {
 
-	private static final ResourceLocation texture = new ResourceLocation("automation:textures/tileentity/piston.png");
-	public static final String model = "automation:models/tileentity/piston";
+	private static final ResourceLocation texture = new ResourceLocation("thermokin:textures/tileentity/piston.png");
+	public static final String model = "thermokin:models/tileentity/piston";
 	private final float offset = -0.4375F, size = 0.625F;
 	
 	@Override

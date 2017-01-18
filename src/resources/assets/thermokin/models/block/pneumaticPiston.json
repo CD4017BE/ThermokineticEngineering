@@ -1,10 +1,10 @@
 {
     "parent": "block/block",
 	"textures": {
-		"main": "automation:blocks/piston0",
-		"front": "automation:blocks/piston1",
-		"back": "automation:blocks/piston2",
-        "particle": "automation:blocks/piston0"
+		"main": "thermokin:block/piston0",
+		"front": "thermokin:block/piston1",
+		"back": "thermokin:block/piston2",
+        "particle": "thermokin:block/piston0"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

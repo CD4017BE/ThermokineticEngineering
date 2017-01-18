@@ -4,8 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.SlotItemHandler;
+import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.HeatReservoir;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
@@ -70,6 +73,19 @@ public class HeatedFurnace extends AutomatedTile implements IGuiData {
 		}
 		temp = heat.T;
 		num = inventory.items[2] == null ? 0 : inventory.items[2].stackSize;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
+		if (cap == Objects.HEAT_CAP) return true;
+		return super.hasCapability(cap, s);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
+		if (cap == Objects.HEAT_CAP) return (T)heat;
+		return super.getCapability(cap, s);
 	}
 
 	@Override

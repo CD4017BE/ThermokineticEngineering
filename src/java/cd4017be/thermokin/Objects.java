@@ -68,6 +68,7 @@ public class Objects {
 		new DefaultItemBlock((liqReservoir = TileBlock.create("liqReservoir", Material.IRON, SoundType.METAL, 0)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((liqPump = TileBlock.create("liqPump", Material.IRON, SoundType.METAL, 0x22)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((liqPipe = new BlockPipe("liqPipe", Material.IRON, SoundType.METAL, 0x20)).setCreativeTab(tabThermokin).setHardness(1.0F).setResistance(20F));
+		new DefaultItemBlock((crystallizer = TileBlock.create("crystallizer", Material.ROCK, SoundType.STONE, 0)));
 		gasPipe.size = 0.5F;
 		liqPipe.size = 0.25F;
 		

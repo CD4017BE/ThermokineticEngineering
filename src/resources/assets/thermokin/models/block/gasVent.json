@@ -1,10 +1,10 @@
 {
     "parent": "block/block",
 	"textures": {
-		"front": "automation:blocks/gasVentF",
-		"back": "automation:blocks/gasVentB",
-		"side": "automation:blocks/gasVentS",
-        "particle": "automation:blocks/gasVentB"
+		"front": "thermokin:block/gasVentF",
+		"back": "thermokin:block/gasVentB",
+		"side": "thermokin:block/gasVentS",
+        "particle": "thermokin:block/gasVentB"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

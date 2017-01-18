@@ -1,10 +1,10 @@
 {
 	"variants": {
-		"orient=n": { "model": "automation:pneumaticPiston" },
-		"orient=e": { "model": "automation:pneumaticPiston" , "y": 90 },
-		"orient=s": { "model": "automation:pneumaticPiston" , "y": 180 },
-		"orient=w": { "model": "automation:pneumaticPiston" , "y": 270 },
-		"orient=b": { "model": "automation:pneumaticPiston" , "x": 90 },
-		"orient=t": { "model": "automation:pneumaticPiston" , "x": 270 }
+		"orient=n": { "model": "thermokin:pneumaticPiston" },
+		"orient=e": { "model": "thermokin:pneumaticPiston" , "y": 90 },
+		"orient=s": { "model": "thermokin:pneumaticPiston" , "y": 180 },
+		"orient=w": { "model": "thermokin:pneumaticPiston" , "y": 270 },
+		"orient=b": { "model": "thermokin:pneumaticPiston" , "x": 90 },
+		"orient=t": { "model": "thermokin:pneumaticPiston" , "x": 270 }
 	}
 }
