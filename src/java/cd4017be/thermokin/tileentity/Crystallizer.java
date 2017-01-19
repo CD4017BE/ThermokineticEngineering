@@ -119,7 +119,7 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 		liq = LiquidContainer.readFromNBT(this, nbt, "liq", SizeL, SizeG, Substances.defaultEnv.P);
 		heat.load(nbt, "cas");
 		if (nbt.hasKey("rcp", 10)) rcp = Converting.readFromNBT(nbt.getCompoundTag("rcp"));
-		else {rcp = null; recipeUpdate = true;}
+		else if (rcp != null && !worldObj.isRemote) {rcp = null; recipeUpdate = true;}
 	}
 
 	@Override

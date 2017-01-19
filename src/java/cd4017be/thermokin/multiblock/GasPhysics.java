@@ -131,10 +131,11 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 
 	@Override
 	protected void updatePhysics() {
-		float R = 1F / this.heatCond;
-		float T = R * this.refTemp;
-		if (R < 1F / gas.nR) gas.T = T;
-		else gas.T -= (gas.T - T) / R / gas.nR;
+		if (heatCond > 0) {
+			float T = refTemp / heatCond;
+			if (heatCond > gas.nR) gas.T = T;
+			else gas.T -= (gas.T - T) * heatCond / gas.nR;
+		}
 		if (!heatExch.isEmpty())
 			for (Iterator<HeatExchCon> it = heatExch.values().iterator(); it.hasNext();) {
 				HeatExchCon hc = it.next();

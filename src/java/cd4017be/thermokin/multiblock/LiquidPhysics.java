@@ -66,7 +66,7 @@ public class LiquidPhysics extends SharedNetwork<LiquidComponent, LiquidPhysics>
 
 	@Override
 	public void add(LiquidComponent comp) {
-		if (content.type == null || comp.network.content.type == null || content.type == comp.network.content.type)
+		if (content.type == null || comp.network == null || comp.network.content.type == null || content.type == comp.network.content.type)
 			super.add(comp);
 	}
 

@@ -52,7 +52,7 @@ public class HeatReservoir {
 			check = false;
 		}
 		if (envCond > C) T = envTemp;
-		else T += (envTemp - T) * envCond / C;
+		else if (envCond > 0) T += (envTemp - T) * envCond / C;
 		for (int i = 0; i < 3; i++) {
 			IHeatReservoir H = ref[i];
 			if (H == null) continue;
