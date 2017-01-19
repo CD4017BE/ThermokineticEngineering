@@ -84,7 +84,7 @@ public class HeatedFurnace extends AutomatedTile implements IGuiData {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
-		if (cap == Objects.HEAT_CAP) return (T)heat;
+		if (cap == Objects.HEAT_CAP) return (T)heat.getCapability(this, s);
 		return super.getCapability(cap, s);
 	}
 

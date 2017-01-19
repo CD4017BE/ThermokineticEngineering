@@ -31,6 +31,12 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRender(solidFuelHeater);
 		BlockItemRegistry.registerRender(gasVent);
 		BlockItemRegistry.registerRender(heatedFurnace);
+		BlockItemRegistry.registerRender(heatSink);
+		BlockItemRegistry.registerRender(liqPump);
+		BlockItemRegistry.registerRender(liqPipe);
+		BlockItemRegistry.registerRender(crystallizer);
+		BlockItemRegistry.registerRender(evaporator);
+		BlockItemRegistry.registerRender(liqReservoir);
 		//Items
 		BlockItemRegistry.registerRender(rotationSensor);
 		BlockItemRegistry.registerRender(thermometer);

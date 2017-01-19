@@ -8,8 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.SlotItemHandler;
+import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.HeatReservoir;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
@@ -56,6 +59,19 @@ public class SolidFuelHeater extends AutomatedTile implements IGuiData {
 			heat.T += p * FuelEnergy / heat.C;
 		}
 		temp = heat.T;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
+		if (cap == Objects.HEAT_CAP) return true;
+		return super.hasCapability(cap, s);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
+		if (cap == Objects.HEAT_CAP) return (T)heat.getCapability(this, s);
+		return super.getCapability(cap, s);
 	}
 
 	@Override

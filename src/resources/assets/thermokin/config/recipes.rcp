@@ -8,14 +8,14 @@ add("substance", "water", "2020ff", 1000, 18, 4186, 2196400, 373);
 
 #define a dimension's environment: (dimId, substance, pressure[Pa], baseTemp[K], biomeTempMult[K], heatResistance[K/W])
 #actual temperature is baseTemp + biomeTempMult * (coldTaiga:-0.6, icePlains:0, plains:0.8, jungle:1.2, savanna:1.5, desert:2.4
-add("environment", 0, "thermokin:air", DefPressure, 270, 25, 0.8);
+add("environment", nil, "thermokin:air", DefPressure, 270, 25, 0.8);
 
 @INIT
 
 #conversion between Forge Fluid and LiquidState: (substance, pressure[Pa], amount[m³], temperature[K], FluidStack)
 add("liqConv", "thermokin:water", 1.0, DefPressure, 300, fl("water", 1000));
 #melting items to liquid: (substance, amount[m³], meltHeat[J/kg], meltTemp[K], solidItem, castItem)
-add("melt", "thermokin:water", 1.0, 334000, 273, it("minecrarft:ice"), nil);
+add("melt", "thermokin:water", 1.0, 334000, 273, it("minecraft:ice"), nil);
 
 #example for molten iron compatibility
 if (0) {

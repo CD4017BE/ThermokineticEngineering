@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"orient=n": { "model": "thermokin:heatSink" },
+		"orient=e": { "model": "thermokin:heatSink" , "y": 90 },
+		"orient=s": { "model": "thermokin:heatSink" , "y": 180 },
+		"orient=w": { "model": "thermokin:heatSink" , "y": 270 },
+		"orient=b": { "model": "thermokin:heatSink" , "x": 90 },
+		"orient=t": { "model": "thermokin:heatSink" , "x": 270 }
+	}
+}

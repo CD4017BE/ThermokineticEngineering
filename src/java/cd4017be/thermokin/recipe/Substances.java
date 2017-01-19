@@ -1,6 +1,9 @@
 package cd4017be.thermokin.recipe;
 
+import java.util.Arrays;
 import java.util.HashMap;
+
+import org.apache.logging.log4j.Level;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -10,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
 import cd4017be.thermokin.physics.GasState;
@@ -33,24 +37,36 @@ public class Substances implements IRecipeHandler {
 
 	@Override
 	public boolean addRecipe(Object... param) {
-		if (param[0] == SUBST) {
+		if (SUBST.equals(param[0])) {
 			if (!(param.length == 8 && param[1] instanceof String && param[2] instanceof String &&
 				param[3] instanceof Double && param[4] instanceof Double && param[5] instanceof Double &&
-				param[6] instanceof Double && param[7] instanceof Double)) return false;
+				param[6] instanceof Double && param[7] instanceof Double)) {
+				FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <string>, <number>, <number>, <number>, <number>, <number>]\ngot: %s", SUBST, Arrays.deepToString(param));
+				return false;
+			}
 			String name = (String)param[1];
 			Substance s = new Substance(name);
 			s.setRegistryName(name);
-			try {s.setColor(Integer.parseInt((String)param[2], 16));} catch(NumberFormatException e) {return false;}
+			try {s.setColor(Integer.parseInt((String)param[2], 16));} catch(NumberFormatException e) {
+				FMLLog.log("RECIPE", Level.ERROR, "not a hexadecimal number: %s", param[2]);
+				return false;
+			}
 			s.setDensities((Double)param[3], (Double)param[4]);
 			s.setLiquidHeatCap((Double)param[5]);
 			s.setEvapEnergyAndTemp((Double)param[6], (Double)param[7]);
 			GameRegistry.register(s);
 			return true;
-		} else if (param[0] == ENV){
+		} else if (ENV.equals(param[0])) {
 			if (!(param.length == 7 && param[2] instanceof String && param[3] instanceof Double &&
-				param[4] instanceof Double && param[5] instanceof Double && param[6] instanceof Double)) return false;
+				param[4] instanceof Double && param[5] instanceof Double && param[6] instanceof Double)) {
+				FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <number>, <number>, <number>, <number>]\ngot: %s", ENV, Arrays.deepToString(param));
+				return false;
+			}
 			Substance s = Substance.REGISTRY.getObject(new ResourceLocation((String)param[2]));
-			if (s == null) return false;
+			if (s == null) {
+				FMLLog.log("RECIPE", Level.ERROR, "invalid substance: %s", param[2]);
+				return false;
+			}
 			double P = (Double)param[3], T = (Double)param[4], dT = (Double)param[5], R = (Double)param[6];
 			Environment e = new Environment(s, P, T, dT, R);
 			if (param[1] instanceof Double) {
@@ -59,17 +75,26 @@ public class Substances implements IRecipeHandler {
 			} else if (defaultEnv == null) defaultEnv = e;
 			return true;
 		} else {
-			if (!(param.length >= 3 && param[1] instanceof ItemStack && param[2] instanceof Double)) return false;
+			if (!(param.length >= 3 && param[1] instanceof ItemStack && param[2] instanceof Double)) {
+				FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <itemstack>, <number>, ...] \ngot: %s", BLOCK, Arrays.deepToString(param));
+				return false;
+			}
 			double R = (Double)param[2];
 			BlockEntry e;
 			if (param.length == 5) {
-				if (!(param[3] instanceof Double && param[4] instanceof Double)) return false;
+				if (!(param[3] instanceof Double && param[4] instanceof Double)) {
+					FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <itemstack>, <number>, <number>, <number>] \ngot: %s", BLOCK, Arrays.deepToString(param));
+					return false;
+				}
 				double Re = (Double)param[3], Xe = (Double)param[4];
 				e = new BlockEntry((float)R, (float)Re, (float)Xe);
 			} else e = new BlockEntry((float)R);
 			ItemStack is = (ItemStack)param[1];
 			Item i = is.getItem();
-			if (!(i instanceof ItemBlock)) return false;
+			if (!(i instanceof ItemBlock)) {
+				FMLLog.log("RECIPE", Level.ERROR, "item doesn't represent a block: %s", param[1]);
+				return false;
+			}
 			IBlockState out = ((ItemBlock)i).block.getStateFromMeta(i.getMetadata(is.getMetadata()));
 			blocks.put(out, e);
 			return true;

@@ -1,7 +1,10 @@
 package cd4017be.thermokin.recipe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,12 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
 import cd4017be.lib.util.OreDictStack;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
+import cd4017be.thermokin.tileentity.LiquidReservoir;
 
 public class Converting implements IRecipeHandler {
 
@@ -24,25 +29,33 @@ public class Converting implements IRecipeHandler {
 	public static final HashMap<Integer, SolEntry> solidLookup = new HashMap<Integer, SolEntry>();
 	public static final HashMap<Substance, ArrayList<LiqEntry>> substanceLookupL = new HashMap<Substance, ArrayList<LiqEntry>>();
 	public static final HashMap<Substance, ArrayList<SolEntry>> substanceLookupS = new HashMap<Substance, ArrayList<SolEntry>>();
-	public static double Vg, P0;
 
 	@Override
 	public boolean addRecipe(Object... param) {
-		boolean L = param[0] == LIQ;
-		if (!(param.length >= 6 && param[1] instanceof String && param[2] instanceof Double && param[3] instanceof Double && param[4] instanceof Double && (L ? param[5] instanceof FluidStack : param[5] instanceof ItemStack || param[5] instanceof OreDictStack))) return false;
+		boolean L = LIQ.equals(param[0]);
+		if (!(param.length >= 6 && param[1] instanceof String && param[2] instanceof Double && param[3] instanceof Double && param[4] instanceof Double && (L ? param[5] instanceof FluidStack : param[5] instanceof ItemStack || param[5] instanceof OreDictStack))) {
+			FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <number>, <number>, <number>, %s]\ngot: %s", L ? LIQ : SOL, L ? "<fluidstack>":"<oredict/itemstack>, ...", Arrays.deepToString(param));
+			return false;
+		}
 		Substance s = Substance.REGISTRY.getObject(new ResourceLocation((String)param[1]));
-		if (s == null) return false;
+		if (s == null) {
+			FMLLog.log("RECIPE", Level.ERROR, "invalid substance: %s", param[1]);
+			return false;
+		}
 		if (L) {
 			FluidStack fluid = (FluidStack)param[5];
 			double V = (double)param[2], P = (double)param[3], T = (double)param[4];
-			addRecipe(new LiqEntry(fluid.getFluid(), new LiquidState(s, Vg * (1.0 - Math.sqrt(P0 / P)), V / (double)fluid.amount, T)));
+			addRecipe(new LiqEntry(fluid.getFluid(), new LiquidState(s, LiquidReservoir.SizeG * (1.0 - Math.sqrt(LiquidReservoir.P0 / P)), V / (double)fluid.amount, T)));
 			return true;
-		} else if (param.length <= 6 || param[6] instanceof ItemStack || param[6] instanceof OreDictStack) {
+		} else if (param.length <= 6 || param[6] instanceof ItemStack || param[6] instanceof OreDictStack || param[6] == null) {
 			Object cast = (param.length > 6) ? param[6] : null;
 			double V = (double)param[2], Q = (double)param[3], T = (double)param[4];
 			addRecipe(new SolEntry(param[5], new LiquidState(s, V, V, T), Q * s.Dl * s.m, cast));
 			return true;
-		} else return false;
+		} else {
+			FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <number>, <number>, <number>, <oredict/itemstack>, <oredict/itemstack>]\ngot: %s", SOL, Arrays.deepToString(param));
+			return false;
+		}
 	}
 
 	public void addRecipe(LiqEntry rcp) {

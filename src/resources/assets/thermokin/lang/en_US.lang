@@ -7,6 +7,7 @@ itemGroup.thermokin=Thermokinetic Engineering
 # names
 tile.cd4017be.shaft.name=Kinetic Shaft
 tile.cd4017be.thermIns.name=Ceramic Heat Insulation
+tile.cd4017be.heatSink.name=Heat Sink
 tile.cd4017be.gasPipe.name=Gas Pipe
 tile.cd4017be.gasVent.name=Gas Vent
 tile.cd4017be.pneumaticPiston.name=Pneumatic Piston

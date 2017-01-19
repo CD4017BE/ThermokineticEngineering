@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidStack;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
@@ -47,20 +48,37 @@ public class LiquidReservoir extends AutomatedTile implements IGuiData, ILiquidC
 		liq.network.updateTick(liq);
 		heat.update(this);
 		LiquidState ls = liq.getLiquid();
-		int am = tanks.getAmount(0), max;
-		if (am > 0) {
-			LiqEntry s = Converting.fluidLookup.get(tanks.fluids[0].getFluid());
-			if (s != null && (s.liquid.type == ls.type || ls.type == null) && (max = (int)((ls.Vmax * s.liquid.Vmax - ls.V) / s.liquid.V)) > 0) {
-				am = Math.min(am, max);
-				ls.insert(s.liquid.copy(s.liquid.V * (double)am));
-				tanks.drain(0, am, true);
-				liq.setLiquid(ls);
-			}
-		}//TODO add the other way around
 		if (ls.V > 0) {
 			double T = (heat.T * heat.C + ls.E()) / (heat.C + ls.C());
-			heat.T = (float)(liq.liquid.T = T);
+			heat.T = (float)(ls.T = T);
 		}
+		FluidStack fluid = tanks.fluids[0];
+		LiqEntry s;
+		if (fluid != null) {
+			s = Converting.fluidLookup.get(fluid.getFluid());
+			if (s != null && (s.liquid.type == ls.type || ls.type == null)) {
+				int dV = (int)((s.liquid.Vmax - ls.V) / s.liquid.V);
+				if (dV > 0) convToLiq(s, dV, ls);
+				else if (dV < 0 && (ls.T > s.liquid.T ^ heat.envTemp > s.liquid.T)) convToFluid(s, -dV, ls);
+			}
+		} else if (ls.type != null && (s = Converting.toFluid(ls, heat.envTemp)) != null) {
+			convToFluid(s, -(int)((s.liquid.Vmax - ls.V) / s.liquid.V), ls);
+		}
+		liq.setLiquid(ls);
+	}
+
+	private void convToLiq(LiqEntry e, int am, LiquidState ls) {
+		am = Math.min(Math.min(tanks.getAmount(0), am), (int)Math.floor(ls.Vrem() / e.liquid.V));
+		if (am <= 0) return;
+		tanks.drain(0, am, true);
+		ls.insert(e.liquid.copy(e.liquid.V * (double)am));
+	}
+
+	private void convToFluid(LiqEntry e, int am, LiquidState ls) {
+		am = Math.min(Math.min(tanks.getSpace(0), am), (int)Math.floor(ls.V / e.liquid.V));
+		if (am <= 0) return;
+		tanks.fill(0, new FluidStack(e.fluid, am), true);
+		ls.drain(e.liquid.V * (double)am);
 	}
 
 	@Override
@@ -87,7 +105,7 @@ public class LiquidReservoir extends AutomatedTile implements IGuiData, ILiquidC
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
 		if (cap == Objects.LIQUID_CAP) return (T)liq;
-		if (cap == Objects.HEAT_CAP) return (T)heat;
+		if (cap == Objects.HEAT_CAP) return (T)heat.getCapability(this, s);
 		return super.getCapability(cap, s);
 	}
 

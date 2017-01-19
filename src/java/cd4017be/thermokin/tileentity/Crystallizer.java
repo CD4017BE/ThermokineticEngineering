@@ -13,12 +13,14 @@ import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.templates.AutomatedTile;
 import cd4017be.lib.templates.Inventory;
+import cd4017be.lib.templates.SharedNetwork;
 import cd4017be.lib.templates.Inventory.IAccessHandler;
 import cd4017be.lib.util.OreDictStack;
 import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.HeatReservoir;
 import cd4017be.thermokin.multiblock.LiquidContainer;
+import cd4017be.thermokin.multiblock.LiquidPhysics.ILiquidCon;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
@@ -26,7 +28,7 @@ import cd4017be.thermokin.recipe.Converting;
 import cd4017be.thermokin.recipe.Converting.SolEntry;
 import cd4017be.thermokin.recipe.Substances;
 
-public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHandler {
+public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHandler, ILiquidCon {
 
 	public static double SizeL, SizeG;
 	public static float C0, R0;
@@ -174,6 +176,25 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 	}
 
 	@Override
+	public void validate() {
+		super.validate();
+		long uid = SharedNetwork.ExtPosUID(pos, dimensionId);
+		liq.setUID(uid);
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if (liq.network != null) liq.network.remove(liq);
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if (liq.network != null) liq.network.remove(liq);
+	}
+
+	@Override
 	public void setSlot(int g, int s, ItemStack item) {
 		inventory.items[s] = item;
 		recipeUpdate = true;
@@ -206,6 +227,11 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 		case 6: rcp.liquid.T = Float.intBitsToFloat(v); break;
 		case 7: rcp.dQ = Float.intBitsToFloat(v); break;
 		}
+	}
+
+	@Override
+	public boolean conLiquid(byte side) {
+		return true;
 	}
 
 }

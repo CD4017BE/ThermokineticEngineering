@@ -37,6 +37,7 @@ public class Thermokin {
 		proxy.init();
 		RecipeAPI.Handlers.put(Substances.SUBST, Substances.instance);
 		RecipeAPI.Handlers.put(Substances.ENV, Substances.instance);
+		RecipeAPI.Handlers.put(Substances.BLOCK, Substances.instance);
 		RecipeAPI.Handlers.put(Converting.LIQ, Converting.instance);
 		RecipeAPI.Handlers.put(Converting.SOL, Converting.instance);
 		RecipeAPI.registerScript(event, "thermokinetic.rcp", "/assets/thermokin/config/recipes.rcp");
