@@ -14,9 +14,10 @@ public interface IMagnet {
 
 		public float B; 
 
-		public SimpleMagnet(ModTileEntity shaft, float m, float B) {
+		public SimpleMagnet(ModTileEntity shaft, float m, float B, String model) {
 			super(shaft, m);
 			this.B = B;
+			this.model = model;
 		}
 
 		@Override

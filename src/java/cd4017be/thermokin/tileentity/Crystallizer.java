@@ -15,7 +15,6 @@ import cd4017be.lib.templates.AutomatedTile;
 import cd4017be.lib.templates.Inventory;
 import cd4017be.lib.templates.SharedNetwork;
 import cd4017be.lib.templates.Inventory.IAccessHandler;
-import cd4017be.lib.util.OreDictStack;
 import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.HeatReservoir;
@@ -71,7 +70,7 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 				dV = Math.min(dV, liquid.Vmax - liquid.V);
 				if (dV >= rcp.liquid.V) {
 					ItemStack item = inventory.items[0];
-					if (Converting.matchItem(rcp.item, item)) {
+					if (rcp.item.equals(item)) {
 						double V = rcp.liquid.V;
 						rcp = rcp.copy(item);
 						rcp.liquid.V += V;
@@ -89,10 +88,9 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 					dV = Vrem;
 					ItemStack item = inventory.items[0];
 					if (item == null) {
-						if (rcp.item instanceof ItemStack) inventory.items[0] = ((ItemStack)rcp.item).copy();
-						else if (rcp.item instanceof OreDictStack) inventory.items[0] = ((OreDictStack)rcp.item).getItems()[0];
+						inventory.items[0] = rcp.item.asItem();
 						recipeUpdate = rcpEmpty = true;
-					} else if (item.stackSize < item.getMaxStackSize() && Converting.matchItem(rcp.item, item)) {
+					} else if (item.stackSize < item.getMaxStackSize() && rcp.item.equals(item)) {
 						item.stackSize++;
 						recipeUpdate = rcpEmpty = true;
 					}

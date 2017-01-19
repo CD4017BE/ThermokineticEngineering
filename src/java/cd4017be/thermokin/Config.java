@@ -2,22 +2,11 @@ package cd4017be.thermokin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-
-import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLLog;
 
 import org.apache.logging.log4j.Level;
 
-import cd4017be.lib.BlockItemRegistry;
 import cd4017be.lib.ConfigurationFile;
-import cd4017be.thermokin.multiblock.IGear;
-import cd4017be.thermokin.multiblock.IMagnet;
-import cd4017be.thermokin.recipe.Converting;
-import cd4017be.thermokin.recipe.Substances;
-import cd4017be.thermokin.recipe.Substances.BlockEntry;
 import cd4017be.thermokin.tileentity.Crystallizer;
 import cd4017be.thermokin.tileentity.Evaporator;
 import cd4017be.thermokin.tileentity.GasPipe;
@@ -44,24 +33,6 @@ public class Config {
 		} else {
 			FMLLog.log("thermokin", Level.WARN, "No config data loaded!");
 		}
-		
-		addMat("default", null, 2.5F, 2.5F, 1.0F);
-		addMat("IRON", Material.IRON, 0.01F, 0.01F, 1.0F);
-		addMat("GLASS", Material.GLASS, 1.0F, 1.0F, 1.0F);
-		addMat("ROCK", Material.ROCK, 1.2F, 1.2F, 1.0F);
-		addMat("CLAY", Material.CLAY, 1.0F, 1.0F, 1.0F);
-		addMat("GROUND", Material.GROUND, 1.5F, 1.5F, 1.0F);
-		addMat("GRASS", Material.GRASS, 2.0F, 2.0F, 1.0F);
-		addMat("SAND", Material.SAND, 4.0F, 4.0F, 1.0F);
-		addMat("WOOD", Material.WOOD, 5.0F, 5.0F, 1.0F);
-		addMat("PACKED_ICE", Material.PACKED_ICE, 0.4F, 0.4F, 1.0F);
-		addMat("ICE", Material.ICE, 0.5F, 0.5F, 1.0F);
-		addMat("CRAFTED_SNOW", Material.CRAFTED_SNOW, 12.0F, 12.0F, 1.0F);
-		addMat("AIR", Material.AIR, 25.0F, 0.0F, 10.0F);
-		addMat("SNOW", Material.SNOW, 15.0F, 15.0F, 1.0F);
-		addMat("CLOTH", Material.CLOTH, 100.0F, 100.0F, 1.0F);
-		addMat("LAVA", Material.LAVA, 2.0F, 1.6F, 0.5F);
-		addMat("WATER", Material.WATER, 1.2F, 1.0F, 0.25F);
 		
 		Crystallizer.C0 = data.getFloat("crystallizer.C", 5000F);
 		Crystallizer.R0 = data.getFloat("crystallizer.R", 0.004F);
@@ -91,73 +62,6 @@ public class Config {
 		PneumaticPiston.Amin = data.getFloat("piston.Amin", 0.001F);
 		PneumaticPiston.Amax = data.getFloat("piston.Amax", 0.1F);
 		Shaft.M0 = data.getFloat("shaft.mass", 1000F);
-	}
-
-	public static void postInit() {
-		Entry[] data = convert("shaftGear", new Entry[0]);
-		final int Ngears = data.length;
-		data = convert("shaftMagnet", data);
-		int l = data.length;
-		Arrays.sort(data);
-		final int[] shaftMounts = new int[l];
-		final float[] mountMult = new float[l],
-				mountMass = new float[l];
-		for (int i = 0; i < l; i++) {
-			Entry e = data[i];
-			shaftMounts[i] = e.id;
-			mountMass[i] = e.m;
-			mountMult[i] = e.s;
-		}
-		Shaft.handlers.add((tile, item) -> {
-			int i = Arrays.binarySearch(shaftMounts, Converting.hashItem(item));
-			return i < 0 ? null : i < Ngears ? 
-				new IGear.SimpleGear(tile, mountMass[i], mountMult[i]) : 
-				new IMagnet.SimpleMagnet(tile, mountMass[i], mountMult[i]);
-		});
-	}
-
-	private static void addMat(String tag, Material m, float R, float Re, float Xe) {
-		float[] args = data.getFloatArray("Rmat." + tag);
-		if (args.length == 3) {
-			R = args[0];
-			Re = args[1];
-			Xe = args[2];
-		}
-		BlockEntry e = new BlockEntry(R, Re, Xe);
-		if (m != null) Substances.materials.put(m, e);
-		else Substances.def_block = e;
-	}
-
-	private static Entry[] convert(String key, Entry[] prev) {
-		float[] mult = data.getFloatArray(key + ".mult"),
-				mass = data.getFloatArray(key + ".mass");
-		String[] names = data.getStringArray(key + ".item");
-		int l = Math.min(names.length, Math.min(mult.length, mass.length));
-		int p = prev.length;
-		Entry[] arr = Arrays.copyOf(prev, p + l);
-		for (int i = 0; i < l; i++) {
-			String[] name = names[i].split(":");
-			int id;
-			if (name.length == 1) {
-				ItemStack item = BlockItemRegistry.stack(name[0], 1);
-				id = item == null ? 0 : Converting.hashItem(item);
-			} else {
-				id = Item.getIdFromItem(Item.getByNameOrId(name[0] + ":" + name[1]));
-				if (name.length > 2) try {
-					id |= (Short.parseShort(name[2]) & 0xffff) << 16;
-				} catch(NumberFormatException e) {}
-			}
-			arr[i + p] = new Entry(id, mass[i], mult[i]);
-		}
-		return arr;
-	}
-
-	private static class Entry implements Comparable<Entry>{
-		Entry(int id, float m, float s) {this.id = id; this.m = m; this.s = s;}
-		int id;
-		float m, s;
-		@Override
-		public int compareTo(Entry o) {return id - o.id;}
 	}
 
 }

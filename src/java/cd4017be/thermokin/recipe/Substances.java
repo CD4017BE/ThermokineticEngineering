@@ -15,7 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import cd4017be.api.recipes.RecipeAPI;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
+import cd4017be.thermokin.Config;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.Substance;
 
@@ -34,6 +36,41 @@ public class Substances implements IRecipeHandler {
 	public static final HashMap<Material, BlockEntry> materials = new HashMap<Material, BlockEntry>();
 	/** Heat resistance of blocks used as cover (no cover = air) */
 	public static final HashMap<IBlockState, BlockEntry> blocks = new HashMap<IBlockState, BlockEntry>();
+
+	public static void init() {
+		RecipeAPI.Handlers.put(SUBST, instance);
+		RecipeAPI.Handlers.put(ENV, instance);
+		RecipeAPI.Handlers.put(BLOCK, instance);
+		addMat("default", null, 2.5F, 2.5F, 1.0F);
+		addMat("IRON", Material.IRON, 0.01F, 0.01F, 1.0F);
+		addMat("GLASS", Material.GLASS, 1.0F, 1.0F, 1.0F);
+		addMat("ROCK", Material.ROCK, 1.2F, 1.2F, 1.0F);
+		addMat("CLAY", Material.CLAY, 1.0F, 1.0F, 1.0F);
+		addMat("GROUND", Material.GROUND, 1.5F, 1.5F, 1.0F);
+		addMat("GRASS", Material.GRASS, 2.0F, 2.0F, 1.0F);
+		addMat("SAND", Material.SAND, 4.0F, 4.0F, 1.0F);
+		addMat("WOOD", Material.WOOD, 5.0F, 5.0F, 1.0F);
+		addMat("PACKED_ICE", Material.PACKED_ICE, 0.4F, 0.4F, 1.0F);
+		addMat("ICE", Material.ICE, 0.5F, 0.5F, 1.0F);
+		addMat("CRAFTED_SNOW", Material.CRAFTED_SNOW, 12.0F, 12.0F, 1.0F);
+		addMat("AIR", Material.AIR, 25.0F, 0.0F, 10.0F);
+		addMat("SNOW", Material.SNOW, 15.0F, 15.0F, 1.0F);
+		addMat("CLOTH", Material.CLOTH, 100.0F, 100.0F, 1.0F);
+		addMat("LAVA", Material.LAVA, 2.0F, 1.6F, 0.5F);
+		addMat("WATER", Material.WATER, 1.2F, 1.0F, 0.25F);
+	}
+
+	private static void addMat(String tag, Material m, float R, float Re, float Xe) {
+		float[] args = Config.data.getFloatArray("Rmat." + tag);
+		if (args.length == 3) {
+			R = args[0];
+			Re = args[1];
+			Xe = args[2];
+		}
+		BlockEntry e = new BlockEntry(R, Re, Xe);
+		if (m != null) Substances.materials.put(m, e);
+		else Substances.def_block = e;
+	}
 
 	@Override
 	public boolean addRecipe(Object... param) {

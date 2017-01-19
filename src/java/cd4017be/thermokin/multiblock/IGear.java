@@ -10,9 +10,10 @@ public interface IGear {
 
 		public float tf; 
 
-		public SimpleGear(ModTileEntity shaft, float m, float f) {
+		public SimpleGear(ModTileEntity shaft, float m, float f, String model) {
 			super(shaft, m);
 			this.tf = f;
+			this.model = model;
 		}
 
 		@Override

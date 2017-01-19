@@ -3,6 +3,7 @@ package cd4017be.thermokin;
 import static cd4017be.thermokin.Objects.*;
 import cd4017be.thermokin.Config;
 import cd4017be.thermokin.gui.*;
+import cd4017be.thermokin.recipe.ShaftMounts;
 import cd4017be.thermokin.render.PistonRenderer;
 import cd4017be.thermokin.render.ShaftRenderer;
 import cd4017be.thermokin.tileentity.PneumaticPiston;
@@ -45,9 +46,9 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(Shaft.class, new ShaftRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(PneumaticPiston.class, new PistonRenderer());
 		SpecialModelLoader.registerTESRModel("thermokin:models/tileentity/shaft");
-		SpecialModelLoader.registerTESRModel("thermokin:models/tileentity/shaftPermMag");
 		SpecialModelLoader.registerTESRModel("thermokin:models/tileentity/shaftMass");
-		SpecialModelLoader.registerTESRModel("thermokin:models/tileentity/shaftGear");
+		for (ShaftMounts.Entry e : ShaftMounts.shaftMounts.values())
+			SpecialModelLoader.registerTESRModel(e.model);
 		SpecialModelLoader.registerTESRModel(PistonRenderer.model);
 	
 	}

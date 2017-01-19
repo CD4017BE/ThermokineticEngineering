@@ -8,6 +8,7 @@ import cd4017be.lib.ConfigurationFile;
 import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
 import cd4017be.thermokin.recipe.Converting;
+import cd4017be.thermokin.recipe.ShaftMounts;
 import cd4017be.thermokin.recipe.Substances;
 import cd4017be.thermokin.recipe.Substances.Environment;
 import net.minecraft.util.ResourceLocation;
@@ -35,11 +36,9 @@ public class Thermokin {
 		Objects.init();
 		BlockGuiHandler.registerMod(this);
 		proxy.init();
-		RecipeAPI.Handlers.put(Substances.SUBST, Substances.instance);
-		RecipeAPI.Handlers.put(Substances.ENV, Substances.instance);
-		RecipeAPI.Handlers.put(Substances.BLOCK, Substances.instance);
-		RecipeAPI.Handlers.put(Converting.LIQ, Converting.instance);
-		RecipeAPI.Handlers.put(Converting.SOL, Converting.instance);
+		Substances.init();
+		Converting.init();
+		ShaftMounts.init();
 		RecipeAPI.registerScript(event, "thermokinetic.rcp", "/assets/thermokin/config/recipes.rcp");
 	}
 
@@ -52,7 +51,6 @@ public class Thermokin {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		Config.postInit();
 		if (Substances.defaultEnv == null) {
 			FMLLog.log("thermokin", Level.ERROR, "A default Environment is missing! Please check your config file, it has probably crashed or is missing the folowing entry:\nadd(\"environment\", nil, \"thermokin:air\", 101250, 270, 25, 0.8);");
 			Substance s = Substance.REGISTRY.getObject(fallbackSubstance);
