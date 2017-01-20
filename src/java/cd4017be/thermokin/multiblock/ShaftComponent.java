@@ -37,12 +37,11 @@ public class ShaftComponent extends MultiblockComp<ShaftComponent, ShaftPhysics>
 		return side / 2 == ((TileEntity)tile).getBlockMetadata();
 	}
 
-	public static ShaftComponent readFromNBT(ModTileEntity tile, NBTTagCompound nbt) {
-		ShaftComponent pipe = new ShaftComponent(tile, nbt.getFloat("mass"));
-		ShaftPhysics physics = new ShaftPhysics(pipe);
+	public void readFromNBT(NBTTagCompound nbt) {
+		ShaftPhysics physics = network;
+		if (physics == null) physics = new ShaftPhysics(this);
 		physics.v = nbt.getFloat("rotVel");
 		physics.s = nbt.getFloat("rotPos");
-		return pipe;
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {

@@ -1,4 +1,4 @@
-#V:00002
+#V:00003
 @PRE_INIT
 DefPressure = 101300;
 
@@ -15,6 +15,9 @@ add("item", 320, "gear");
 add("item", 321, "magnet");
 add("shaftGear", it("m.gear"), "shaftGear", 1200, 1.0);
 add("shaftMagnet", it("m.magnet"), "shaftPermMag", 1600, 0.5);
+
+add("heatBlock", it("tile.thermIns"), 500);
+add("heatBlock", it("tile.heatSink"), 0.005, 0.001, 0.2);
 
 @INIT
 

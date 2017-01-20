@@ -49,7 +49,7 @@ public class Evaporator extends ModTileEntity implements ITickable, IGuiData, IG
 		LiquidState liq = this.liq.getLiquid();
 		double T = (gas.E() + liq.E() + (double)(heat.T * heat.C)) / (gas.nR + liq.C() + heat.C);
 		heat.T = (float)(gas.T = liq.T = T);
-		if (gas.type != liq.type && liq.type != null) {
+		if (gas.type != liq.type && liq.type != null && liq.V > LiquidState.NULL) {
 			if (tl >= 0) tl = -liq.type.Qe / T;
 			GasState ngas = new GasState(liq.type, T, 0, SizeG - liq.V);
 			tl = -ThermodynamicUtil.evaporate(liq, ngas, -tl);

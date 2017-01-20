@@ -89,7 +89,7 @@ public class ThermodynamicUtil {
 		double Pa0 = src.P(), Pb0 = dst.P();
 		if (Pa0 <= Pb0) return false;
 		double Pa1 = Pa0 * src.V / (src.V + dV), Pb1 = Pb0 * Math.min(MinEvacFactor, dst.V / (dst.V - dV));
-		return Pa0 - Pb0 > Pb1 - Pa1;
+		return Pa1 >= Pb1;
 	}
 
 }

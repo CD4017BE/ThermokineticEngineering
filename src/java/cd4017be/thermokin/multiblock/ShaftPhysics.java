@@ -120,6 +120,7 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 	}
 
 	public void exchangeComponent(ShaftComponent original, ShaftComponent newOne) {
+		if (core == original) core = null;
 		float mass = newOne.m - original.m;
 		if (mass > 0) v *= m / (m + mass);
 		m += mass;
@@ -164,8 +165,7 @@ public class ShaftPhysics extends SharedNetwork<ShaftComponent, ShaftPhysics> {
 	private void updateClient() {
 		diff = 0;
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setFloat("RotVel", v);
-		nbt.setFloat("RotPos", s);
+		nbt.setFloat("rotVel", v);
 		ModTileEntity tile = (ModTileEntity)core.tile;
 		BlockPos pos = tile.getPos();
 		((WorldServer)tile.getWorld()).getMinecraftServer().getPlayerList().sendToAllNearExcept(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 64D, tile.dimensionId, new SPacketUpdateTileEntity(pos, -1, nbt));

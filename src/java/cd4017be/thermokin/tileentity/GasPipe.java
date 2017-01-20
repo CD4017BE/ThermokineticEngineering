@@ -1,5 +1,6 @@
 package cd4017be.thermokin.tileentity;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -110,6 +111,11 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 		if (!comp.canConnect(s)) return -1;
 		TileEntity te = Utils.getTileOnSide(this, s);
 		return te != null && te instanceof IGasCon && ((IGasCon)te).conGas((byte)(s^1)) ? 0 : -1;
+	}
+
+	@Override
+	public void onNeighborBlockChange(Block b) {
+		comp.updateCon = true;
 	}
 
 	@Override

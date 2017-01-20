@@ -148,7 +148,7 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 		if (!spread.isEmpty())
 			for (Iterator<GasContainer> it = spread.iterator(); it.hasNext();) {
 				GasContainer cont = it.next();
-				if (((TileEntity)cont.tile).isInvalid()) {
+				if (((TileEntity)cont.tile).isInvalid() || cont.network == this) {
 					it.remove();
 					continue;
 				}

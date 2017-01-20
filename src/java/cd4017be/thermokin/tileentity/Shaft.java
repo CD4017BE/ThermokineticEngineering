@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemHandlerHelper;
 import cd4017be.thermokin.multiblock.ShaftComponent;
 import cd4017be.thermokin.multiblock.ShaftPhysics;
 import cd4017be.lib.ModTileEntity;
@@ -25,14 +26,23 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 	public static float M0;
 	public static final ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>> handlers = new ArrayList<BiFunction<ModTileEntity, ItemStack, ShaftComponent>>();
 
-	private ShaftComponent create(Shaft tile, ItemStack item) {
+	public static ShaftComponent create(ModTileEntity tile, ItemStack item) {
 		if (item != null) {
 			ShaftComponent newComp;
 			for (BiFunction<ModTileEntity, ItemStack, ShaftComponent> h : handlers)
-				if ((newComp = h.apply(this, item)) != null)
+				if ((newComp = h.apply(tile, item)) != null) {
+					newComp.type = ItemHandlerHelper.copyStackWithSize(item, 1);
 					return newComp;
+				}
 		}
 		return null;
+	}
+
+	public static ShaftComponent create(ModTileEntity tile, NBTTagCompound nbt) {
+		ShaftComponent c = create(tile, ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("type")));
+		if (c == null) c = new ShaftComponent(tile, M0);
+		c.readFromNBT(nbt);
+		return c;
 	}
 
 	private Cover cover;
@@ -73,6 +83,7 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 			player.setHeldItem(hand, --item.stackSize <= 0 ? null : item);
 		} else return false;
 		comp.network.exchangeComponent(comp, newComp);
+		comp = newComp;
 		markUpdate();
 		return true;
 	}
@@ -87,32 +98,37 @@ public class Shaft extends MultiblockTile<ShaftComponent, ShaftPhysics> implemen
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		comp = ShaftComponent.readFromNBT(this, nbt);
+		comp = create(this, nbt);
 		cover = Cover.read(nbt, "cover");
 	}
 
 	@Override
 	public void handleUpdateTag(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		ShaftComponent nc = ShaftComponent.readFromNBT(this, nbt);
-		if (comp.network == null) comp = nc; 
-		else comp.network.exchangeComponent(comp, nc);
+		ShaftComponent nc = create(this, nbt);
+		if (comp.network != null) comp.network.exchangeComponent(comp, nc);
+		comp = nc;
 		cover = Cover.read(nbt, "cover");
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.getNbtCompound();
-		if (nbt.hasKey("RotVel")) {
-			comp.network.v = nbt.getFloat("RotVel");
+		if (nbt.hasKey("rotVel")) {
+			comp.network.v = nbt.getFloat("rotVel");
 		}
 		if (nbt.hasKey("type")) {
 			cover = Cover.read(nbt, "cover");
 			NBTTagCompound tag = nbt.getCompoundTag("type");
 			ItemStack type = tag.hasNoTags() ? null : ItemStack.loadItemStackFromNBT(tag);
-			ShaftComponent nc;
-			if (!ItemStack.areItemsEqual(type, comp.type) && (nc = create(this, type)) != null)
-				comp.network.exchangeComponent(comp, nc);
+			if (!ItemStack.areItemsEqual(type, comp.type)) {
+				ShaftComponent nc = create(this, type);
+				if (nc == null && comp.type != null) nc = new ShaftComponent(this, M0);
+				if (nc != null) {
+					comp.network.exchangeComponent(comp, nc);
+					comp = nc;
+				}
+			}
 			this.markUpdate();
 		}
 	}

@@ -42,7 +42,7 @@ public class GuiCrystallizer extends GuiMachine {
 		if (liq.type != null) {
 			int n = (int)(liq.V / liq.Vmax * 34D);
 			color(liq.type.color | 0xff000000);
-			drawTexturedModalRect(guiLeft + 44, guiTop + 50 - n, 176, 0, 34, n);
+			drawTexturedModalRect(guiLeft + 44, guiTop + 50 - n, 176, 0, 16, n);
 		}
 	}
 
