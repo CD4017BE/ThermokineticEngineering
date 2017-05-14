@@ -34,7 +34,6 @@ public class LiquidTube extends MultiblockTile<LiquidComponent, LiquidPhysics> i
 		if (!player.isSneaking() && item == null) return super.onActivated(player, hand, item, dir, X, Y, Z);
 		if (cover != null) {
 			if (player.isSneaking() && item == null) {
-				
 				this.dropStack(cover.item);
 				cover = null;
 				this.markUpdate();
@@ -51,7 +50,7 @@ public class LiquidTube extends MultiblockTile<LiquidComponent, LiquidPhysics> i
 			TileEntity te = Utils.getTileOnSide(this, s);
 			if (te != null && te instanceof LiquidTube) {
 				LiquidComponent pipe = ((LiquidTube)te).comp;
-				pipe.setConnect(s, t);
+				pipe.setConnect((byte)(s^1), t);
 				((LiquidTube)te).markUpdate();
 			}
 			return true;

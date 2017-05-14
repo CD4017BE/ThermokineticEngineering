@@ -104,6 +104,7 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 				E += rcp.liquid.T * dC - dV * rcp.dQ;
 				GasState gas = liq.getBufferGas();
 				E += dV * (P0 - gas.E() / (gas.V - dV));
+				if (liquid.type == null) liquid.type = type;
 				liq.setLiquid(liquid);
 			}
 			if (rcpEmpty) rcp = null;

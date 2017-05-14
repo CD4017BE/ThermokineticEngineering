@@ -61,7 +61,7 @@ public class GasPipe extends MultiblockTile<GasContainer, GasPhysics> implements
 			TileEntity te = Utils.getTileOnSide(this, s);
 			if (te != null && te instanceof GasPipe) {
 				GasContainer pipe = ((GasPipe)te).comp;
-				pipe.setConnect(s, t);
+				pipe.setConnect((byte)(s^1), t);
 				((GasPipe)te).markUpdate();
 			}
 			return true;

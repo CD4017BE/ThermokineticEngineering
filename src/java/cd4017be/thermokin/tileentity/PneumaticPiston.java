@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -19,7 +18,6 @@ import cd4017be.thermokin.multiblock.ShaftComponent;
 import cd4017be.thermokin.multiblock.ShaftPhysics.IKineticComp;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.templates.AutomatedTile;
-import cd4017be.lib.util.Utils;
 
 /**
  * 
@@ -53,10 +51,7 @@ public class PneumaticPiston extends AutomatedTile implements IKineticComp, IGas
 	}
 
 	private GasContainer getConContainer(int side) {
-		if (side == 0) return null;
-		side += this.getOrientation(); side %= 6;
-		TileEntity te = Utils.getTileOnSide(this, (byte)side);
-		return te != null ? te.getCapability(Objects.GAS_CAP, EnumFacing.VALUES[side^1]) : null;
+		return side == 0 ? null : getNeighborCap(Objects.GAS_CAP, EnumFacing.VALUES[(side + getOrientation()) % 6]);
 	}
 
 	@Override

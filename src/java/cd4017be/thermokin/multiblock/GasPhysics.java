@@ -13,6 +13,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.multiblock.GasContainer.HeatWrapper;
 import cd4017be.thermokin.physics.GasState;
+import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
 import cd4017be.thermokin.recipe.Substances;
 import cd4017be.thermokin.recipe.Substances.Environment;
@@ -148,14 +149,15 @@ public class GasPhysics extends SharedNetwork<GasContainer, GasPhysics> {
 		if (!spread.isEmpty())
 			for (Iterator<GasContainer> it = spread.iterator(); it.hasNext();) {
 				GasContainer cont = it.next();
-				if (((TileEntity)cont.tile).isInvalid() || cont.network == this) {
+				if (cont.invalid() || cont.network == this) {
 					it.remove();
 					continue;
 				}
 				double dV = cont.V;
 				if (ThermodynamicUtil.shouldSpread(gas, cont.network.gas, dV)) {
+					Substance type = gas.type;
 					it.remove();
-					cont.evacuate().type = gas.type;
+					cont.evacuate().type = type;
 					add(cont);
 				}
 			}

@@ -45,10 +45,6 @@ public class GasContainer extends MultiblockComp<GasContainer, GasPhysics> imple
 		if (network != null) network.gas.copy(V).writeGasToNBT(nbt, k);
 	}
 
-	public void remove() {
-		if (network != null) network.remove(this);
-	}
-
 	public GasState evacuate() {
 		HashMap<Long, GasContainer> map = new HashMap<Long, GasContainer>(1);
 		map.put(uid, this);
