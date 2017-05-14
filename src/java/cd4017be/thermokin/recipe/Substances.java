@@ -1,23 +1,27 @@
 package cd4017be.thermokin.recipe;
 
-import java.util.Arrays;
 import java.util.HashMap;
-
-import org.apache.logging.log4j.Level;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import cd4017be.api.recipes.RecipeAPI;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
-import cd4017be.thermokin.Config;
+import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
+import cd4017be.lib.script.Parameters;
+import cd4017be.lib.templates.IPipe;
+import cd4017be.lib.templates.IPipe.Cover;
+import cd4017be.thermokin.Objects;
+import cd4017be.thermokin.multiblock.IHeatReservoir;
 import cd4017be.thermokin.physics.GasState;
 import cd4017be.thermokin.physics.Substance;
 
@@ -37,104 +41,68 @@ public class Substances implements IRecipeHandler {
 	/** Heat resistance of blocks used as cover (no cover = air) */
 	public static final HashMap<IBlockState, BlockEntry> blocks = new HashMap<IBlockState, BlockEntry>();
 
-	public static void init() {
+	public static void init(ConfigConstants cfg) {
 		RecipeAPI.Handlers.put(SUBST, instance);
 		RecipeAPI.Handlers.put(ENV, instance);
 		RecipeAPI.Handlers.put(BLOCK, instance);
-		addMat("default", null, 2.5F, 2.5F, 1.0F);
-		addMat("IRON", Material.IRON, 0.01F, 0.01F, 1.0F);
-		addMat("GLASS", Material.GLASS, 1.0F, 1.0F, 1.0F);
-		addMat("ROCK", Material.ROCK, 1.2F, 1.2F, 1.0F);
-		addMat("CLAY", Material.CLAY, 1.0F, 1.0F, 1.0F);
-		addMat("GROUND", Material.GROUND, 1.5F, 1.5F, 1.0F);
-		addMat("GRASS", Material.GRASS, 2.0F, 2.0F, 1.0F);
-		addMat("SAND", Material.SAND, 4.0F, 4.0F, 1.0F);
-		addMat("WOOD", Material.WOOD, 5.0F, 5.0F, 1.0F);
-		addMat("PACKED_ICE", Material.PACKED_ICE, 0.4F, 0.4F, 1.0F);
-		addMat("ICE", Material.ICE, 0.5F, 0.5F, 1.0F);
-		addMat("CRAFTED_SNOW", Material.CRAFTED_SNOW, 12.0F, 12.0F, 1.0F);
-		addMat("AIR", Material.AIR, 25.0F, 0.0F, 10.0F);
-		addMat("SNOW", Material.SNOW, 15.0F, 15.0F, 1.0F);
-		addMat("CLOTH", Material.CLOTH, 100.0F, 100.0F, 1.0F);
-		addMat("LAVA", Material.LAVA, 2.0F, 1.6F, 0.5F);
-		addMat("WATER", Material.WATER, 1.2F, 1.0F, 0.25F);
+		addMat(cfg, "default", null, 2.5F, 2.5F, 1.0F);
+		addMat(cfg, "IRON", Material.IRON, 0.01F, 0.01F, 1.0F);
+		addMat(cfg, "GLASS", Material.GLASS, 1.0F, 1.0F, 1.0F);
+		addMat(cfg, "ROCK", Material.ROCK, 1.2F, 1.2F, 1.0F);
+		addMat(cfg, "CLAY", Material.CLAY, 1.0F, 1.0F, 1.0F);
+		addMat(cfg, "GROUND", Material.GROUND, 1.5F, 1.5F, 1.0F);
+		addMat(cfg, "GRASS", Material.GRASS, 2.0F, 2.0F, 1.0F);
+		addMat(cfg, "SAND", Material.SAND, 4.0F, 4.0F, 1.0F);
+		addMat(cfg, "WOOD", Material.WOOD, 5.0F, 5.0F, 1.0F);
+		addMat(cfg, "PACKED_ICE", Material.PACKED_ICE, 0.4F, 0.4F, 1.0F);
+		addMat(cfg, "ICE", Material.ICE, 0.5F, 0.5F, 1.0F);
+		addMat(cfg, "CRAFTED_SNOW", Material.CRAFTED_SNOW, 12.0F, 12.0F, 1.0F);
+		addMat(cfg, "AIR", Material.AIR, 25.0F, 0.0F, 10.0F);
+		addMat(cfg, "SNOW", Material.SNOW, 15.0F, 15.0F, 1.0F);
+		addMat(cfg, "CLOTH", Material.CLOTH, 100.0F, 100.0F, 1.0F);
+		addMat(cfg, "LAVA", Material.LAVA, 2.0F, 1.6F, 0.5F);
+		addMat(cfg, "WATER", Material.WATER, 1.2F, 1.0F, 0.25F);
 	}
 
-	private static void addMat(String tag, Material m, float R, float Re, float Xe) {
-		float[] args = Config.data.getFloatArray("Rmat." + tag);
-		if (args.length == 3) {
-			R = args[0];
-			Re = args[1];
-			Xe = args[2];
-		}
-		BlockEntry e = new BlockEntry(R, Re, Xe);
+	private static void addMat(ConfigConstants cfg, String tag, Material m, float... R) {
+		cfg.getVect("Rmat." + tag, R);
+		BlockEntry e = new BlockEntry(R[0], R[1], R[2]);
 		if (m != null) Substances.materials.put(m, e);
 		else Substances.def_block = e;
 	}
 
 	@Override
-	public boolean addRecipe(Object... param) {
-		if (SUBST.equals(param[0])) {
-			if (!(param.length == 8 && param[1] instanceof String && param[2] instanceof String &&
-				param[3] instanceof Double && param[4] instanceof Double && param[5] instanceof Double &&
-				param[6] instanceof Double && param[7] instanceof Double)) {
-				FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <string>, <number>, <number>, <number>, <number>, <number>]\ngot: %s", SUBST, Arrays.deepToString(param));
-				return false;
-			}
-			String name = (String)param[1];
+	public void addRecipe(Parameters p) {
+		if (SUBST.equals(p.getString(0))) {
+			String name = p.getString(1);
 			Substance s = new Substance(name);
 			s.setRegistryName(name);
-			try {s.setColor(Integer.parseInt((String)param[2], 16));} catch(NumberFormatException e) {
-				FMLLog.log("RECIPE", Level.ERROR, "not a hexadecimal number: %s", param[2]);
-				return false;
-			}
-			s.setDensities((Double)param[3], (Double)param[4]);
-			s.setLiquidHeatCap((Double)param[5]);
-			s.setEvapEnergyAndTemp((Double)param[6], (Double)param[7]);
+			s.setColor(Integer.parseInt(p.getString(2), 16));
+			s.setDensities(p.getNumber(3), p.getNumber(4));
+			s.setLiquidHeatCap(p.getNumber(5));
+			s.setEvapEnergyAndTemp(p.getNumber(6), p.getNumber(7));
 			GameRegistry.register(s);
-			return true;
-		} else if (ENV.equals(param[0])) {
-			if (!(param.length == 7 && param[2] instanceof String && param[3] instanceof Double &&
-				param[4] instanceof Double && param[5] instanceof Double && param[6] instanceof Double)) {
-				FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <number>, <number>, <number>, <number>]\ngot: %s", ENV, Arrays.deepToString(param));
-				return false;
-			}
-			Substance s = Substance.REGISTRY.getObject(new ResourceLocation((String)param[2]));
-			if (s == null) {
-				FMLLog.log("RECIPE", Level.ERROR, "invalid substance: %s", param[2]);
-				return false;
-			}
-			double P = (Double)param[3], T = (Double)param[4], dT = (Double)param[5], R = (Double)param[6];
+		} else if (ENV.equals(p.getString(0))) {
+			Substance s = Substance.REGISTRY.getObject(new ResourceLocation(p.getString(2)));
+			if (s == null) throw new IllegalArgumentException(String.format("invalid substance: %s", p.param[2]));
+			double P = p.getNumber(3), T = p.getNumber(4), dT = p.getNumber(5), R = p.getNumber(6);
 			Environment e = new Environment(s, P, T, dT, R);
-			if (param[1] instanceof Double) {
-				int dim = ((Double)param[1]).intValue();
+			if (p.param[1] instanceof Double) {
+				int dim = (int)p.getNumber(1);
 				environments.put(dim, e);
 			} else if (defaultEnv == null) defaultEnv = e;
-			return true;
 		} else {
-			if (!(param.length >= 3 && param[1] instanceof ItemStack && param[2] instanceof Double)) {
-				FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <itemstack>, <number>, ...] \ngot: %s", BLOCK, Arrays.deepToString(param));
-				return false;
-			}
-			double R = (Double)param[2];
+			double R = p.getNumber(2);
 			BlockEntry e;
-			if (param.length == 5) {
-				if (!(param[3] instanceof Double && param[4] instanceof Double)) {
-					FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <itemstack>, <number>, <number>, <number>] \ngot: %s", BLOCK, Arrays.deepToString(param));
-					return false;
-				}
-				double Re = (Double)param[3], Xe = (Double)param[4];
+			if (p.param.length == 5) {
+				double Re = p.getNumber(3), Xe = p.getNumber(4);
 				e = new BlockEntry((float)R, (float)Re, (float)Xe);
 			} else e = new BlockEntry((float)R);
-			ItemStack is = (ItemStack)param[1];
+			ItemStack is = p.get(1, ItemStack.class);
 			Item i = is.getItem();
-			if (!(i instanceof ItemBlock)) {
-				FMLLog.log("RECIPE", Level.ERROR, "item doesn't represent a block: %s", param[1]);
-				return false;
-			}
+			if (!(i instanceof ItemBlock)) throw new IllegalArgumentException(String.format("Item doesn't represent a block: %s", is));
 			IBlockState out = ((ItemBlock)i).block.getStateFromMeta(i.getMetadata(is.getMetadata()));
 			blocks.put(out, e);
-			return true;
 		}
 	}
 
@@ -169,6 +137,25 @@ public class Substances implements IRecipeHandler {
 		public GasState getGas(World world, BlockPos pos, double V) {
 			double T = getTemp(world, pos);
 			return new GasState(type, T, P * V / T, V);
+		}
+
+		public Object getHeatObj(World world, BlockPos pos, EnumFacing side) {
+			pos = pos.offset(side);
+			if (!world.isBlockLoaded(pos)) return null;
+			IBlockState state = world.getBlockState(pos);
+			if (state.getBlock().hasTileEntity(state)) {
+				TileEntity te = world.getTileEntity(pos);
+				if (te == null) return null;
+				IHeatReservoir hs = te.getCapability(Objects.HEAT_CAP, side.getOpposite());
+				if (hs != null) return hs;
+				if (te instanceof IPipe) {
+					Cover c = ((IPipe)te).getCover();
+					state = c == null ? Blocks.AIR.getDefaultState() : c.block;
+				}
+			}
+			BlockEntry e = blocks.get(state);
+			if (e == null) e = materials.getOrDefault(state.getMaterial(), def_block);
+			return e.Re + e.Xe * R;
 		}
 
 		public float getCond(IBlockState state, float Rref) {

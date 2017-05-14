@@ -1,7 +1,6 @@
 package cd4017be.thermokin;
 
 import static cd4017be.thermokin.Objects.*;
-import cd4017be.thermokin.Config;
 import cd4017be.thermokin.gui.*;
 import cd4017be.thermokin.recipe.ShaftMounts;
 import cd4017be.thermokin.render.PistonRenderer;
@@ -10,7 +9,6 @@ import cd4017be.thermokin.tileentity.PneumaticPiston;
 import cd4017be.thermokin.tileentity.Shaft;
 import cd4017be.lib.BlockItemRegistry;
 import cd4017be.lib.TileBlockRegistry;
-import cd4017be.lib.TooltipInfo;
 import cd4017be.lib.render.ModelPipe;
 import cd4017be.lib.render.SpecialModelLoader;
 import cd4017be.lib.render.Util;
@@ -23,7 +21,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderers() {
 		MinecraftForge.EVENT_BUS.register(Util.instance);//Frame counter needed for rendering multiblock structures
-		TooltipInfo.addConfigReference(Config.data);
 		//BlockItems
 		BlockItemRegistry.registerRender(shaft);
 		BlockItemRegistry.registerRender(thermIns);

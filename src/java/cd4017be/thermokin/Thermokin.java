@@ -2,9 +2,10 @@ package cd4017be.thermokin;
 
 import org.apache.logging.log4j.Level;
 
-import cd4017be.api.recipes.RecipeAPI;
+import cd4017be.api.recipes.RecipeScriptContext;
+import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.lib.BlockGuiHandler;
-import cd4017be.lib.ConfigurationFile;
+import cd4017be.lib.script.ScriptFiles.Version;
 import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.physics.ThermodynamicUtil;
 import cd4017be.thermokin.recipe.Converting;
@@ -30,16 +31,21 @@ public class Thermokin {
 	@SidedProxy(clientSide="cd4017be.thermokin.ClientProxy", serverSide="cd4017be.thermokin.CommonProxy")
 	public static CommonProxy proxy;
 
+	public Thermokin() {
+		RecipeScriptContext.scriptRegistry.add(new Version("thermokinetic", 1, "/assets/thermokin/config/recipes.rcp"));
+	}
+
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Config.loadConfig(ConfigurationFile.init(event, "thermokinetic.cfg", "/assets/thermokin/config/preset.cfg", true));
+		ConfigConstants cfg = new ConfigConstants(RecipeScriptContext.instance.modules.get("thermokinetic"));
 		Objects.init();
 		BlockGuiHandler.registerMod(this);
 		proxy.init();
-		Substances.init();
+		Substances.init(cfg);
 		Converting.init();
 		ShaftMounts.init();
-		RecipeAPI.registerScript(event, "thermokinetic.rcp", "/assets/thermokin/config/recipes.rcp");
+		Objects.initConstants(cfg);
+		RecipeScriptContext.instance.run("thermokinetic.PRE_INIT");
 	}
 
 	@Mod.EventHandler

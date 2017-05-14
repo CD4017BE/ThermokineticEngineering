@@ -1,20 +1,17 @@
 package cd4017be.thermokin.recipe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
-import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.items.ItemHandlerHelper;
 import cd4017be.api.recipes.RecipeAPI;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
+import cd4017be.lib.script.Parameters;
 import cd4017be.lib.util.OreDictStack;
 import cd4017be.thermokin.physics.LiquidState;
 import cd4017be.thermokin.physics.Substance;
@@ -35,30 +32,18 @@ public class Converting implements IRecipeHandler {
 	}
 
 	@Override
-	public boolean addRecipe(Object... param) {
-		boolean L = LIQ.equals(param[0]);
-		if (!(param.length >= 6 && param[1] instanceof String && param[2] instanceof Double && param[3] instanceof Double && param[4] instanceof Double && (L ? param[5] instanceof FluidStack : param[5] instanceof ItemStack || param[5] instanceof OreDictStack))) {
-			FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <number>, <number>, <number>, %s]\ngot: %s", L ? LIQ : SOL, L ? "<fluidstack>":"<oredict/itemstack>, ...", Arrays.deepToString(param));
-			return false;
-		}
-		Substance s = Substance.REGISTRY.getObject(new ResourceLocation((String)param[1]));
-		if (s == null) {
-			FMLLog.log("RECIPE", Level.ERROR, "invalid substance: %s", param[1]);
-			return false;
-		}
+	public void addRecipe(Parameters p) {
+		boolean L = LIQ.equals(p.getString(0));
+		Substance s = Substance.REGISTRY.getObject(new ResourceLocation(p.getString(1)));
+		if (s == null) throw new IllegalArgumentException(String.format("invalid substance: %s", p.getString(1)));
 		if (L) {
-			FluidStack fluid = (FluidStack)param[5];
-			double V = (double)param[2], P = (double)param[3], T = (double)param[4];
+			FluidStack fluid = p.get(5, FluidStack.class);
+			double V = p.getNumber(2), P = p.getNumber(3), T = p.getNumber(4);
 			addRecipe(new LiqEntry(fluid.getFluid(), new LiquidState(s, LiquidReservoir.SizeG * (1.0 - Math.sqrt(LiquidReservoir.P0 / P)), V / (double)fluid.amount, T)));
-			return true;
-		} else if (param.length <= 6 || param[6] instanceof ItemStack || param[6] instanceof OreDictStack || param[6] == null) {
-			ItemKey cast = param.length > 6 ? new ItemKey(param[6]) : new ItemKey();
-			double V = (double)param[2], Q = (double)param[3], T = (double)param[4];
-			addRecipe(new SolEntry(new ItemKey(param[5]), new LiquidState(s, V, 0, T), Q * s.Dl * s.m, cast));
-			return true;
 		} else {
-			FMLLog.log("RECIPE", Level.ERROR, "expected: [\"%s\", <string>, <number>, <number>, <number>, <oredict/itemstack>, <oredict/itemstack>]\ngot: %s", SOL, Arrays.deepToString(param));
-			return false;
+			ItemKey cast = p.param.length > 6 ? new ItemKey(p.get(6)) : new ItemKey();
+			double V = p.getNumber(2), Q = p.getNumber(3), T = p.getNumber(4);
+			addRecipe(new SolEntry(new ItemKey(p.get(5)), new LiquidState(s, V, 0, T), Q * s.Dl * s.m, cast));
 		}
 	}
 

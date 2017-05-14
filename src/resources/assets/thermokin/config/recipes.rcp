@@ -1,42 +1,94 @@
-#V:00003
-@PRE_INIT
-DefPressure = 101300;
+VERSION = 1;
 
-#define a new substance: (name, color[rrggbb], liqDensity[kg/m設, molarMass[g/mol], liqHeatCap[J/kg/K], evapHeat[J/kg], evapTemp[K])
-add("substance", "air", "fffcfa", 900, 30, 3000, 198000, 80);
-add("substance", "water", "2020ff", 1000, 18, 4186, 2196400, 373);
-add("substance", "lava", "ffc020", 2500, 40, 3000, 2196400, 4000);
+{
+	!internal heat capacity (C), transfer resistance (R), liquid capacity (Vl) and gas capacity (Vg) of machines
+	crystallizer.C = 8000;
+	crystallizer.R = 0.004;
+	crystallizer.Vl = 1.0;
+	crystallizer.Vg = 4.0;
+	evaporator.C = 8000;
+	evaporator.R = 0.004;
+	evaporator.Vl = 0.8;
+	evaporator.Vg = 1.0;
+	hFurnace.C = 8000;
+	hFurnace.R = 0.004;
+	hFurnace.Ew = 250000;
+	hFurnace.Tw = 1200;
+	hFurnace.Rw = 20;
+	liqReservoir.C = 8000;
+	liqReservoir.R = 0.004;
+	liqReservoir.Vl = 1.0;
+	liqReservoir.Vg = 4.0;
+	liqReservoir.P0 = 80000;
+	sfHeater.C = 8000;
+	sfHeater.R = 0.004;
+	gasPipe.Vg = 0.25;
+	gasVent.Vg = 1.0;
+	liqPump.Amin = 0.0001;
+	liqPump.Amax = 0.01;
+	piston.Amin = 0.001;
+	piston.Amax = 0.1;
+	shaft.mass = 1000;
 
-#define a dimension's environment: (dimId, substance, pressure[Pa], baseTemp[K], biomeTempMult[K], heatResistance[K/W])
-#actual temperature is baseTemp + biomeTempMult * (coldTaiga:-0.6, icePlains:0, plains:0.8, jungle:1.2, savanna:1.5, desert:2.4
-add("environment", nil, "thermokin:air", DefPressure, 270, 25, 0.8);
+	sfHeater.E = 10000; !heat energy per furnace fuel burn tick in J
 
-add("item", 320, "gear");
-add("item", 321, "magnet");
-add("shaftGear", it("m.gear"), "shaftGear", 1200, 1.0);
-add("shaftMagnet", it("m.magnet"), "shaftPermMag", 1600, 0.5);
+	!heat transfer resistance for block materials [asCover, asNeighborBlock, environmentMultiplier]
+	Rmat.default =	[2.5, 2.5, 1.0]#;
+	Rmat.IRON =		[0.01, 0.01, 1.0]#;
+	Rmat.GLASS =	[1.0, 1.0, 1.0]#;
+	Rmat.ROCK =		[1.2, 1.2, 1.0]#;
+	Rmat.CLAY =		[1.0, 1.0, 1.0]#;
+	Rmat.GROUND =	[1.5, 1.5, 1.0]#;
+	Rmat.GRASS =	[2.0, 2.0, 1.0]#;
+	Rmat.SAND =		[4.0, 4.0, 1.0]#;
+	Rmat.WOOD =		[5.0, 5.0, 1.0]#;
+	Rmat.PACKED_ICE = [0.4, 0.4, 1.0]#;
+	Rmat.ICE =		[0.5, 0.5, 1.0]#;
+	Rmat.CRAFTED_SNOW = [12.0, 12.0, 1.0]#;
+	Rmat.AIR =		[25.0, 0.0, 10.0]#;
+	Rmat.SNOW =		[15.0, 15.0, 1.0]#;
+	Rmat.CLOTH =	[100.0, 100.0, 1.0]#;
+	Rmat.LAVA =		[2.0, 1.6, 0.5]#;
+	Rmat.WATER =	[1.2, 1.0, 0.25]#;
+}
 
-add("heatBlock", it("tile.thermIns"), 500);
-add("heatBlock", it("tile.heatSink"), 0.005, 0.001, 0.2);
+DefPressure = 101300; !normal air pressure
 
-@INIT
+PRE_INIT() {
+	!define a new substance: (name, color[rrggbb], liqDensity[kg/m設, molarMass[g/mol], liqHeatCap[J/kg/K], evapHeat[J/kg], evapTemp[K])
+	add("substance", "air", "fffcfa", 900, 30, 3000, 198000, 80);
+	add("substance", "water", "2020ff", 1000, 18, 4186, 2196400, 373);
+	add("substance", "lava", "ffc020", 2500, 40, 3000, 2196400, 4000);
 
-#conversion between Forge Fluid and LiquidState: (substance, pressure[Pa], amount[m設, temperature[K], FluidStack)
-add("liqConv", "thermokin:water", 1.0, DefPressure, 300, fl("water", 1000));
-add("liqConv", "thermokin:lava", 1.0, DefPressure, 1500, fl("lava", 1000));
-#melting items to liquid: (substance, amount[m設, meltHeat[J/kg], meltTemp[K], solidItem, castItem)
-add("melt", "thermokin:water", 1.0, 334000, 273, it("minecraft:ice"), nil);
-add("melt", "thermokin:water", 0.25, 334000, 273, it("minecraft:snow"), it("minecraft:hopper"));
-add("melt", "thermokin:water", 0.0625, 334000, 273, it("minecraft:snowball"), it("minecraft:flower_pot"));
-add("melt", "thermokin:lava", 1.0, 334000, 1300, it("minecraft:obsidian"), nil);
-add("melt", "thermokin:lava", 0.125, 334000, 1300, it("minecraft:stone"), it("minecraft:cauldron"));
+	!define a dimension's environment: (dimId, substance, pressure[Pa], baseTemp[K], biomeTempMult[K], heatResistance[K/W])
+	!actual temperature is baseTemp + biomeTempMult * (coldTaiga:-0.6, icePlains:0, plains:0.8, jungle:1.2, savanna:1.5, desert:2.4
+	add("environment", nil, "thermokin:air", DefPressure, 270, 25, 0.8);
 
-#example for molten iron compatibility
-if (0) {
-	Vingot = /(1.0, 9.0);
-	Vnugget = /(1.0, 81.0);
-	add("liqConv", "thermokin:iron", 1.0, DefPressure, 1000, fl("moltenIron", 1296));
-	add("melt", "thermokin:iron", 1.0, 0, 1000, ore("blockIron"), nil);
-	add("melt", "thermokin:iron", Vingot, 0, 1000, ore("ingotIron"), it("m.castIngot"));
-	add("melt", "thermokin:iron", Vnugget, 0, 1000, ore("nuggetIron"), it("m.castNugget"));
+	add("item", 320, "gear");
+	add("item", 321, "magnet");
+	add("shaftGear", it("m.gear"), "shaftGear", 1200, 1.0);
+	add("shaftMagnet", it("m.magnet"), "shaftPermMag", 1600, 0.5);
+
+	add("heatBlock", it("tile.thermIns"), 500);
+	add("heatBlock", it("tile.heatSink"), 0.005, 0.001, 0.2);
+}
+
+INIT() {
+	!conversion between Forge Fluid and LiquidState: (substance, pressure[Pa], amount[m設, temperature[K], FluidStack)
+	add("liqConv", "thermokin:water", 1.0, DefPressure, 300, fl("water", 1000));
+	add("liqConv", "thermokin:lava", 1.0, DefPressure, 1500, fl("lava", 1000));
+	!melting items to liquid: (substance, amount[m設, meltHeat[J/kg], meltTemp[K], solidItem, castItem)
+	add("melt", "thermokin:water", 1.0, 334000, 273, it("minecraft:ice"), nil);
+	add("melt", "thermokin:water", 0.25, 334000, 273, it("minecraft:snow"), it("minecraft:hopper"));
+	add("melt", "thermokin:water", 0.0625, 334000, 273, it("minecraft:snowball"), it("minecraft:flower_pot"));
+	add("melt", "thermokin:lava", 1.0, 334000, 1300, it("minecraft:obsidian"), nil);
+	add("melt", "thermokin:lava", 0.125, 334000, 1300, it("minecraft:stone"), it("minecraft:cauldron"));
+
+	!example for molten iron compatibility
+	if (false) {
+		add("liqConv", "thermokin:iron", 1.0, DefPressure, 1000, fl("moltenIron", 1296));
+		add("melt", "thermokin:iron", 1.0, 0, 1000, ore("blockIron"), nil);
+		add("melt", "thermokin:iron", /9, 0, 1000, ore("ingotIron"), it("m.castIngot"));
+		add("melt", "thermokin:iron", /81, 0, 1000, ore("nuggetIron"), it("m.castNugget"));
+	}
 }
