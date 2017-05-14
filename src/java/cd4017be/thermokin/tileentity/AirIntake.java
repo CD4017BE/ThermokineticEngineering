@@ -12,12 +12,12 @@ import cd4017be.thermokin.multiblock.GasPhysics;
 import cd4017be.thermokin.multiblock.GasPhysics.IGasCon;
 import cd4017be.lib.templates.MultiblockTile;
 
-public class GasVent extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, ITickable {
+public class AirIntake extends MultiblockTile<GasContainer, GasPhysics> implements IGasCon, ITickable {
 
 	public static double size;
 	private Environment env;
 
-	public GasVent() {
+	public AirIntake() {
 		comp = new GasContainer(this, size);
 		comp.setResistance(Substances.getResistanceFor(Objects.gasVent.getDefaultState()));
 	}
