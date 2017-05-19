@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"orient=n": { "model": "thermokin:airIntake" },
+		"orient=e": { "model": "thermokin:airIntake" , "y": 90 },
+		"orient=s": { "model": "thermokin:airIntake" , "y": 180 },
+		"orient=w": { "model": "thermokin:airIntake" , "y": 270 },
+		"orient=b": { "model": "thermokin:airIntake" , "x": 90 },
+		"orient=t": { "model": "thermokin:airIntake" , "x": 270 }
+	}
+}

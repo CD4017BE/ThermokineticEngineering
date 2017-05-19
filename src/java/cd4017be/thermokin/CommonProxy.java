@@ -15,7 +15,8 @@ public class CommonProxy {
 		TileBlockRegistry.register(pneumaticPiston, PneumaticPiston.class, TileContainer.class);
 		TileBlockRegistry.register(gasPipe, GasPipe.class, TileContainer.class);
 		TileBlockRegistry.register(solidFuelHeater, SolidFuelHeater.class, TileContainer.class);
-		TileBlockRegistry.register(gasVent, AirIntake.class, null);
+		TileBlockRegistry.register(airIntake, AirIntake.class, null);
+		TileBlockRegistry.register(gasVent, GasVent.class, null);
 		TileBlockRegistry.register(heatedFurnace, HeatedFurnace.class, TileContainer.class);
 		TileBlockRegistry.register(evaporator, Evaporator.class, DataContainer.class);
 		TileBlockRegistry.register(liqReservoir, LiquidReservoir.class, TileContainer.class);

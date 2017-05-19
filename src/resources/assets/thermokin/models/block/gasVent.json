@@ -1,21 +1,19 @@
 {
     "parent": "block/block",
 	"textures": {
-		"front": "thermokin:block/gasVentF",
-		"back": "thermokin:block/gasVentB",
-		"side": "thermokin:block/gasVentS",
-        "particle": "thermokin:block/gasVentB"
+		"tex": "thermokin:block/gasVent",
+        "particle": "thermokin:block/gasVent"
     },
     "elements": [
-        {   "from": [ 0, 0, 0 ],
-            "to": [ 16, 16, 8 ],
+        {   "from": [ 4, 4, 0 ],
+            "to": [ 12, 12, 2 ],
             "faces": {
-                "down":  { "uv": [ 0, 0, 8, 16 ], "texture": "#side", "rotation": 90, "cullface": "down" },
-                "up":    { "uv": [ 0, 0, 8, 16 ], "texture": "#side", "rotation": 90, "cullface": "up" },
-                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#back", "cullface": "north" },
-                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#front" },
-                "west":  { "uv": [ 0, 0, 8, 16 ], "texture": "#side", "cullface": "west" },
-                "east":  { "uv": [ 0, 0, 8, 16 ], "texture": "#side", "cullface": "east" }
+                "down":  { "uv": [ 8, 0, 10, 8 ], "texture": "#tex", "rotation": 90 },
+                "up":    { "uv": [ 8, 0, 10, 8 ], "texture": "#tex", "rotation": 90 },
+                "north": { "uv": [ 0, 8, 8, 16 ], "texture": "#tex", "cullface": "north" },
+                "south": { "uv": [ 0, 0, 8, 8 ], "texture": "#tex" },
+                "west":  { "uv": [ 8, 0, 10, 8 ], "texture": "#tex" },
+                "east":  { "uv": [ 8, 0, 10, 8 ], "texture": "#tex" }
             }
         }
     ]

@@ -33,9 +33,7 @@ public class AirIntake extends MultiblockTile<GasContainer, GasPhysics> implemen
 		super.update();
 		GasState gas = comp.network.gas;
 		double Pa = gas.P();
-		if (Pa > env.P) {
-			gas.extract(gas.V * (Math.sqrt(Pa / env.P) - 1.0));
-		} else {
+		if (Pa < env.P) {
 			env.getGas(worldObj, pos, 100).exchange(gas);
 		}
 	}

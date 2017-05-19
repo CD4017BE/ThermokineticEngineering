@@ -25,6 +25,7 @@ import cd4017be.thermokin.tileentity.Shaft;
 import cd4017be.thermokin.tileentity.SolidFuelHeater;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -44,6 +45,7 @@ public class Objects {
 	public static BlockPipe gasPipe;
 	public static TileBlock solidFuelHeater;
 	public static TileBlock gasVent;
+	public static TileBlock airIntake;
 	public static TileBlock heatedFurnace;
 	public static TileBlock evaporator;
 	public static TileBlock liqReservoir;
@@ -73,7 +75,8 @@ public class Objects {
 		new DefaultItemBlock((pneumaticPiston = TileBlock.create("pneumaticPiston", Material.IRON, SoundType.METAL, 0x22)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((gasPipe = new BlockPipe("gasPipe", Material.IRON, SoundType.METAL, 0x20)).setCreativeTab(tabThermokin).setHardness(1.0F).setResistance(20F));
 		new DefaultItemBlock((solidFuelHeater = TileBlock.create("solidFuelHeater", Material.ROCK, SoundType.STONE, 1)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
-		new DefaultItemBlock((gasVent = TileBlock.create("gasVent", Material.GLASS, SoundType.GLASS, 0x22)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
+		new DefaultItemBlock((airIntake = TileBlock.create("airIntake", Material.IRON, SoundType.METAL, 0x22).setBlockBounds(new AxisAlignedBB(0.0, 0.0, 0, 1.0, 1.0, 0.5))).setCreativeTab(tabThermokin).setHardness(1.0F).setResistance(10F));
+		new DefaultItemBlock((gasVent = TileBlock.create("gasVent", Material.GLASS, SoundType.GLASS, 0x22).setBlockBounds(new AxisAlignedBB(0.25, 0.25, 0, 0.75, 0.75, 0.125))).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((heatedFurnace = TileBlock.create("heatedFurnace", Material.ROCK, SoundType.STONE, 1)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((evaporator = TileBlock.create("evaporator", Material.IRON, SoundType.METAL, 1)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((liqReservoir = TileBlock.create("liqReservoir", Material.IRON, SoundType.METAL, 0)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
