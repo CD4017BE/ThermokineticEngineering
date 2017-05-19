@@ -50,6 +50,7 @@ public class LiquidState {
 
 	public void merge(LiquidState s) {
 		if (type == null) type = s.type;
+		else if (type != s.type && s.type != null) throw new IllegalArgumentException("incompatible liquids!");
 		Vmax += s.Vmax;
 		T = T * V + s.T * s.V;
 		V += s.V;
@@ -65,6 +66,7 @@ public class LiquidState {
 
 	public double insert(LiquidState s) {
 		if (type == null) type = s.type;
+		else if (type != s.type && s.type != null) throw new IllegalArgumentException("incompatible liquids!");
 		double dV = Math.min(Vmax - V, s.V);
 		T = T * V + s.T * dV;
 		V += dV;
