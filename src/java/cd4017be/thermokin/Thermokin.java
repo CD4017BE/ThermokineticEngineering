@@ -32,7 +32,7 @@ public class Thermokin {
 	public static CommonProxy proxy;
 
 	public Thermokin() {
-		RecipeScriptContext.scriptRegistry.add(new Version("thermokinetic", 1, "/assets/thermokin/config/recipes.rcp"));
+		RecipeScriptContext.scriptRegistry.add(new Version("thermokinetic", 2, "/assets/thermokin/config/recipes.rcp"));
 	}
 
 	@Mod.EventHandler

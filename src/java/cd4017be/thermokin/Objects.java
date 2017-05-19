@@ -90,34 +90,34 @@ public class Objects {
 	}
 
 	public static void initConstants(ConfigConstants cfg) {
-		Crystallizer.C0 = (float)cfg.getNumber("crystallizer.C", 5000F);
-		Crystallizer.R0 = (float)cfg.getNumber("crystallizer.R", 0.004F);
-		Crystallizer.SizeL = cfg.getNumber("crystallizer.Vl", 1.0);
-		Crystallizer.SizeG = cfg.getNumber("crystallizer.Vg", 4.0);
-		Evaporator.C0 = (float)cfg.getNumber("evaporator.C", 5000F);
-		Evaporator.R0 = (float)cfg.getNumber("evaporator.R", 0.004F);
-		Evaporator.SizeL = cfg.getNumber("evaporator.Vl", 0.8);
-		Evaporator.SizeG = cfg.getNumber("evaporator.Vg", 1.0);
-		HeatedFurnace.C0 = (float)cfg.getNumber("hFurnace.C", 10000F);
-		HeatedFurnace.R0 = (float)cfg.getNumber("hFurnace.R", 0.004F);
-		HeatedFurnace.Energy = (float)cfg.getNumber("hFurnace.Ew", 250000F);
-		HeatedFurnace.NeededTemp = (float)cfg.getNumber("hFurnace.Tw", 1200F);
-		HeatedFurnace.TRwork = (float)cfg.getNumber("hFurnace.Rw", 20F);
-		LiquidReservoir.C0 = (float)cfg.getNumber("liqReservoir.C", 5000F);
-		LiquidReservoir.R0 = (float)cfg.getNumber("liqReservoir.R", 0.004F);
-		LiquidReservoir.SizeL = cfg.getNumber("liqReservoir.Vl", 1.0);
-		LiquidReservoir.SizeG = cfg.getNumber("liqReservoir.Vg", 4.0);
-		LiquidReservoir.P0 = cfg.getNumber("liqReservoir.P0", 101300);
-		SolidFuelHeater.C0 = (float)cfg.getNumber("sfHeater.C", 10000F);
-		SolidFuelHeater.R0 = (float)cfg.getNumber("sfHeater.R", 0.004F);
-		SolidFuelHeater.FuelEnergy = (float)cfg.getNumber("sfHeater.E", 10000F);
-		GasPipe.size = cfg.getNumber("gasPipe.Vg", 0.25);
-		AirIntake.size = cfg.getNumber("gasVent.Vg", 5F);
-		LiquidPump.Amin = (float)cfg.getNumber("liqPump.Amin", 0.0001F);
-		LiquidPump.Amax = (float)cfg.getNumber("liqPump.Amax", 0.01F);
-		PneumaticPiston.Amin = (float)cfg.getNumber("piston.Amin", 0.001F);
-		PneumaticPiston.Amax = (float)cfg.getNumber("piston.Amax", 0.1F);
-		Shaft.M0 = (float)cfg.getNumber("shaft.mass", 1000F);
+		Crystallizer.C0 = (float)cfg.getNumber("crystallizer_C", 5000F);
+		Crystallizer.R0 = (float)cfg.getNumber("crystallizer_R", 0.004F);
+		Crystallizer.SizeL = cfg.getNumber("crystallizer_Vl", 1.0);
+		Crystallizer.SizeG = cfg.getNumber("crystallizer_Vg", 4.0);
+		Evaporator.C0 = (float)cfg.getNumber("evaporator_C", 5000F);
+		Evaporator.R0 = (float)cfg.getNumber("evaporator_R", 0.004F);
+		Evaporator.SizeL = cfg.getNumber("evaporator_Vl", 0.8);
+		Evaporator.SizeG = cfg.getNumber("evaporator_Vg", 1.0);
+		HeatedFurnace.C0 = (float)cfg.getNumber("hFurnace_C", 10000F);
+		HeatedFurnace.R0 = (float)cfg.getNumber("hFurnace_R", 0.004F);
+		HeatedFurnace.Energy = (float)cfg.getNumber("hFurnace_Ew", 250000F);
+		HeatedFurnace.NeededTemp = (float)cfg.getNumber("hFurnace_Tw", 1200F);
+		HeatedFurnace.TRwork = (float)cfg.getNumber("hFurnace_Rw", 20F);
+		LiquidReservoir.C0 = (float)cfg.getNumber("liqReservoir_C", 5000F);
+		LiquidReservoir.R0 = (float)cfg.getNumber("liqReservoir_R", 0.004F);
+		LiquidReservoir.SizeL = cfg.getNumber("liqReservoir_Vl", 1.0);
+		LiquidReservoir.SizeG = cfg.getNumber("liqReservoir_Vg", 4.0);
+		LiquidReservoir.P0 = cfg.getNumber("liqReservoir_P0", 101300);
+		SolidFuelHeater.C0 = (float)cfg.getNumber("sfHeater_C", 10000F);
+		SolidFuelHeater.R0 = (float)cfg.getNumber("sfHeater_R", 0.004F);
+		SolidFuelHeater.FuelEnergy = (float)cfg.getNumber("sfHeater_E", 10000F);
+		GasPipe.size = cfg.getNumber("gasPipe_Vg", 0.25);
+		AirIntake.size = cfg.getNumber("gasVent_Vg", 5F);
+		LiquidPump.Amin = (float)cfg.getNumber("liqPump_Amin", 0.0001F);
+		LiquidPump.Amax = (float)cfg.getNumber("liqPump_Amax", 0.01F);
+		PneumaticPiston.Amin = (float)cfg.getNumber("piston_Amin", 0.001F);
+		PneumaticPiston.Amax = (float)cfg.getNumber("piston_Amax", 0.1F);
+		Shaft.M0 = (float)cfg.getNumber("shaft_mass", 1000F);
 	}
 
 }
