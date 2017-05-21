@@ -22,6 +22,8 @@ public class Substance extends Impl<Substance>{
 	public double Dl = 461915;
 	/**[kg/molR] specific mass */
 	public double m = 2.1649e-3;
+	/**oxidation (positive) or reduction (negative) potential */
+	public double ox = 0.2;
 	/**[0xrrggbb] color used for rendering in GUIs */
 	public int color = 0x8080ff;
 	/** unlocalized name */

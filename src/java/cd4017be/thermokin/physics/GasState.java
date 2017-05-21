@@ -76,6 +76,26 @@ public class GasState {
 		return new GasState(type, T, nR * n_V / V, n_V);
 	}
 	/**
+	 * removes the given amount of gas from this volume.
+	 * @param dnR [molR] amount of gas "particles" to drain
+	 * @param n_V [m³] new volume for the drained gas
+	 * @return new GasState
+	 */
+	public GasState remove(double dnR, double n_V) {
+		nR -= dnR;
+		return new GasState(type, T, dnR, n_V);
+	}
+	/**
+	 * adds the given gas to that what is stored in this volume.<br> It's assumed that the caller has already checked the type of the added gas to match with this one.
+	 * @param s gas to add
+	 */
+	public void add(GasState s) {
+		T *= nR;
+		T += s.T * s.nR;
+		nR += s.nR;
+		T /= nR;
+	}
+	/**
 	 * Combines this gas volume with the given gas volume. Gases must be of same type!
 	 * @param s other gas
 	 */

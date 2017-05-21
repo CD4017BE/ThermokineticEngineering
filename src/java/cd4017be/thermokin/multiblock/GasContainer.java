@@ -45,17 +45,33 @@ public class GasContainer extends MultiblockComp<GasContainer, GasPhysics> imple
 		if (network != null) network.gas.copy(V).writeGasToNBT(nbt, k);
 	}
 
+	/**
+	 * Will empty this GasContainer by separating it from its network and dumping all contained gas into that network.<br>
+	 * If this is the only component in the network then the gas is just deleted without creating a new network.
+	 * @return the new empty GasState (for content initialization purposes)
+	 */
 	public GasState evacuate() {
+		GasPhysics old = splitOff();
+		GasState ng = network.gas;
+		old.gas.nR += ng.nR; ng.nR = 0;
+		return ng;
+	}
+
+	/**
+	 * Separates this GasContainer from its current GasPhysics network by creating a new network.<br>
+	 * If this is already the only component in the current network then this method will do nothing and simply return it.
+	 * @return the previous network
+	 */
+	public GasPhysics splitOff() {
+		if (network.components.size() == 1 && network.components.containsKey(uid)) return network;
 		HashMap<Long, GasContainer> map = new HashMap<Long, GasContainer>(1);
 		map.put(uid, this);
 		GasPhysics old = network;
 		network = old.onSplit(map);
 		old.components.remove(uid);
-		GasState ng = network.gas;
-		old.gas.nR += ng.nR; ng.nR = 0;
 		updateCon = true;
 		old.update = true;
-		return ng;
+		return old;
 	}
 
 	@Override
