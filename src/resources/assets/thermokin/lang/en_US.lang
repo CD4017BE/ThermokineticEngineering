@@ -61,6 +61,8 @@ gui.cd4017be.Temp1=%.1f °C
 gui.cd4017be.Temp2=%.1f / %.0f °C
 gui.cd4017be.liqAll=Liquid %s\n%.3f / %.1f m³\nT= %.1f °C
 # Gui tooltips
+gui.cd4017be.thermostat.min=Thermostat:\nmin %.1f °C
+gui.cd4017be.thermostat.max=Thermostat:\nmax %.1f °C
 gui.cd4017be.recipe.euse=Used Energy:\n%.0f kJ
 gui.cd4017be.rstCtr=Redstone control mode
 gui.cd4017be.heat=Heat:\n%d / %d K
@@ -72,3 +74,4 @@ gui.cd4017be.gas.stat=V: %s m³\nP: %s Pa\nT: %.1f °C\nn: %s mol
 gui.cd4017be.evap.mix=Gas: %.3fm³ %s\nPressure: %sPa\nLiquid: %.3fm³ %s
 gui.cd4017be.melt.stat=Solid %s\nV: %.3f / %.3f m³\nQ: %s / %s J\n@ T: %.1f °C
 gui.cd4017be.boiler.burnUp=Burnup Rate:\n%.0f Ft/tick
+gui.cd4017be.heater.mix=Oxidizer supply:\n%s %.1f%%\nT= %.1f °C\nP= %sPa
