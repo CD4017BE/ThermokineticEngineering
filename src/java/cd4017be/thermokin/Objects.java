@@ -1,5 +1,7 @@
 package cd4017be.thermokin;
 
+import org.apache.logging.log4j.Level;
+
 import cd4017be.api.Capabilities.EmptyCallable;
 import cd4017be.api.Capabilities.EmptyStorage;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
@@ -13,6 +15,7 @@ import cd4017be.thermokin.multiblock.GasContainer;
 import cd4017be.thermokin.multiblock.IHeatReservoir;
 import cd4017be.thermokin.multiblock.LiquidComponent;
 import cd4017be.thermokin.multiblock.ShaftComponent;
+import cd4017be.thermokin.physics.Substance;
 import cd4017be.thermokin.tileentity.AirIntake;
 import cd4017be.thermokin.tileentity.Crystallizer;
 import cd4017be.thermokin.tileentity.Evaporator;
@@ -25,10 +28,13 @@ import cd4017be.thermokin.tileentity.Shaft;
 import cd4017be.thermokin.tileentity.SolidFuelHeater;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Objects {
 
@@ -52,6 +58,8 @@ public class Objects {
 	public static TileBlock liqPump;
 	public static BlockPipe liqPipe;
 	public static TileBlock crystallizer;
+
+	public static Substance combustionWaste;
 
 	@CapabilityInject(ShaftComponent.class)
 	public static Capability<ShaftComponent> SHAFT_CAP;
@@ -111,9 +119,15 @@ public class Objects {
 		LiquidReservoir.SizeL = cfg.getNumber("liqReservoir_Vl", 1.0);
 		LiquidReservoir.SizeG = cfg.getNumber("liqReservoir_Vg", 4.0);
 		LiquidReservoir.P0 = cfg.getNumber("liqReservoir_P0", 101300);
-		SolidFuelHeater.C0 = (float)cfg.getNumber("sfHeater_C", 10000F);
-		SolidFuelHeater.R0 = (float)cfg.getNumber("sfHeater_R", 0.004F);
-		SolidFuelHeater.FuelEnergy = (float)cfg.getNumber("sfHeater_E", 10000F);
+		SolidFuelHeater.C0 = (float)cfg.getNumber("sfHeater_C", 10000);
+		SolidFuelHeater.R0 = (float)cfg.getNumber("sfHeater_R", 0.004);
+		SolidFuelHeater.Size = cfg.getNumber("sfHeater_Vg", 1.0);
+		SolidFuelHeater.BurnEnergy = cfg.getNumber("sfHeater_E", 17280); //693molR/kg  12MJ/kg
+		SolidFuelHeater.IgnitionTemp = (float)cfg.getNumber("sfHeater_T0", 1000);
+		SolidFuelHeater.FlameOutReact = cfg.getNumber("sfHeater_flameOut", 1.0) / SolidFuelHeater.BurnEnergy;
+		SolidFuelHeater.ReactMult = cfg.getNumber("sfHeater_speed", 0.0005);
+		SolidFuelHeater.FuelDensity = (float)cfg.getNumber("fuelDensity", 10);
+		SolidFuelHeater.MinFuel = SolidFuelHeater.FuelDensity * 10F;
 		GasPipe.size = cfg.getNumber("gasPipe_Vg", 0.25);
 		AirIntake.size = cfg.getNumber("gasVent_Vg", 5F);
 		LiquidPump.Amin = (float)cfg.getNumber("liqPump_Amin", 0.0001F);
@@ -121,6 +135,11 @@ public class Objects {
 		PneumaticPiston.Amin = (float)cfg.getNumber("piston_Amin", 0.001F);
 		PneumaticPiston.Amax = (float)cfg.getNumber("piston_Amax", 0.1F);
 		Shaft.M0 = (float)cfg.getNumber("shaft_mass", 1000F);
+		combustionWaste = Substance.REGISTRY.getObject(new ResourceLocation(cfg.get("subst_combWaste", String.class, "thermokin:combWaste")));
+		if (combustionWaste == null) {
+			FMLLog.log("thermokin", Level.ERROR, "The substance set as combustion waste does'nt exist! Please fix your config!");
+			GameRegistry.register(combustionWaste = new Substance("combWaste").setRegistryName("thermokin:combWaste"));
+		}
 	}
 
 }

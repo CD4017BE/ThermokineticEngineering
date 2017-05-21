@@ -81,6 +81,7 @@ public class Substances implements IRecipeHandler {
 			s.setDensities(p.getNumber(3), p.getNumber(4));
 			s.setLiquidHeatCap(p.getNumber(5));
 			s.setEvapEnergyAndTemp(p.getNumber(6), p.getNumber(7));
+			if (p.param.length > 8) s.setOxidizer(p.getNumber(8));
 			GameRegistry.register(s);
 		} else if (ENV.equals(p.getString(0))) {
 			Substance s = Substance.REGISTRY.getObject(new ResourceLocation(p.getString(2)));

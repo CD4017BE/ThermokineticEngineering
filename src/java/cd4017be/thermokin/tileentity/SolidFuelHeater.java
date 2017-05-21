@@ -118,10 +118,10 @@ public class SolidFuelHeater extends AutomatedTile implements IGuiData, IGasCon 
 			gasIn.V -= dV; gas0.V -= dV;
 			gasOut.V += dV; gas1.V += dV;
 		}
-		if (tooMuch) {
-			double TV0 = gas0.T / gas0.V, TV1 = gas1.T / gas1.V;
-			outputGas(gas0.remove((gas0.nR * TV0 - gas1.nR * TV1) / (TV0 + TV1), 0));
-		}
+		//if (tooMuch) {
+		//	double TV0 = gas0.T / gas0.V, TV1 = gas1.T / gas1.V;
+		//	outputGas(gas0.remove((gas0.nR * TV0 - gas1.nR * TV1) / (TV0 + TV1), 0));
+		//}
 	}
 
 	private void consumeFuel() {

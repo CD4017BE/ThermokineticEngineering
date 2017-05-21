@@ -32,7 +32,7 @@ public class Thermokin {
 	public static CommonProxy proxy;
 
 	public Thermokin() {
-		RecipeScriptContext.scriptRegistry.add(new Version("thermokinetic", 2, "/assets/thermokin/config/recipes.rcp"));
+		RecipeScriptContext.scriptRegistry.add(new Version("thermokinetic", 4, "/assets/thermokin/config/recipes.rcp"));
 	}
 
 	@Mod.EventHandler
@@ -44,8 +44,8 @@ public class Thermokin {
 		Substances.init(cfg);
 		Converting.init();
 		ShaftMounts.init();
-		Objects.initConstants(cfg);
 		RecipeScriptContext.instance.run("thermokinetic.PRE_INIT");
+		Objects.initConstants(cfg);
 	}
 
 	@Mod.EventHandler
@@ -53,14 +53,14 @@ public class Thermokin {
 		proxy.registerRenderers();
 	}
 
-	private static final ResourceLocation fallbackSubstance = new ResourceLocation("thermokin:air");
+	private static final ResourceLocation fallbackAir = new ResourceLocation("thermokin:air");
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		if (Substances.defaultEnv == null) {
 			FMLLog.log("thermokin", Level.ERROR, "A default Environment is missing! Please check your config file, it has probably crashed or is missing the folowing entry:\nadd(\"environment\", nil, \"thermokin:air\", 101250, 270, 25, 0.8);");
-			Substance s = Substance.REGISTRY.getObject(fallbackSubstance);
-			if (s == null) GameRegistry.register(s = new Substance("air").setRegistryName(fallbackSubstance));
+			Substance s = Substance.REGISTRY.getObject(fallbackAir);
+			if (s == null) GameRegistry.register(s = new Substance("air").setRegistryName(fallbackAir));
 			Substances.defaultEnv = new Environment(s, ThermodynamicUtil.Pn, 270, 25, 0.8);
 		}
 		Substance.Default = Substances.defaultEnv.type;
