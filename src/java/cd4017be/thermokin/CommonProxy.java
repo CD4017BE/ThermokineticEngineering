@@ -23,7 +23,7 @@ public class CommonProxy {
 		TileBlockRegistry.register(liqPipe, LiquidTube.class, null);
 		TileBlockRegistry.register(liqPump, LiquidPump.class, DataContainer.class);
 		TileBlockRegistry.register(crystallizer, Crystallizer.class, TileContainer.class);
-		
+		TileBlockRegistry.register(chimneyBase, Chimney.class, null);
 	}
 
 }

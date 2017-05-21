@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"height=0": { "model": "thermokin:chimney0" },
+		"height=1": { "model": "thermokin:chimney1" },
+		"height=2": { "model": "thermokin:chimney1" },
+		"height=3": { "model": "thermokin:chimney1" },
+		"height=4": { "model": "thermokin:chimney2" },
+		"height=5": { "model": "thermokin:chimney2" },
+		"height=6": { "model": "thermokin:chimney2" },
+		"height=7": { "model": "thermokin:chimney2" },
+		"height=8": { "model": "thermokin:chimney3" },
+		"height=9": { "model": "thermokin:chimney3" },
+		"height=10": { "model": "thermokin:chimney3" },
+		"height=11": { "model": "thermokin:chimney3" },
+		"height=12": { "model": "thermokin:chimney3" },
+		"height=13": { "model": "thermokin:chimney3" },
+		"height=14": { "model": "thermokin:chimney3" },
+		"height=15": { "model": "thermokin:chimney3" }
+	}
+}

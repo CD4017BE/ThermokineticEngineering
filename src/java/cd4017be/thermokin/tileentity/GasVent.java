@@ -14,9 +14,9 @@ import cd4017be.thermokin.recipe.Substances.Environment;
 
 public class GasVent extends ModTileEntity implements IGasCon, ITickable {
 
-	private Environment env;
-	private GasContainer gasRef;
-	private boolean updateCon = true;
+	protected Environment env;
+	protected GasContainer gasRef;
+	protected boolean updateCon = true;
 
 	@Override
 	public void update() {
@@ -26,11 +26,13 @@ public class GasVent extends ModTileEntity implements IGasCon, ITickable {
 			gasRef = getNeighborCap(Objects.GAS_CAP, EnumFacing.VALUES[getOrientation()]);
 		}
 		if (gasRef == null) return;
-		GasState gas = gasRef.network.gas;
+		ventGas(gasRef.network.gas);
+	}
+
+	protected void ventGas(GasState gas) {
 		double Pa = gas.P();
-		if (Pa > env.P) {
+		if (Pa > env.P)
 			gas.extract(gas.V * (Math.sqrt(Pa / env.P) - 1.0));
-		}
 	}
 
 	@Override

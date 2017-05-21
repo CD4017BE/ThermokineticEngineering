@@ -36,6 +36,8 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRender(crystallizer);
 		BlockItemRegistry.registerRender(evaporator);
 		BlockItemRegistry.registerRender(liqReservoir);
+		BlockItemRegistry.registerRender(chimney);
+		BlockItemRegistry.registerRender(chimneyBase);
 		//Items
 		BlockItemRegistry.registerRender(rotationSensor);
 		BlockItemRegistry.registerRender(thermometer);
