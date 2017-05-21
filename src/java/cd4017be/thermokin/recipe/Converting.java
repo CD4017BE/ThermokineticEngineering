@@ -107,7 +107,7 @@ public class Converting implements IRecipeHandler {
 		LiquidState liq = LiquidState.readFromNBT(nbt, "l", nbt.getDouble("V"));
 		if (liq.type == null) return null;
 		ItemKey item = ItemKey.readFromNBT(nbt, "s");
-		return item != null ? new SolEntry(item, liq, dQ, null) : null;
+		return item != null ? new SolEntry(item, liq, dQ, new ItemKey()) : null;
 	}
 
 	public static class SolEntry {
