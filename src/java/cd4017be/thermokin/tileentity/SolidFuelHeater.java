@@ -87,7 +87,7 @@ public class SolidFuelHeater extends AutomatedTile implements IGuiData, IGasCon 
 				if (t < 0) t = 0;
 				else if (t > 1) t = 1;
 				reactivity = Math.max((double)t * reactivity, flameOut);
-				speed = (float)(reactivity / Math.max(1e-9, flameOut));
+				speed = (float)(reactivity / Math.max(FlameOutReact, flameOut));
 				//Chemical reaction:
 				if (reactivity > fuel) {
 					reactivity = fuel;
@@ -96,7 +96,7 @@ public class SolidFuelHeater extends AutomatedTile implements IGuiData, IGasCon 
 				fuel -= reactivity; //consume fuel
 				GasState g = gas0.remove(reactivity / gas0.type.ox, 0); //consume oxidizer
 				g.T += BurnEnergy * g.type.ox; //add reaction energy
-				outputGas(g);
+				outputGas(g);//TODO try adiabatic transfer
 			} else if (flameOut < 0) flame = true;//self ignition
 			else if (reactivity > 2 * flameOut) tryIgnition();
 		}
@@ -106,22 +106,16 @@ public class SolidFuelHeater extends AutomatedTile implements IGuiData, IGasCon 
 	private void exchangePressure(GasState gas0, GasState gas1, double inV) {
 		double E0 = gas0.E(), E1 = gas1.E();
 		double dV = (E1 * gas0.V - E0 * gas1.V) / (E0 + E1);
-		boolean tooMuch = false;
 		if (dV > inV) {
 			dV = inV;
 			flame = false;
 		} else if (gasOut.V + dV < V_LIMIT) {
 			dV = V_LIMIT - gasOut.V;
-			tooMuch = true;
 		}
 		if (dV != 0) {
 			gasIn.V -= dV; gas0.V -= dV;
 			gasOut.V += dV; gas1.V += dV;
 		}
-		//if (tooMuch) {
-		//	double TV0 = gas0.T / gas0.V, TV1 = gas1.T / gas1.V;
-		//	outputGas(gas0.remove((gas0.nR * TV0 - gas1.nR * TV1) / (TV0 + TV1), 0));
-		//}
 	}
 
 	private void consumeFuel() {
