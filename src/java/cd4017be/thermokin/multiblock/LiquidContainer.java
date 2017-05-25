@@ -25,7 +25,7 @@ public class LiquidContainer extends LiquidComponent {
 	 */
 	public LiquidContainer(IAbstractTile tile, double Vmax, GasState buffer) {
 		super(tile);
-		this.liquid = new LiquidState(null, Vmax, 0, 0);
+		this.liquid = new LiquidState(Vmax);
 		this.bufferGas = buffer;
 		this.bufferGasC = null;
 	}
@@ -38,7 +38,7 @@ public class LiquidContainer extends LiquidComponent {
 	 */
 	public LiquidContainer(IAbstractTile tile, double Vmax, GasContainer buffer) {
 		super(tile);
-		this.liquid = new LiquidState(null, Vmax, 0, 0);
+		this.liquid = new LiquidState(Vmax);
 		this.bufferGas = null;
 		this.bufferGasC = buffer;
 	}

@@ -87,7 +87,7 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 		LiquidPhysics in = input.network, out = output.network;
 		if (in.content.type == null || (out.content.type != null && in.content.type != out.content.type)) {run = false; return 0;}
 		ds *= x;
-		LiquidState liq = new LiquidState(null, dA * ds, 0, 0);
+		LiquidState liq = new LiquidState(dA * ds);
 		double P = in.drainLiquid(liq, false) / liq.Vmax;
 		if (liq.V == 0) {run = false; return 0;}
 		P += out.fillLiquid(liq, false) / liq.V;
@@ -103,7 +103,7 @@ public class LiquidPump extends ModTileEntity implements ITickable, IKineticComp
 		double Vmax = Math.min(in.content.V, out.content.Vrem());
 		if (Vmax == 0 || (out.content.type != null && in.content.type != out.content.type)) return speed = power = 0;
 		ds *= x;
-		LiquidState liq = new LiquidState(null, Math.min(dA * ds, Vmax), 0, 0);
+		LiquidState liq = new LiquidState(Math.min(dA * ds, Vmax));
 		speed = (float)liq.Vmax / ds;
 		return power = -(float)(in.drainLiquid(liq, true) + out.fillLiquid(liq, true));
 	}

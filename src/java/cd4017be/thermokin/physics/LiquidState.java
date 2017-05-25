@@ -21,6 +21,8 @@ public class LiquidState {
 		this.T = T;
 	}
 
+	public LiquidState(double Vmax) {this(null, Vmax, 0, 0);}
+
 	public static LiquidState readFromNBT(NBTTagCompound nbt, String k, double Vmax) {
 		return new LiquidState(Substance.REGISTRY.getObject(new ResourceLocation(nbt.getString(k + "id"))), Vmax, nbt.getDouble(k + "V"), nbt.getDouble(k + "T"));
 	}

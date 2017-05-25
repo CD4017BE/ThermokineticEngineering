@@ -27,12 +27,12 @@ public class LiquidPhysics extends SharedNetwork<LiquidComponent, LiquidPhysics>
 		if (core instanceof LiquidContainer) {
 			nodes.add((LiquidContainer)core);
 			content = ((LiquidContainer)core).liquid.copy();
-		} else content = new LiquidState(null, 0, 0, 0);
+		} else content = new LiquidState(0);
 	}
 
 	protected LiquidPhysics(HashMap<Long, LiquidComponent> comps) {
 		super(comps);
-		content = new LiquidState(null, 0, 0, 0);
+		content = new LiquidState(0);
 		for (LiquidComponent comp : comps.values())
 			if (comp instanceof LiquidContainer) {
 				nodes.add((LiquidContainer)comp);

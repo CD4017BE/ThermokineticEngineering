@@ -160,7 +160,7 @@ public class Crystallizer extends AutomatedTile implements IGuiData, IAccessHand
 		cont.addItemSlot(new SlotItemHandler(inventory, 0, 17, 25));
 		cont.addItemSlot(new SlotItemHandler(inventory, 1, 71, 16));
 		cont.addPlayerInventory(8, 68);
-		if (worldObj.isRemote && rcp == null) rcp = new SolEntry(null, new LiquidState(null, 0, 0, 0), 0, null); 
+		if (worldObj.isRemote && rcp == null) rcp = new SolEntry(null, new LiquidState(0), 0, null); 
 	}
 
 	@Override
