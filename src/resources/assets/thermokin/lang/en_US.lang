@@ -52,6 +52,7 @@ gui.cd4017be.heatedFurnace.name=Furnace
 gui.cd4017be.evaporator.name=Evaporation
 gui.cd4017be.liqReservoir.name=Liquid Reservoir
 gui.cd4017be.liqPump.name=Liquid Pump
+gui.cd4017be.hydraulicPress.name=Hydraulic Press
 # general resource amount formats
 gui.cd4017be.Estor1=%.0f kJ
 gui.cd4017be.Estor2=%.0f / %.0f kJ
@@ -75,3 +76,4 @@ gui.cd4017be.evap.mix=Gas: %.3fm³ %s\nPressure: %sPa\nLiquid: %.3fm³ %s
 gui.cd4017be.melt.stat=Solid %s\nV: %.3f / %.3f m³\nQ: %s / %s J\n@ T: %.1f °C
 gui.cd4017be.boiler.burnUp=Burnup Rate:\n%.0f Ft/tick
 gui.cd4017be.heater.mix=Oxidizer supply:\n%s %.1f%%\nT= %.1f °C\nP= %sPa
+gui.cd4017be.press.state=Hydraulic Liquid:\n%s\nV= %.3f / %.3f m³\nP= %s / %s Pa

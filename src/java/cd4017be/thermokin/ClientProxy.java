@@ -38,6 +38,7 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRender(liqReservoir);
 		BlockItemRegistry.registerRender(chimney);
 		BlockItemRegistry.registerRender(chimneyBase);
+		BlockItemRegistry.registerRender(hydraulicPress);
 		//Items
 		BlockItemRegistry.registerRender(rotationSensor);
 		BlockItemRegistry.registerRender(thermometer);
@@ -64,6 +65,7 @@ public class ClientProxy extends CommonProxy {
 		TileBlockRegistry.registerGui(liqReservoir, GuiLiquidReservoir.class);
 		TileBlockRegistry.registerGui(crystallizer, GuiCrystallizer.class);
 		TileBlockRegistry.registerGui(liqPump, GuiLiquidPump.class);
+		TileBlockRegistry.registerGui(hydraulicPress, GuiHydraulicPress.class);
 		//set block transparencies
 		Objects.pneumaticPiston.setBlockLayer(BlockRenderLayer.CUTOUT);
 		//pipe models

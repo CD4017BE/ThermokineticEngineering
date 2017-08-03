@@ -60,6 +60,7 @@ public class Objects {
 	public static TileBlock crystallizer;
 	public static TileBlock chimney;
 	public static TileBlock chimneyBase;
+	public static TileBlock hydraulicPress;
 
 	public static Substance combustionWaste;
 
@@ -95,6 +96,7 @@ public class Objects {
 		new DefaultItemBlock((crystallizer = TileBlock.create("crystallizer", Material.ROCK, SoundType.STONE, 0x20)).setCreativeTab(tabThermokin).setHardness(1.5F).setResistance(10F));
 		new DefaultItemBlock((chimney = new BlockChimney("chimney", Material.ROCK, SoundType.STONE, 0x20)).setCreativeTab(tabThermokin).setHardness(2.0F).setResistance(10F));
 		new DefaultItemBlock((chimneyBase = new BlockChimney("chimneyBase", Material.ROCK, SoundType.STONE, 0x20)).setCreativeTab(tabThermokin).setHardness(2.0F).setResistance(10F));
+		new DefaultItemBlock((hydraulicPress = TileBlock.create("hydraulicPress", Material.IRON, SoundType.METAL, 1)).setCreativeTab(tabThermokin).setHardness(2.0F).setResistance(10F));
 		gasPipe.size = 0.5F;
 		liqPipe.size = 0.25F;
 		

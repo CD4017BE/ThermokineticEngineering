@@ -24,6 +24,7 @@ public class CommonProxy {
 		TileBlockRegistry.register(liqPump, LiquidPump.class, DataContainer.class);
 		TileBlockRegistry.register(crystallizer, Crystallizer.class, TileContainer.class);
 		TileBlockRegistry.register(chimneyBase, Chimney.class, null);
+		TileBlockRegistry.register(hydraulicPress, HydraulicPress.class, TileContainer.class);
 	}
 
 }
