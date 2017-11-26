@@ -21,8 +21,7 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	public final float C;
 	/** [K] temperature */
 	public float T = Float.NaN;
-	protected World world;
-	protected BlockPos pos;
+	protected TileEntity tile;
 	public Environment env;
 	protected float envTemp, envCond, dQ;
 	protected boolean check;
@@ -71,7 +70,7 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	 * @return HeatAccess capability for the given side or null if not available
 	 */
 	public IHeatAccess getCapability(EnumFacing side) {
-		if (world == null || world.isRemote || side == null) return null;
+		if (tile == null || tile.getWorld().isRemote || side == null) return null;
 		return ref[side.ordinal()];
 	}
 
@@ -87,6 +86,8 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	public void prepareTick() {
 		if (check) {
 			envCond = 0;
+			BlockPos pos = tile.getPos();
+			World world = tile.getWorld();
 			for (EnumFacing s : EnumFacing.values()) {
 				int i = s.ordinal();
 				Access acc = ref[i];
@@ -122,26 +123,25 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	}
 
 	@Override
-	public void initialize(World world, BlockPos pos) {
-		if (this.world == null && !world.isRemote) CommutativeTickHandler.register(this);
-		this.world = world;
-		this.pos = pos;
+	public void initialize(TileEntity tile) {
+		World world = tile.getWorld();
+		if (this.tile == null && !world.isRemote) CommutativeTickHandler.register(this);
+		this.tile = tile;
 		env = Environment.getEnvFor(world);
-		envTemp = env.getTemp(world, pos);
+		envTemp = env.getTemp(world, tile.getPos());
 		if (Float.isNaN(T)) T = envTemp;
 		check = true;
 	}
 
 	@Override
 	public void invalidate() {
-		if (world == null || world.isRemote) return;
+		if (tile == null || tile.getWorld().isRemote) return;
 		CommutativeTickHandler.invalidate(this);
 		for (Access acc : ref)
 			if (acc != null && acc.link != null)
 				acc.link.disconnect();
 		check = false;
-		world = null;
-		pos = null;
+		tile = null;
 	}
 
 	private class Access implements IHeatAccess {

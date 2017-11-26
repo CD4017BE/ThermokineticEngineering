@@ -1,8 +1,7 @@
 package cd4017be.api;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.tileentity.TileEntity;
 
 /**
  * 
@@ -25,11 +24,9 @@ public interface IBlockModule {
 	public void writeNBT(NBTTagCompound nbt, String k);
 
 	/**
-	 * initializes state for a given position in world
-	 * @param world 
-	 * @param pos
+	 * initializes state (called when TileEntity validates)
 	 */
-	public void initialize(World world, BlockPos pos);
+	public void initialize(TileEntity te);
 
 	/**
 	 * invalidates state to perform cleanup

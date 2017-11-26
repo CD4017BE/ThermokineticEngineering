@@ -3,8 +3,7 @@ package cd4017be.api.heat;
 import cd4017be.api.IBlockModule;
 import cd4017be.api.registry.Environment;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.tileentity.TileEntity;
 
 /**
  * Simple implementation of {@link IHeatAccess} and {@link IHeatReservoir} with constant heat capacity.<br>
@@ -75,9 +74,9 @@ public class SimpleHeatReservoir implements IHeatAccess, IBlockModule {
 	}
 
 	@Override
-	public void initialize(World world, BlockPos pos) {
+	public void initialize(TileEntity te) {
 		if (Float.isNaN(T))
-			T = Environment.getEnvFor(world).getTemp(world, pos);
+			T = Environment.getEnvFor(te.getWorld()).getTemp(te.getWorld(), te.getPos());
 	}
 
 	@Override
