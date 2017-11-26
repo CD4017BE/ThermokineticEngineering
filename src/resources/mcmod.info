@@ -1,0 +1,20 @@
+[
+{
+  "modid": "thermokin",
+  "name": "ThermokineticEngineering",
+  "description": "",
+  "version": "0.0.0",
+  "acceptableRemoteVersions": "[0.0.0,0.1.0)",
+  "acceptableSaveVersions": "[0.0.0,0.1.0)",
+  "acceptedMinecraftVersions": "[1.11.2,1.12)",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CD4017BE"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "useDependencyInformation": true,
+  "requiredMods": ["cd4017be_lib@[5.0.5, 5.1.0)"],
+  "dependencies": ["cd4017be_lib@[5.0.5, 5.1.0)"]
+}
+]
