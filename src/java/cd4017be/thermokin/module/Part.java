@@ -23,8 +23,6 @@ public class Part {
 	public final float Tmax;
 	/**[dmg/K/t] vulnerability to overheating */
 	public final float dmgH;
-	/**storage  */
-	public final int storCap;
 
 	public Part(Type type, ItemStack item, float Lh, float Tmax, float dmgH) {
 		this.type = type;
