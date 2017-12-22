@@ -1,10 +1,12 @@
 package cd4017be.thermokin.module;
 
 import java.util.Arrays;
+import java.util.List;
 
 import cd4017be.api.IBlockModule;
 import cd4017be.lib.capability.AbstractInventory;
 import cd4017be.lib.util.ItemFluidUtil;
+import cd4017be.lib.util.Orientation;
 import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.tileentity.ModularMachine;
 import net.minecraft.item.ItemStack;
@@ -28,14 +30,18 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 	/** internal processing slots */
 	public ItemStack[] items;
 	/** capabilities for external access */
-	public final IItemHandler[] caps = new IItemHandler[6];
+	public final Access[] caps = new Access[6];
+
+	private final ModularMachine tile;
 
 	private final int size;
+	/**modules[port] = sideIdx {0-5:BTNSWE, 6-7:none, 0x8: in/out, 0xf0: slot} */
 	private final byte[] modules;
 
-	public InventoryModule(int ioMode, int size) {
+	public InventoryModule(ModularMachine tile, int size, byte... modules) {
+		this.tile = tile;
 		this.size = size;
-		this.modules = new byte[size * 2];
+		this.modules = modules;
 		this.items = new ItemStack[size];
 		Arrays.fill(items, ItemStack.EMPTY);
 	}
@@ -43,15 +49,17 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 	@Override
 	public void readNBT(NBTTagCompound nbt, String k) {
 		byte[] arr = nbt.getByteArray(k + "Cfg");
-		System.arraycopy(arr, 0, modules, 0, Math.min(arr.length, modules.length));
-		items = new ItemStack[size + (nbt.getByte(k + "L") & 0xff)];
+		for (int i = Math.min(arr.length, modules.length) - 1; i >= 0; i--) {
+			modules[i] &= 0xf8;
+			modules[i] |= arr[i] & 0x7;
+		}
+		onPartsLoad(tile);
 		ItemFluidUtil.loadInventory(nbt.getTagList(k + "I", 0), items);
 	}
 
 	@Override
 	public void writeNBT(NBTTagCompound nbt, String k) {
 		nbt.setByteArray(k + "Cfg", modules);
-		nbt.setByte(k + "L", (byte) (items.length - size));
 		nbt.setTag(k + "S", ItemFluidUtil.saveInventory(items));
 	}
 
@@ -64,16 +72,43 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 	}
 
 	@Override
+	public void onPlaced(ModularMachine m, NBTTagCompound nbt) {
+		byte[] arr = nbt.getByteArray("iCfg");
+		for (int i = Math.min(arr.length, modules.length) - 1; i >= 0; i--) {
+			int cfg = arr[i] & 7;
+			modules[i] &= 0xf8;
+			modules[i] |= cfg < 6 ? m.orientation.rotate(EnumFacing.VALUES[cfg]).ordinal() : cfg;
+		}
+		onPartsLoad(m);
+	}
+
+	@Override
+	public void addDrops(ModularMachine m, NBTTagCompound nbt, List<ItemStack> drops) {
+		Orientation o = m.orientation.reverse();
+		byte[] arr = new byte[modules.length];
+		for (int i = 0; i < arr.length; i++) {
+			byte val = modules[i];
+			int cfg = val & 7;
+			arr[i] = (byte)(val & 0xf8 | (cfg < 6 ? o.rotate(EnumFacing.VALUES[cfg]).ordinal() : cfg));
+		}
+		nbt.setByteArray("iCfg", arr);
+		addToList(drops);
+	}
+
 	public void onPartsLoad(ModularMachine m) {
 		int n = size;
 		for (int i = 0; i < caps.length; i++) {
 			Part p = m.components[i + 6];
-			IItemHandler acc = null;
+			Access acc = null;
 			if (p instanceof PartItem) {
 				PartItem pi = (PartItem)p;
 				switch(pi.invType) {
 				case ACCESS:
-					acc = new Access(i, 1);//FIXME use correct index
+					for (byte mod : modules)
+						if ((mod & 7) == i) {
+							acc = new Access(mod >> 4 & 15, 1);//TODO use special internal access
+							break;
+						}
 					break;
 				case AUTOMATIC:
 					acc = null;
@@ -88,7 +123,7 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 			caps[i] = acc;
 		}
 		int l = items.length;
-		if (n != l) {//can only happen when NBT data corrupted
+		if (n != l) {
 			items = Arrays.copyOf(items, n);
 			if (n > l) Arrays.fill(items, l, n, ItemStack.EMPTY);
 		}
@@ -96,7 +131,49 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 
 	@Override
 	public void onPartChanged(ModularMachine m, int i) {
-		
+		if (i < 6 || i >= 12) return;
+		Part p = m.components[i];
+		i -= 6;
+		Access acc = caps[i];
+		Access nacc = null;
+		int n = 0, l = acc != null && acc.s >= size ? acc.l : 0, nl = 0;
+		for (int j = i - 1; j >= 0; j--)
+			if (caps[j] != null) {
+				n = caps[j].s + caps[j].l;
+				if (n > size) break;
+			}
+		if (n < size) n = size;
+		if (p instanceof PartItem) {
+			PartItem pi = (PartItem)p;
+			switch(pi.invType) {
+			case ACCESS:
+				for (byte mod : modules)
+					if ((mod & 7) == i) {
+						nacc = new Access(mod >> 4 & 15, 1);//TODO use special internal access
+						break;
+					}
+				break;
+			case AUTOMATIC: break;
+			case BUFFER:
+				nl = pi.size;
+				nacc = new Access(n, nl);
+				break;
+			}
+		}
+		int dl = nl - l;
+		if (dl != 0) {
+			ItemStack[] nItems = new ItemStack[items.length + dl];
+			System.arraycopy(items, 0, nItems, 0, n);
+			for (int j = 0; j < l; j++) ItemFluidUtil.dropStack(getStackInSlot(j + n), m.getWorld(), m.getPos());
+			Arrays.fill(nItems, n, n + nl, ItemStack.EMPTY);
+			System.arraycopy(items, n + l, nItems, n + nl, items.length - n - l);
+			for (int j = i + 1; j < caps.length; j++) {
+				acc = caps[j];
+				if (acc != null && acc.s >= n)
+					caps[j] = new Access(acc.s + dl, acc.l);
+			}
+		}
+		caps[i] = nacc;
 	}
 
 	@Override
@@ -114,12 +191,12 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 		return items[slot];
 	}
 
-	public IItemHandler getExtInventory(TileEntity te, int port) {
-		byte cfg = modules[port];
-		if (cfg < 0 || cfg >= 6) return null;
+	public IItemHandler getExtInventory(int port) {
+		int cfg = modules[port] & 0x7;
+		if (cfg >= 6) return null;
 		IItemHandler acc = caps[cfg];
 		if (acc != null) return acc;
-		return Utils.neighborCapability(te, EnumFacing.VALUES[cfg], CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		return Utils.neighborCapability(tile, EnumFacing.VALUES[cfg], CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 	}
 
 	private class Access extends AbstractInventory {

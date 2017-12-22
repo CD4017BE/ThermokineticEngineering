@@ -7,8 +7,8 @@ public class PartItem extends Part {
 	public final Type invType;
 	public final int size;
 
-	public PartItem(Type type, ItemStack item, float Lh, float Tmax, float dmgH, int size) {
-		super(Part.Type.ITEM, item, Lh, Tmax, dmgH);
+	public PartItem(Type type, int id, ItemStack item, float Lh, float Tmax, float dmgH, int size) {
+		super(Part.Type.MODULE, id, item, Lh, Tmax, dmgH);
 		this.invType = type;
 		this.size = size;
 	}

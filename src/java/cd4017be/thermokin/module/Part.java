@@ -1,6 +1,10 @@
 package cd4017be.thermokin.module;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -9,23 +13,38 @@ import net.minecraft.item.ItemStack;
 public class Part {
 
 	public static int MAX_DUR = 250;
+	public static final Part
+			NULL_CASING = new Part(Type.CASING, 0, ItemStack.EMPTY, 1.0F, Float.POSITIVE_INFINITY, 0),
+			NULL_MODULE = new Part(Type.MODULE, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0),
+			NULL_MAIN = new Part(Type.MAIN, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0);
 
+	@Nonnull
 	public static Part getPart(ItemStack stack) {
-		return null;
+		return NULL_MAIN;
 	}
 
+	@Nonnull
+	public static Part getPart(Type type, int id) {
+		return type.NULL();
+	}
+
+	public final int id;
 	public final Type type;
 	/**the Item that represents this part */
 	public final ItemStack item;
 	/**[J/K/t] heat conductivity */
-	public final float Lh;
+	public float Lh;
 	/**[K] melting temperature */
-	public final float Tmax;
+	public float Tmax;
 	/**[dmg/K/t] vulnerability to overheating */
-	public final float dmgH;
+	public float dmgH;
 
-	public Part(Type type, ItemStack item, float Lh, float Tmax, float dmgH) {
+	@SideOnly(Side.CLIENT)
+	public int modelId = -1;
+
+	public Part(Type type, int id, ItemStack item, float Lh, float Tmax, float dmgH) {
 		this.type = type;
+		this.id = id;
 		this.item = item;
 		this.Lh = Lh;
 		this.Tmax = Tmax;
@@ -33,7 +52,28 @@ public class Part {
 	}
 
 	public enum Type {
-		CASING, THERMAL, ITEM, FLUID
+		CASING(0, 6),
+		MODULE(6, 12),
+		MAIN(12, 15);
+
+		public final int slotS, slotE;
+
+		private Type(int s, int e) {
+			this.slotS = s;
+			this.slotE = e;
+		}
+
+		public Part NULL() {
+			switch(this) {
+			case CASING: return NULL_CASING;
+			case MODULE: return NULL_MODULE;
+			default: return NULL_MAIN;
+			}
+		}
+
+		public static Type forSlot(int s) {
+			return s < 6 ? CASING : s < 12 ? MODULE : MAIN;
+		}
 	}
 
 }
