@@ -100,17 +100,17 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 		for (int i = 0; i < caps.length; i++) {
 			Part p = m.components[i + 6];
 			Access acc = null;
-			if (p instanceof PartItem) {
-				PartItem pi = (PartItem)p;
+			if (p instanceof PartIOModule) {
+				PartIOModule pi = (PartIOModule)p;
 				switch(pi.invType) {
-				case ACCESS:
+				case EXT_ACC:
 					for (byte mod : modules)
 						if ((mod & 7) == i) {
 							acc = new Access(mod >> 4 & 15, 1);//TODO use special internal access
 							break;
 						}
 					break;
-				case AUTOMATIC:
+				case INT_ACC:
 					acc = null;
 					break;
 				case BUFFER:
@@ -143,17 +143,17 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 				if (n > size) break;
 			}
 		if (n < size) n = size;
-		if (p instanceof PartItem) {
-			PartItem pi = (PartItem)p;
+		if (p instanceof PartIOModule) {
+			PartIOModule pi = (PartIOModule)p;
 			switch(pi.invType) {
-			case ACCESS:
+			case EXT_ACC:
 				for (byte mod : modules)
 					if ((mod & 7) == i) {
 						nacc = new Access(mod >> 4 & 15, 1);//TODO use special internal access
 						break;
 					}
 				break;
-			case AUTOMATIC: break;
+			case INT_ACC: break;
 			case BUFFER:
 				nl = pi.size;
 				nacc = new Access(n, nl);

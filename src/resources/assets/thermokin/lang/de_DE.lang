@@ -1,0 +1,20 @@
+#PARSE_ESCAPES
+#CreativeTab
+itemGroup.thermokin=Thermokinetic Engineering
+
+#Blöcke
+tile.thermokin.assembler.name=Maschinenenwerkbank
+tile.thermokin.assembler.tip=
+
+#Items
+
+#GUI namen
+
+#GUI Tooltips
+gui.cd4017be.assembler.case=Gehäuse
+gui.cd4017be.assembler.core=Kern
+gui.cd4017be.assembler.mod=Module
+gui.cd4017be.assembler.do0=§4fehlende Hauptkomponenten!
+gui.cd4017be.assembler.do1=§6fehlende Gehäuse / Module!
+gui.cd4017be.assembler.do1=§2Maschine herstellen
+gui.cd4017be.assembler.info=

@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"normal": { "model": "crafting_table" },
+		"inventory": { "model": "crafting_table" }
+	}
+}

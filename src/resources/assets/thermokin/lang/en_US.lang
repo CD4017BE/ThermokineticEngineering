@@ -1,0 +1,20 @@
+#PARSE_ESCAPES
+#CreativeTab
+itemGroup.thermokin=Thermokinetic Engineering
+#Blocks
+tile.thermokin.assembler.name=Machine Assembling Table
+tile.thermokin.assembler.tip=
+
+#Items
+
+
+#GUI names
+
+#GUI tooltips
+gui.cd4017be.assembler.case=Casings
+gui.cd4017be.assembler.core=Core
+gui.cd4017be.assembler.mod=Modules
+gui.cd4017be.assembler.do0=§4invalid/missing core parts!
+gui.cd4017be.assembler.do1=§6missing casings or modules!
+gui.cd4017be.assembler.do1=§2craft machine
+gui.cd4017be.assembler.info=

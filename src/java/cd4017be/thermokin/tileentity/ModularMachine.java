@@ -13,6 +13,7 @@ import cd4017be.lib.property.PropertyByte;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Orientation;
 import cd4017be.lib.util.Utils;
+import cd4017be.thermokin.module.IMachineData;
 import cd4017be.thermokin.module.IPartListener;
 import cd4017be.thermokin.module.Part;
 import cd4017be.thermokin.module.Part.Type;
@@ -23,12 +24,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
-public abstract class ModularMachine extends BaseTileEntity implements ITilePlaceHarvest, IModularTile {
+/**
+ * 
+ * @author cd4017be
+ */
+public abstract class ModularMachine extends BaseTileEntity implements IMachineData, ITilePlaceHarvest, IModularTile {
 
 	protected static final Random RAND = new Random();
 
 	public final @Nonnull Part[] components = Utils.init(new Part[15], (i)-> Type.forSlot(i).NULL());
 	public final byte[] durability = new byte[15];
+	/**bits[0-23 6*4]: module settings (slot * value), bits[24-60 12*3]: resource settings (id * value) */
+	public long cfg;
 	public Orientation orientation;
 
 	public abstract IBlockModule[] getModules();
@@ -46,6 +53,7 @@ public abstract class ModularMachine extends BaseTileEntity implements ITilePlac
 		if (comps.length >= 15)
 			for (int i = 0; i < components.length; i++)
 				components[i] = Part.getPart(Type.forSlot(i), comps[i]);
+		cfg = nbt.getLong("cfg");
 		int n = 0;
 		for (IBlockModule m : getModules())
 			m.readNBT(nbt, "M" + (n++));
@@ -61,6 +69,7 @@ public abstract class ModularMachine extends BaseTileEntity implements ITilePlac
 		for (int i = 0; i < comps.length; i++)
 			comps[i] = components[i].id;
 		nbt.setIntArray("comp", comps);
+		nbt.setLong("cfg", cfg);
 		return super.writeToNBT(nbt);
 	}
 
@@ -82,10 +91,31 @@ public abstract class ModularMachine extends BaseTileEntity implements ITilePlac
 		for (IBlockModule m : getModules()) m.initialize(this);
 	}
 
+	@Override
+	public int getCfg(int i) {
+		return (int)(i < 6 ? cfg >> (i * 4) & 15L : cfg >> (i * 3 - 6) & 7L) - 1;
+	}
+
+	@Override
+	public boolean setCfg(int i, int v) {
+		if (IMachineData.super.setCfg(i, v)) {
+			boolean mod = i < 6;
+			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 - 6, mod ? 15L : 7L, v + 1);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Part getPart(int i) {
+		return components[i];
+	}
+
 	public void setPart(int i, Part part) {
 		Part old = components[i];
 		if (part != old) {
 			components[i] = part;
+			if (i >= 6 && i < 12) setCfg(i - 6, -1);
 			for (IBlockModule m : getModules())
 				if (m instanceof IPartListener)
 					((IPartListener)m).onPartChanged(this, i);
@@ -195,7 +225,7 @@ public abstract class ModularMachine extends BaseTileEntity implements ITilePlac
 		@Override
 		public int insertAm(int slot, ItemStack item) {
 			Part p = Part.getPart(item);
-			return isPartValid(slot, p) ? p.item.getCount() : 0;
+			return getLayout().isPartValid(slot, p) ? p.item.getCount() : 0;
 		}
 
 	}
