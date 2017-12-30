@@ -98,12 +98,20 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 
 	@Override
 	public boolean setCfg(int i, int v) {
-		if (IMachineData.super.setCfg(i, v)) {
-			boolean mod = i < 6;
-			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 - 6, mod ? 15L : 7L, v + 1);
-			return true;
+		int lv = getCfg(i);
+		boolean flag = IMachineData.super.setCfg(i, v);
+		if (!flag) {
+			if (v != lv) return false;
+			v = -1;
 		}
-		return false;
+		if (v != lv) {
+			boolean mod = i < 6;
+			for (IBlockModule m : getModules())
+				if (m instanceof IPartListener)
+					((IPartListener)m).onCfgChange(this, i, v);
+			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 - 6, mod ? 15L : 7L, v + 1);
+		}
+		return flag;
 	}
 
 	@Override
@@ -115,12 +123,16 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		Part old = components[i];
 		if (part != old) {
 			components[i] = part;
-			if (i >= 6 && i < 12) setCfg(i - 6, -1);
+			if (i >= 6 && i < 12) {
+				setCfg(i - 6, -1);
+				for (int j = 6, n = j + getLayout().ioCount(); j < n; j++)
+					setCfg(j, getCfg(j));
+			}
 			for (IBlockModule m : getModules())
 				if (m instanceof IPartListener)
-					((IPartListener)m).onPartChanged(this, i);
+					((IPartListener)m).onPartChanged(this, i, old);
 			if (this instanceof IPartListener)
-				((IPartListener)this).onPartChanged(this, i);
+				((IPartListener)this).onPartChanged(this, i, old);
 		}
 	}
 
@@ -143,6 +155,8 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		orientation = Orientation.fromFacing(entity.getHorizontalFacing().getOpposite());
 		byte[] dur = nbt.getByteArray("dur");
 		int[] comps = nbt.getIntArray("comp");
+		long cfg = nbt.getLong("cfg");
+		this.cfg = cfg;
 		if (dur.length >= 12 && comps.length >= 12)
 			for (EnumFacing s : EnumFacing.values()) {
 				int s0 = s.ordinal();
@@ -151,7 +165,15 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 				components[s1] = Part.getPart(Type.CASING, comps[s0]);
 				durability[s1 + 6] = dur[s0 + 6];
 				components[s1 + 6] = Part.getPart(Type.MODULE, comps[s0 + 6]);
+				int v = (int)(cfg >> (s0 * 4) & 15L);
+				if (v > 0 && v <= 6) v = orientation.rotate(EnumFacing.VALUES[v - 1]).ordinal() + 1;
+				this.cfg = Utils.setState(this.cfg, s1 * 4, 15L, v);
 			}
+		for (int i = 24; i < 60; i+=3) {
+			int v = (int)(cfg >> i & 7L);
+			if (v > 0 && v <= 6)
+				this.cfg = Utils.setState(this.cfg, i, 7L, orientation.rotate(EnumFacing.VALUES[v - 1]).ordinal() + 1);
+		}
 		for (int i = 12; i < comps.length && i < components.length; i++) {
 			durability[i] = dur[i];
 			components[i] = Part.getPart(Type.MAIN, comps[i]);
@@ -166,6 +188,8 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		NBTTagCompound nbt = new NBTTagCompound();
 		byte[] dur = new byte[durability.length];
 		int[] comps = new int[components.length];
+		long cfg = this.cfg;
+		Orientation invOr = orientation.reverse();
 		for (EnumFacing s : EnumFacing.values()) {
 			int s0 = s.ordinal();
 			int s1 = orientation.rotate(s).ordinal();
@@ -173,6 +197,14 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 			comps[s0] = components[s1].id;
 			dur[s0 + 6] = durability[s1 + 6];
 			comps[s0 + 6] = components[s1 + 6].id;
+			int v = (int)(this.cfg >> (s1 * 4) & 15L);
+			if (v > 0 && v <= 6) v = invOr.rotate(EnumFacing.VALUES[v - 1]).ordinal() + 1;
+			cfg = Utils.setState(cfg, s0 * 4, 15L, v);
+		}
+		for (int i = 24; i < 60; i+=3) {
+			int v = (int)(this.cfg >> i & 7L);
+			if (v > 0 && v <= 6)
+				cfg = Utils.setState(cfg, i, 7L, invOr.rotate(EnumFacing.VALUES[v - 1]).ordinal() + 1);
 		}
 		for (int i = 12; i < comps.length && i < components.length; i++) {
 			dur[i] = durability[i];
@@ -180,6 +212,7 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		}
 		nbt.setByteArray("dur", dur);
 		nbt.setIntArray("comp", comps);
+		nbt.setLong("cfg", cfg);
 		List<ItemStack> list = makeDefaultDrops(nbt);
 		for (IBlockModule m : getModules())
 			if (m instanceof IPartListener)

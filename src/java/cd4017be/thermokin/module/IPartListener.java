@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface IPartListener {
 
-	void onPartChanged(ModularMachine m, int i);
+	void onPartChanged(ModularMachine m, int i, Part old);
 
 	/**
 	 * @param m
@@ -17,5 +17,7 @@ public interface IPartListener {
 	void onPlaced(ModularMachine m, NBTTagCompound nbt);
 
 	void addDrops(ModularMachine m, NBTTagCompound nbt, List<ItemStack> drops);
+
+	void onCfgChange(ModularMachine m, int i, int cfg);
 
 }
