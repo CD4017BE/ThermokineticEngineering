@@ -7,7 +7,9 @@ import javax.annotation.Nonnull;
 
 import cd4017be.api.IBlockModule;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.capability.AbstractInventory;
+import cd4017be.lib.property.PropertyByte;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Orientation;
 import cd4017be.lib.util.Utils;
@@ -21,7 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
-public abstract class ModularMachine extends BaseTileEntity implements ITilePlaceHarvest {
+public abstract class ModularMachine extends BaseTileEntity implements ITilePlaceHarvest, IModularTile {
 
 	protected static final Random RAND = new Random();
 
@@ -153,6 +155,16 @@ public abstract class ModularMachine extends BaseTileEntity implements ITilePlac
 			if (m instanceof IPartListener)
 				((IPartListener)m).addDrops(this, nbt, list);
 		return list;
+	}
+
+	@Override
+	public <T> T getModuleState(int m) {
+		return PropertyByte.cast(components[m].modelId);
+	}
+	@Override
+	public boolean isModulePresent(int m) {
+		Part p = components[m];
+		return p != Part.NULL_CASING && p != Part.NULL_MODULE && p != Part.NULL_MAIN;
 	}
 
 	public class PartInventory extends AbstractInventory {

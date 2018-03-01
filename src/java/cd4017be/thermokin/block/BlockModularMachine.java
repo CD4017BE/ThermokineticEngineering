@@ -2,62 +2,63 @@ package cd4017be.thermokin.block;
 
 import java.lang.reflect.InvocationTargetException;
 
-import cd4017be.lib.block.AdvancedBlock;
-import cd4017be.lib.property.PropertyBoolean;
-import cd4017be.lib.property.PropertyWrapObj;
-import cd4017be.thermokin.module.Part;
+import cd4017be.lib.block.MultipartBlock;
+import cd4017be.lib.property.PropertyByte;
 import cd4017be.thermokin.tileentity.ModularMachine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import scala.actors.threadpool.Arrays;
 
-public class BlockModularMachine extends AdvancedBlock {
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
+public class BlockModularMachine extends MultipartBlock {
 
-	public static final IUnlistedProperty<short[]> parts_prop = new PropertyWrapObj<short[]>("parts", short[].class);
-	public static final IUnlistedProperty<Boolean> opaque_prop = new PropertyBoolean("opaque");
-	public static final IProperty<Integer> type_prop = PropertyInteger.create("type", 0, 15);
+	public static final PropertyByte[] PART_PROPS = new PropertyByte[12];
+	public static final PropertyInteger TYPE_PROP = PropertyInteger.create("v", 0, 15);
+	static {
+		String[] names = {"cb", "ct", "cn", "cs", "cw", "ce", "mb", "mt", "mn", "ms", "mw", "me"};
+		for (int i = 0; i < PART_PROPS.length; i++)
+			PART_PROPS[i] = new PropertyByte(names[i]);
+	}
 
 	@SuppressWarnings("unchecked")
 	public final Class<? extends ModularMachine>[] tiles = new Class[16];
 
-	protected BlockModularMachine(String id, Material m, SoundType sound, int flags) {
+	/**
+	 * @param id
+	 * @param m
+	 * @param sound
+	 * @param flags
+	 */
+	public BlockModularMachine(String id, Material m, SoundType sound, int flags) {
 		super(id, m, sound, flags, ModularMachine.class);
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new ExtendedBlockState(this, new IProperty[] {type_prop}, new IUnlistedProperty[] {opaque_prop, parts_prop});
+	protected IUnlistedProperty<?>[] createModules() {
+		return PART_PROPS;
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(type_prop, meta);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(type_prop);
+	protected PropertyInteger createBaseState() {
+		return TYPE_PROP;
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state) {
-		return tiles[state.getValue(type_prop)] != null;
+		return tiles[state.getValue(TYPE_PROP)] != null;
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		Class<? extends ModularMachine> tc = tiles[state.getValue(type_prop)];
+		Class<? extends ModularMachine> tc = tiles[state.getValue(TYPE_PROP)];
 		if (tc == null) return null;
 		try {
 			try {
@@ -69,32 +70,6 @@ public class BlockModularMachine extends AdvancedBlock {
 			ex.printStackTrace();
 		}
 		return null;
-	}
-
-	@Override
-	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		IExtendedBlockState eState = (IExtendedBlockState)state;
-		boolean opaque = true;
-		short[] parts;
-		TileEntity te = world.getTileEntity(pos);
-		if (te instanceof ModularMachine) {
-			ModularMachine m = (ModularMachine)te;
-			int n = 0;
-			parts = new short[15];
-			for (int i = 0; i < 15; i++) {
-				Part p = m.components[i];
-				if (p != null) {
-					short id = p.getModelId(i);
-					if (id >= 0) {
-						parts[n++] = id;
-						continue;
-					}
-				}
-				if (i < 6) opaque = false;
-			}
-			if (n < 15) parts = Arrays.copyOf(parts, n);
-		} else parts = null;
-		return eState.withProperty(opaque_prop, opaque).withProperty(parts_prop, parts);
 	}
 
 }

@@ -1,24 +1,25 @@
 package cd4017be.thermokin.render;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Function;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import cd4017be.lib.block.MultipartBlock;
+import cd4017be.lib.property.PropertyByte;
+import cd4017be.lib.render.model.BakedModel;
+import cd4017be.lib.render.model.MultipartModel;
+import cd4017be.lib.render.model.RawModelData;
 import cd4017be.lib.util.Orientation;
-import cd4017be.thermokin.block.BlockModularMachine;
+import cd4017be.thermokin.Main;
 import cd4017be.thermokin.module.Part;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import cd4017be.thermokin.module.Part.Type;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,134 +32,152 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-public class ModularModel implements IModel {
 
-	private static final ModelRotation[] ORIENTS = new ModelRotation[6];
+/**
+ * @author CD4017BE
+ *
+ */
+public class ModularModel extends MultipartModel {
+
+	public static IModelProvider[] PROVIDERS = new IModelProvider[12];
+	public static ItemHandler ITEM_HANDLER = new ItemHandler();
 	static {
-		for(EnumFacing s : EnumFacing.values())
-			ORIENTS[s.ordinal()] = Orientation.fromFacing(s).getModelRotation();
-	}
-	ResourceLocation particleLoc;
-	ArrayList<ResourceLocation> parts = new ArrayList<ResourceLocation>();
-	
-	HashMap<short[], IBakedModel> cache = new HashMap<short[], IBakedModel>();
-
-	private Baked baked;
-	private final ItemModels items = new ItemModels();
-
-	public void register(Part part, ResourceLocation model) {
-		if (part.modelId >= 0)
-			parts.set(part.modelId, model);
-		else {
-			part.modelId = parts.size();
-			parts.add(model);
+		for (EnumFacing s : EnumFacing.values()) {
+			PROVIDERS[s.ordinal()] = new ModelProviderCasing(s);
+			PROVIDERS[s.ordinal() + 6] = new ModelProviderModule(s);
 		}
 	}
 
-	@Override
-	public Collection<ResourceLocation> getDependencies() {
-		return parts;
+	public static void register(Part part, ResourceLocation model) {
+		if (part.modelId >= 0) return;
+		if (model == null) {
+			part.modelId = -1;
+		} else if (part.type == Type.CASING) {
+			part.modelId = ModelProviderCasing.textures.size();
+			ModelProviderCasing.textures.add(model);
+		} else if (part.type == Type.MODULE) {
+			part.modelId = ModelProviderModule.models.size();
+			ModelProviderModule.models.add(model);
+		}
 	}
 
-	@Override
-	public Collection<ResourceLocation> getTextures() {
-		return Arrays.asList(particleLoc);
+	/**
+	 * @param block
+	 */
+	public ModularModel(MultipartBlock block) {
+		super(block);
+		System.arraycopy(PROVIDERS, 0, modelProvider, 0, PROVIDERS.length);
+		itemHandler = ITEM_HANDLER;
 	}
 
-	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-		if (baked == null) baked = new Baked(format, bakedTextureGetter);
-		return baked;
-	}
+	static abstract class ModelProviderSided implements IModelProvider {
 
-	@Override
-	public IModelState getDefaultState() {
-		return ModelRotation.X0_Y0;
-	}
+		protected IBakedModel[] baked;
+		protected final Orientation side;
 
-	class Baked implements IBakedModel {
+		/**
+		 * @param face
+		 */
+		ModelProviderSided(EnumFacing face) {
+			this.side = Orientation.fromFacing(face);
+		}
 
-		final TextureAtlasSprite particleTex;
-		final IBakedModel[] models;
+		@Override
+		public IBakedModel getModelFor(Object val) {
+			int id = ((Byte)val).intValue() & 0xff;
+			return id < baked.length ? baked[id] : null;
+		}
 
-		Baked(VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-			particleTex = bakedTextureGetter.apply(particleLoc);
-			models = new IBakedModel[parts.size() * 6];
-			int n = 0;
-			for (ResourceLocation loc : parts) {
-				IModel model = ModelLoaderRegistry.getModelOrMissing(loc);
-				for (ModelRotation rot : ORIENTS)
-					models[n++] = model.bake(rot, format, bakedTextureGetter);
+		@Override
+		public void bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
+			if (baked != null) return;
+			Collection<ResourceLocation> locs = getDependencies();
+			baked = new IBakedModel[locs.size()];
+			int i = 0;
+			for (ResourceLocation loc : locs) {
+				IModel model = ModelLoaderRegistry.getModelOrLogError(loc, "missing");
+				baked[i++] = model.bake(model.getDefaultState(), format, textureGetter);
 			}
 		}
 
-		@Override
-		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-			IExtendedBlockState eState = (IExtendedBlockState)state;
-			ArrayList<BakedQuad> list = new ArrayList<BakedQuad>();
-			if (side == null && eState.getValue(BlockModularMachine.opaque_prop)) return list;
-			short[] arr = eState.getValue(BlockModularMachine.parts_prop);
-			if (arr != null)
-				for (short s : arr)
-					if (s >= 0 && s < models.length)
-						list.addAll(models[s].getQuads(state, side, rand));
-			return list;
-		}
-
-		@Override
-		public boolean isAmbientOcclusion() {
-			return false;
-		}
-
-		@Override
-		public boolean isGui3d() {
-			return false;
-		}
-
-		@Override
-		public boolean isBuiltInRenderer() {
-			return false;
-		}
-
-		@Override
-		public TextureAtlasSprite getParticleTexture() {
-			return particleTex;
-		}
-
-		@Override
-		public ItemCameraTransforms getItemCameraTransforms() {
-			return ItemCameraTransforms.DEFAULT;
-		}
-
-		@Override
-		public ItemOverrideList getOverrides() {
-			return items;
-		}
-		
 	}
 
-	class ItemModels extends ItemOverrideList {
+	static class ModelProviderCasing extends ModelProviderSided {
 
-		public ItemModels() {
+		static final ArrayList<ResourceLocation> textures = new ArrayList<ResourceLocation>();
+		static final ResourceLocation mainModel = new ResourceLocation(Main.ID, "block/.casing");
+
+		/**
+		 * @param face
+		 */
+		ModelProviderCasing(EnumFacing face) {
+			super(face);
+		}
+
+		@Override
+		public Collection<ResourceLocation> getDependencies() {
+			ArrayList<ResourceLocation> modelLocs = new ArrayList<ResourceLocation>(textures.size());
+			for (ResourceLocation tex : textures)
+				modelLocs.add(new ResourceLocation(mainModel + "#" + side.getName() + "$" + tex));
+			return modelLocs;
+		}
+
+	}
+
+	static class ModelProviderModule extends ModelProviderSided {
+
+		static final ArrayList<ResourceLocation> models = new ArrayList<ResourceLocation>();
+
+		/**
+		 * @param face
+		 */
+		ModelProviderModule(EnumFacing face) {
+			super(face);
+		}
+
+		@Override
+		public Collection<ResourceLocation> getDependencies() {
+			ArrayList<ResourceLocation> modelLocs = new ArrayList<ResourceLocation>(models.size());
+			for (ResourceLocation loc : models)
+				modelLocs.add(new ResourceLocation(loc + "#" + side.getName()));
+			return modelLocs;
+		}
+
+	}
+
+	static class ItemHandler extends ItemOverrideList {
+
+		Cache<int[], BakedModel> modelCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterAccess(5, TimeUnit.MINUTES).build();
+
+		ItemHandler() {
 			super(Collections.emptyList());
 		}
 
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
-			
-			return super.handleItemState(originalModel, stack, world, entity);
+			if (stack.hasTagCompound()) {
+				int[] comps = stack.getTagCompound().getIntArray("comp");
+				try {
+					return modelCache.get(comps, ()-> generate((BakedMultipart)originalModel, stack, comps));
+				} catch (ExecutionException e) {e.printStackTrace();}
+			}
+			return originalModel;
 		}
 
-	}
-
-	class CachedModel extends Baked {
-
-		private final BakedQuad[][] quads = new BakedQuad[7][];
-
-		@Override
-		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-			int i = side == null ? 0 : side.getIndex() + 1;
-			return quads[i] == null ? Collections.<BakedQuad>emptyList() : Arrays.asList(quads[i]);
+		BakedModel generate(BakedMultipart model, ItemStack item, int[] comps) {
+			int i = item.getItem().getMetadata(item.getItemDamage());
+			IBakedModel base = model.base[i];
+			BakedModel result = new BakedModel(base.getParticleTexture(), RawModelData.DEFAULT_TRANSFORM, base.isAmbientOcclusion(), base.isGui3d());
+			MultipartBlock block = model.getOwner();
+			IExtendedBlockState state = (IExtendedBlockState) block.getDefaultState().withProperty(model.getOwner().baseState, i);
+			for (int j = 0; j < block.modules.length; j++) {
+				Part p = Part.getPart(Type.forSlot(j), comps[j]);
+				state = state.withProperty(block.modules[j], PropertyByte.cast(p.modelId));
+			}
+			result.quads[0] = model.getQuads(state, null, 0);
+			for (EnumFacing f : EnumFacing.values())
+				result.quads[f.ordinal() + 1] = model.getQuads(state, f, 0);
+			return result;
 		}
 
 	}
