@@ -44,7 +44,7 @@ public class GuiAssembler extends AdvancedGui {
 		guiComps.add(new Text<>(8, 29, 34, 108, 8, "assembler.mod").center());
 		guiComps.add(new Text<>(9, 146, 4, 45, 8, "assembler.core").center());
 		guiComps.add(new InfoTab(10, 7, 6, 7, 8, "assembler.info"));
-		guiComps.add(new Button(11, 174, 52, 16, 16, 0, ()-> data.getStatus(), (b)-> send((byte)-20)).texture(224, 96).setTooltip("assembler.do#"));
+		guiComps.add(new Button(11, 174, 52, 16, 16, 0, ()-> data.getStatus(), (b)-> sendPkt((byte)-20)).texture(224, 96).setTooltip("assembler.do#"));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class GuiAssembler extends AdvancedGui {
 			do {
 				k = (k + next & 15) - 1;
 				if (data.setCfg(id, k) || k >= 6 && next == 2 && data.setCfg(id, k = -1)) {
-					send((byte)-id, (byte)k);
+					sendPkt((byte)-id, (byte)k);
 					break;
 				}
 			} while(k != s);
@@ -181,7 +181,7 @@ public class GuiAssembler extends AdvancedGui {
 			do {
 				k = (k + next) % 7 - 1;
 				if (data.setCfg(i, k)) {
-					send((byte)-i, (byte)k);
+					sendPkt((byte)-i, (byte)k);
 					break;
 				}
 			} while(k != s);
