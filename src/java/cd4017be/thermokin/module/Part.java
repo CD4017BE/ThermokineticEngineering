@@ -1,7 +1,10 @@
 package cd4017be.thermokin.module;
 
+import java.util.HashMap;
+
 import javax.annotation.Nonnull;
 
+import cd4017be.lib.util.ItemKey;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,14 +21,28 @@ public class Part {
 			NULL_MODULE = new Part(Type.MODULE, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0),
 			NULL_MAIN = new Part(Type.MAIN, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0);
 
+	public static final HashMap<ItemKey, Part> recipes = new HashMap<ItemKey, Part>();
+	public static final Part[] casings = new Part[16], modules = new Part[16], cores = new Part[16];
+
 	@Nonnull
 	public static Part getPart(ItemStack stack) {
-		return NULL_MAIN;
+		return recipes.getOrDefault(new ItemKey(stack), NULL_MAIN);
 	}
 
 	@Nonnull
 	public static Part getPart(Type type, int id) {
-		return type.NULL();
+		Part p = null;
+		switch(type) {
+		case CASING:
+			if (id < casings.length) p = casings[id];
+			return p == null ? NULL_CASING : p;
+		case MODULE:
+			if (id < modules.length) p = modules[id];
+			return p == null ? NULL_MODULE : p;
+		default:
+			if (id < cores.length) p = cores[id];
+			return p == null ? NULL_MAIN : p;
+		}
 	}
 
 	public final int id;

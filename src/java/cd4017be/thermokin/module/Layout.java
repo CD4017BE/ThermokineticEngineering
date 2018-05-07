@@ -21,6 +21,8 @@ public class Layout {
 	public String name;
 	public int invIn, invOut, invAcc;
 	public int tankIn, tankOut, tankAcc;
+	/**bit[0,1]: need bottom/top, bits[4-7]: min amount */
+	public byte casings = 0x53;
 
 	public Layout(int id, ItemStack item) {
 		this.id = id;
@@ -34,8 +36,9 @@ public class Layout {
 
 	public boolean isPartValid(int slot, Part part) {
 		Type t = part.type;
-		return t.slotS <= slot && slot < t.slotE;
+		if (t.slotS > slot || slot >= t.slotE) return false;
 		//TODO check main parts
+		return true;
 	}
 
 	public ItemStack getResult(Part[] parts, ItemStack[] items, long cfg) {
@@ -56,7 +59,13 @@ public class Layout {
 	}
 
 	public boolean isComplete(Part[] parts) {
-		return false;
+		int n = 0;
+		for (int i = 0; i < 6; i++) {
+			boolean b = parts[i] != Part.NULL_CASING;
+			if (b) n++;
+			else if (i < 2 && (casings >> i & 1) != 0) return false;
+		}
+		return n > casings >> 4;
 	}
 
 	public static final ArrayList<Layout> layouts = new ArrayList<Layout>();
