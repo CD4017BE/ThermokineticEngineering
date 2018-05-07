@@ -2,8 +2,8 @@ package cd4017be.api.heat;
 
 import cd4017be.api.IBlockModule;
 import cd4017be.api.registry.Environment;
-import cd4017be.api.CommutativeTickHandler;
-import cd4017be.api.CommutativeTickHandler.ICommutativeTickable;
+import cd4017be.lib.TickRegistry;
+import cd4017be.lib.TickRegistry.IUpdatable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +15,7 @@ import net.minecraft.world.World;
  * This already handles heat exchange with surrounding blocks all on it's own using the CommutativeTick system. The hosting TileEntity only needs to expose it's {@link #getCapability heat capability} and {@link #markUpdate notify block changes}.
  * @author CD4017BE
  */
-public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable, IBlockModule {
+public class SidedHeatReservoir implements IHeatAccess, IBlockModule, IUpdatable {
 
 	/** [J/K] heat capacity */
 	public final float C;
@@ -23,9 +23,10 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	public float T = Float.NaN;
 	protected TileEntity tile;
 	public Environment env;
-	protected float envTemp, envCond, dQ;
-	protected boolean check;
+	protected float envTemp, Renv;
+	private boolean check;
 	protected final Access[] ref = new Access[6];
+	private HeatConductor envCond;
 
 	/**
 	 * creates a SidedHeatReservoir with fixed heat capacity.<br>
@@ -50,7 +51,7 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 				R = Math.max(R, 1F / C);
 				if (acc == null) {
 					ref[side.ordinal()] = new Access(R);
-					check = true;
+					markUpdate();
 				} else {
 					acc.R = R;
 					if (acc.link != null) acc.link.updateHeatCond();
@@ -58,7 +59,7 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 			} else if (acc != null) {
 				if (acc.link != null) acc.link.disconnect();
 				ref[side.ordinal()] = null;
-				check = true;
+				markUpdate();
 			}
 		} else for (EnumFacing s : EnumFacing.values())
 			setR(s, R);
@@ -70,7 +71,7 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	 * @return HeatAccess capability for the given side or null if not available
 	 */
 	public IHeatAccess getCapability(EnumFacing side) {
-		if (tile == null || tile.getWorld().isRemote || side == null) return null;
+		if (tile == null || side == null) return null;
 		return ref[side.ordinal()];
 	}
 
@@ -79,13 +80,16 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	 * Call this when neighboring blocks change.
 	 */
 	public void markUpdate() {
-		check = true;
+		if (!check) {
+			check = true;
+			if (tile != null) TickRegistry.instance.updates.add(this);
+		}
 	}
 
 	@Override
-	public void prepareTick() {
+	public void process() {
 		if (check) {
-			envCond = 0;
+			float l = 0;
 			BlockPos pos = tile.getPos();
 			World world = tile.getWorld();
 			for (EnumFacing s : EnumFacing.values()) {
@@ -97,19 +101,16 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 					TileEntity te = world.getTileEntity(pos1);
 					IHeatAccess hr = te == null ? null : te.getCapability(IHeatAccess.CAPABILITY_HEAT_ACCESS, s.getOpposite());
 					if (hr != null) new HeatConductor(acc, hr);
-					else envCond += env.getCond(world.getBlockState(pos1), acc.R);
+					else l += env.getCond(world.getBlockState(pos1), acc.R);
 				}
 			}
-			if (envCond > C) envCond = C;
+			if (l > C) l = C;
+			Renv = 1F / l;
+			if (l != 0) {
+				if (envCond == null) new HeatConductor(this, new InfiniteReservoir(envTemp, 0));
+			} else if (envCond != null) envCond.disconnect();
 			check = false;
 		}
-		dQ += (envTemp - T) * envCond;
-	}
-
-	@Override
-	public void runTick() {
-		T += dQ / C;
-		dQ = 0;
 	}
 
 	@Override
@@ -125,18 +126,17 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 	@Override
 	public void initialize(TileEntity tile) {
 		World world = tile.getWorld();
-		if (this.tile == null && !world.isRemote) CommutativeTickHandler.register(this);
+		if (world.isRemote) return;
+		if (this.tile == null && check) TickRegistry.instance.updates.add(this);
 		this.tile = tile;
 		env = Environment.getEnvFor(world);
 		envTemp = env.getTemp(world, tile.getPos());
 		if (Float.isNaN(T)) T = envTemp;
-		check = true;
 	}
 
 	@Override
 	public void invalidate() {
-		if (tile == null || tile.getWorld().isRemote) return;
-		CommutativeTickHandler.invalidate(this);
+		if (tile == null) return;
 		for (Access acc : ref)
 			if (acc != null && acc.link != null)
 				acc.link.disconnect();
@@ -178,7 +178,7 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 			if (link == c) return;
 			if (link != null && c != null) link.disconnect();
 			link = c;
-			check = true;
+			markUpdate();
 		}
 
 	}
@@ -195,7 +195,22 @@ public class SidedHeatReservoir implements IHeatReservoir, ICommutativeTickable,
 
 	@Override
 	public void addHeat(float dQ) {
-		this.dQ += dQ;
+		T += dQ / C;
+	}
+
+	@Override
+	public HeatConductor getLink() {
+		return envCond;
+	}
+
+	@Override
+	public void setLink(HeatConductor c) {
+		envCond = c;
+	}
+
+	@Override
+	public float R() {
+		return Renv;
 	}
 
 }

@@ -5,14 +5,17 @@ import cd4017be.thermokin.tileentity.ModularMachine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+
 import static java.lang.Float.*;
 
 import java.util.List;
 
-public class HeatModule extends SidedHeatReservoir implements IPartListener {
+public class HeatModule extends SidedHeatReservoir implements IPartListener, ITickable {
 
 	public static int CHECK_INTERVAL = 10;
 	protected float Tacc, Tmax = NaN;
+	protected int timer;
 
 	public HeatModule(float C) {
 		super(C);
@@ -47,14 +50,10 @@ public class HeatModule extends SidedHeatReservoir implements IPartListener {
 	}
 
 	@Override
-	public void prepareTick() {
+	public void update() {
 		Tacc += T;
-		super.prepareTick();
-	}
-
-	@Override
-	public void runTick() {
-		if (tile.getWorld().getTotalWorldTime() % CHECK_INTERVAL == 0) {
+		if (++timer >= CHECK_INTERVAL) {
+			timer = 0;
 			ModularMachine m = (ModularMachine)tile;
 			if (Tmax == NaN) {
 				Tmax = POSITIVE_INFINITY;
@@ -70,7 +69,6 @@ public class HeatModule extends SidedHeatReservoir implements IPartListener {
 					if (dT > 0) m.damagePart(i, dT * p.dmgH * (float)CHECK_INTERVAL);
 				}
 		}
-		super.runTick();
 	}
 
 }

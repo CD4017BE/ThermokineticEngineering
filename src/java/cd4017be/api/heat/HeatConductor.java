@@ -2,23 +2,22 @@ package cd4017be.api.heat;
 
 import javax.annotation.Nonnull;
 
-import cd4017be.api.CommutativeTickHandler;
-import cd4017be.api.CommutativeTickHandler.ICommutativeTickable;
-
 /**
  * Used to simulate heat exchange between the heat reservoirs behind two {@link IHeatAccess} objects.<br>
  * Automatically registers itself for physics updates upon construction, so no extra updating required.<br>
  * <b>Use this server side only!</b>
  * @author CD4017BE
  */
-public class HeatConductor implements ICommutativeTickable {
+public class HeatConductor {
 
 	@Nonnull
 	public final IHeatAccess A, B;
 	/** [K*t/J] heat resistance */
-	private float R;
+	float R;
 	/** [J/t] heat flow A -> B */
-	private float dQ;
+	float dQ;
+	/** internal id */
+	int id = -1;
 
 	/**
 	 * creates a HeatConductor that connects two heat reservoirs with each other
@@ -31,7 +30,7 @@ public class HeatConductor implements ICommutativeTickable {
 		A.setLink(this);
 		B.setLink(this);
 		updateHeatCond();
-		CommutativeTickHandler.register(this);
+		HeatSimulation.instance.add(this);
 	}
 
 	/**
@@ -41,7 +40,7 @@ public class HeatConductor implements ICommutativeTickable {
 	public void disconnect() {
 		A.setLink(null);
 		B.setLink(null);
-		CommutativeTickHandler.invalidate(this);
+		HeatSimulation.instance.remove(this);
 	}
 
 	/**
@@ -54,17 +53,6 @@ public class HeatConductor implements ICommutativeTickable {
 	/**@return [J/t] amount of thermal energy transmitted A->B last tick (for calorimetric measurement)*/
 	public float dQ() {
 		return dQ;
-	}
-
-	@Override
-	public void prepareTick() {
-		dQ = (A.T() - B.T()) / R;
-	}
-
-	@Override
-	public void runTick() {
-		A.addHeat(-dQ);
-		B.addHeat(dQ);
 	}
 
 }
