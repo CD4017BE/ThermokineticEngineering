@@ -58,6 +58,7 @@ public class Part {
 
 	@SideOnly(Side.CLIENT)
 	public int modelId = -1;
+	public boolean opaque = false;
 
 	public Part(Type type, int id, ItemStack item, float Lh, float Tmax, float dmgH) {
 		this.type = type;

@@ -3,7 +3,6 @@ package cd4017be.thermokin.block;
 import java.lang.reflect.InvocationTargetException;
 
 import cd4017be.lib.block.MultipartBlock;
-import cd4017be.lib.property.PropertyByte;
 import cd4017be.thermokin.tileentity.ModularMachine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,7 +10,8 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -20,13 +20,11 @@ import net.minecraftforge.common.property.IUnlistedProperty;
  */
 public class BlockModularMachine extends MultipartBlock {
 
-	public static final PropertyByte[] PART_PROPS = new PropertyByte[12];
+	public static final String[] PART_PROPS = {
+			"cb", "ct", "cn", "cs", "cw", "ce",
+			"mb", "mt", "mn", "ms", "mw", "me"
+		};
 	public static final PropertyInteger TYPE_PROP = PropertyInteger.create("v", 0, 15);
-	static {
-		String[] names = {"cb", "ct", "cn", "cs", "cw", "ce", "mb", "mt", "mn", "ms", "mw", "me"};
-		for (int i = 0; i < PART_PROPS.length; i++)
-			PART_PROPS[i] = new PropertyByte(names[i]);
-	}
 
 	@SuppressWarnings("unchecked")
 	public final Class<? extends ModularMachine>[] tiles = new Class[16];
@@ -38,12 +36,19 @@ public class BlockModularMachine extends MultipartBlock {
 	 * @param flags
 	 */
 	public BlockModularMachine(String id, Material m, SoundType sound, int flags) {
-		super(id, m, sound, flags, ModularMachine.class);
+		super(id, m, sound, flags, PART_PROPS.length, ModularMachine.class);
 	}
 
 	@Override
-	protected IUnlistedProperty<?>[] createModules() {
-		return PART_PROPS;
+	@SideOnly(Side.CLIENT)
+	public String moduleVariant(int i) {
+		return PART_PROPS[i];
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Class<?> moduleType(int i) {
+		return Byte.class;
 	}
 
 	@Override

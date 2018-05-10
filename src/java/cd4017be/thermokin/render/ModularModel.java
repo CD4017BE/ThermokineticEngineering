@@ -10,12 +10,12 @@ import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import cd4017be.lib.block.MultipartBlock;
-import cd4017be.lib.property.PropertyByte;
 import cd4017be.lib.render.model.BakedModel;
 import cd4017be.lib.render.model.MultipartModel;
 import cd4017be.lib.render.model.RawModelData;
 import cd4017be.lib.util.Orientation;
 import cd4017be.thermokin.Main;
+import cd4017be.thermokin.block.BlockModularMachine;
 import cd4017be.thermokin.module.Part;
 import cd4017be.thermokin.module.Part.Type;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -31,12 +31,15 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 /**
  * @author CD4017BE
  *
  */
+@SideOnly(Side.CLIENT)
 public class ModularModel extends MultipartModel {
 
 	public static IModelProvider[] PROVIDERS = new IModelProvider[12];
@@ -64,7 +67,7 @@ public class ModularModel extends MultipartModel {
 	/**
 	 * @param block
 	 */
-	public ModularModel(MultipartBlock block) {
+	public ModularModel(BlockModularMachine block) {
 		super(block);
 		System.arraycopy(PROVIDERS, 0, modelProvider, 0, PROVIDERS.length);
 		itemHandler = ITEM_HANDLER;
@@ -147,7 +150,7 @@ public class ModularModel extends MultipartModel {
 
 	static class ItemHandler extends ItemOverrideList {
 
-		Cache<int[], BakedModel> modelCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterAccess(5, TimeUnit.MINUTES).build();
+		Cache<int[], BakedModel> modelCache = CacheBuilder.newBuilder().maximumSize(127).expireAfterAccess(5, TimeUnit.MINUTES).build();
 
 		ItemHandler() {
 			super(Collections.emptyList());
@@ -169,11 +172,8 @@ public class ModularModel extends MultipartModel {
 			IBakedModel base = model.base[i];
 			BakedModel result = new BakedModel(base.getParticleTexture(), RawModelData.DEFAULT_TRANSFORM, base.isAmbientOcclusion(), base.isGui3d());
 			MultipartBlock block = model.getOwner();
-			IExtendedBlockState state = (IExtendedBlockState) block.getDefaultState().withProperty(model.getOwner().baseState, i);
-			for (int j = 0; j < block.modules.length; j++) {
-				Part p = Part.getPart(Type.forSlot(j), comps[j]);
-				state = state.withProperty(block.modules[j], PropertyByte.cast(p.modelId));
-			}
+			IExtendedBlockState state = (IExtendedBlockState) block.getDefaultState().withProperty(block.baseState, i);
+			state = state.withProperty(MultipartBlock.moduleRef, new ModularItemImpl(comps));
 			result.quads[0] = model.getQuads(state, null, 0);
 			for (EnumFacing f : EnumFacing.values())
 				result.quads[f.ordinal() + 1] = model.getQuads(state, f, 0);
