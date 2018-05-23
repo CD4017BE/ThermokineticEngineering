@@ -21,8 +21,8 @@ public class Part {
 			NULL_MODULE = new Part(Type.MODULE, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0),
 			NULL_MAIN = new Part(Type.MAIN, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0);
 
-	public static final HashMap<ItemKey, Part> recipes = new HashMap<ItemKey, Part>();
-	public static final Part[] casings = new Part[16], modules = new Part[16], cores = new Part[16];
+	private static final HashMap<ItemKey, Part> recipes = new HashMap<ItemKey, Part>();
+	private static final Part[] casings = new Part[64], modules = new Part[16], cores = new Part[16];
 
 	@Nonnull
 	public static Part getPart(ItemStack stack) {
@@ -67,6 +67,13 @@ public class Part {
 		this.Lh = Lh;
 		this.Tmax = Tmax;
 		this.dmgH = dmgH;
+		
+		switch(type) {
+		case CASING: casings[id] = this; break;
+		case MODULE: modules[id] = this; break;
+		case MAIN: cores[id] = this; break;
+		}
+		if (!item.isEmpty()) recipes.put(new ItemKey(item), this);
 	}
 
 	public enum Type {

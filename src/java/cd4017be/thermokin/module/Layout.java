@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class Layout {
 
-	public static final Layout NULL = new Layout(-1, ItemStack.EMPTY);
+	public static final Layout NULL = new Layout();
 
 	public final int id;
 	public final ItemStack item;
@@ -24,10 +24,18 @@ public class Layout {
 	/**bit[0,1]: need bottom/top, bits[4-7]: min amount */
 	public byte casings = 0x53;
 
-	public Layout(int id, ItemStack item) {
-		this.id = id;
+	public Layout(ItemStack item) {
+		this.id = layouts.size();
 		this.item = item;
 		this.name = item.getItem().getRegistryName().toString();
+		layouts.add(this);
+		registry.put(new ItemKey(item), this);
+	}
+
+	private Layout() {
+		this.id = -1;
+		this.item = ItemStack.EMPTY;
+		this.name = "null";
 	}
 
 	public int ioCount() {
@@ -68,8 +76,9 @@ public class Layout {
 		return n > casings >> 4;
 	}
 
-	public static final ArrayList<Layout> layouts = new ArrayList<Layout>();
+	private static final ArrayList<Layout> layouts = new ArrayList<Layout>();
 	public static final HashMap<ItemKey, Layout> recipes = new HashMap<ItemKey, Layout>();
+	private static final HashMap<ItemKey, Layout> registry = new HashMap<ItemKey, Layout>();
 
 	public static Layout fromRecipe(ItemStack item0, ItemStack item1, ItemStack item2) {
 		Layout layout = recipes.get(new ItemKey(item0, item1, item2));
@@ -78,6 +87,12 @@ public class Layout {
 
 	public static Layout fromId(int id) {
 		return id >= 0 && id < layouts.size() ? layouts.get(id) : NULL;
+	}
+
+	public static Layout addRecipe(ItemStack result, ItemStack in0, ItemStack in1, ItemStack in2) {
+		Layout layout = registry.get(new ItemKey(result));
+		if (layout != null) recipes.put(new ItemKey(in0, in1, in2), layout);
+		return layout;
 	}
 
 }

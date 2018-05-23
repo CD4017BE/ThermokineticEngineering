@@ -1,6 +1,7 @@
 package cd4017be.thermokin;
 
 import cd4017be.api.recipes.RecipeScriptContext;
+import cd4017be.api.registry.PartRegistry;
 import cd4017be.lib.script.ScriptFiles.Version;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -28,6 +29,7 @@ public class Main {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Objects.init();
+		PartRegistry.init();
 		RecipeScriptContext.instance.run(ConfigName + ".PRE_INIT");
 		proxy.init();
 	}

@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -51,13 +52,14 @@ public class ModularModel extends MultipartModel {
 		}
 	}
 
-	public static void register(Part part, ResourceLocation model) {
+	public static void register(Part part, ResourceLocation model, BlockRenderLayer layer) {
 		if (part.modelId >= 0) return;
 		if (model == null) {
 			part.modelId = -1;
 		} else if (part.type == Type.CASING) {
 			part.modelId = ModelProviderCasing.textures.size();
 			ModelProviderCasing.textures.add(model);
+			ModelProviderCasing.layers.add(layer);
 		} else if (part.type == Type.MODULE) {
 			part.modelId = ModelProviderModule.models.size();
 			ModelProviderModule.models.add(model);
@@ -87,8 +89,13 @@ public class ModularModel extends MultipartModel {
 
 		@Override
 		public IBakedModel getModelFor(Object val) {
+			return getModelFor(val, null);
+		}
+
+		@Override
+		public IBakedModel getModelFor(Object val, BlockRenderLayer layer) {
 			int id = ((Byte)val).intValue() & 0xff;
-			return id < baked.length ? baked[id] : null;
+			return id < baked.length && (layer == null || getLayer(id) == layer) ? baked[id] : null;
 		}
 
 		@Override
@@ -103,11 +110,14 @@ public class ModularModel extends MultipartModel {
 			}
 		}
 
+		abstract BlockRenderLayer getLayer(int id);
+
 	}
 
 	static class ModelProviderCasing extends ModelProviderSided {
 
 		static final ArrayList<ResourceLocation> textures = new ArrayList<ResourceLocation>();
+		static final ArrayList<BlockRenderLayer> layers = new ArrayList<BlockRenderLayer>();
 		static final ResourceLocation mainModel = new ResourceLocation(Main.ID, "block/.casing");
 
 		/**
@@ -123,6 +133,11 @@ public class ModularModel extends MultipartModel {
 			for (ResourceLocation tex : textures)
 				modelLocs.add(new ResourceLocation(mainModel + "#" + side.getName() + "$" + tex));
 			return modelLocs;
+		}
+
+		@Override
+		BlockRenderLayer getLayer(int id) {
+			return layers.get(id);
 		}
 
 	}
@@ -144,6 +159,11 @@ public class ModularModel extends MultipartModel {
 			for (ResourceLocation loc : models)
 				modelLocs.add(new ResourceLocation(loc + "#" + side.getName()));
 			return modelLocs;
+		}
+
+		@Override
+		BlockRenderLayer getLayer(int id) {
+			return BlockRenderLayer.CUTOUT;
 		}
 
 	}
