@@ -8,6 +8,7 @@ tile.thermokin.assembler.tip=Used to build most machines in this mod.
 #Items
 item.thermokin.wrench.name=Machine Assembly Wrench
 item.thermokin.wrench.tip=Allows exchange and reconfiguration of modules in an already build machine.\nSneak-right-click on a machine in world to open GUI.
+item.thermokin.part.tipA=Heat conductivity: %.3u W/K\nMelting temperature: %.0f K\nOverheat durability: %.0f Ks
 
 #Layouts
 layout.thermokin.oven=Fuel supply

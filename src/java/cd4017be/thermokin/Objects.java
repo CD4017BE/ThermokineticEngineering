@@ -5,6 +5,7 @@ import cd4017be.lib.item.BaseItemBlock;
 import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
 import cd4017be.thermokin.block.BlockModularMachine;
+import cd4017be.thermokin.item.ItemCasing;
 import cd4017be.thermokin.item.ItemModularMachine;
 import cd4017be.thermokin.item.ItemWrench;
 import cd4017be.thermokin.module.Layout;
@@ -43,6 +44,7 @@ public class Objects {
 	public static final ItemModularMachine oven = null;
 
 	//Items
+	public static final ItemCasing casing = null;
 	public static final ItemWrench wrench = null;
 
 	static void init() {
@@ -65,6 +67,7 @@ public class Objects {
 		ev.getRegistry().registerAll(
 			new BaseItemBlock(ASSEMBLER),
 			new ItemModularMachine(OVEN),
+			new ItemCasing("casing").setCreativeTab(tabThermokin),
 			new ItemWrench("wrench").setCreativeTab(tabThermokin)
 		);
 	}
