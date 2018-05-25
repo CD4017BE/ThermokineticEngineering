@@ -131,7 +131,7 @@ public class ModularModel extends MultipartModel {
 		public Collection<ResourceLocation> getDependencies() {
 			ArrayList<ResourceLocation> modelLocs = new ArrayList<ResourceLocation>(textures.size());
 			for (ResourceLocation tex : textures)
-				modelLocs.add(new ResourceLocation(mainModel + "#" + side.getName() + "$" + tex));
+				modelLocs.add(new ResourceLocation(mainModel + "#" + side.name() + "$" + tex));
 			return modelLocs;
 		}
 
@@ -157,7 +157,7 @@ public class ModularModel extends MultipartModel {
 		public Collection<ResourceLocation> getDependencies() {
 			ArrayList<ResourceLocation> modelLocs = new ArrayList<ResourceLocation>(models.size());
 			for (ResourceLocation loc : models)
-				modelLocs.add(new ResourceLocation(loc + "#" + side.getName()));
+				modelLocs.add(new ResourceLocation(loc + "#" + side.name()));
 			return modelLocs;
 		}
 
@@ -192,7 +192,7 @@ public class ModularModel extends MultipartModel {
 			IBakedModel base = model.base[i];
 			BakedModel result = new BakedModel(base.getParticleTexture(), RawModelData.DEFAULT_TRANSFORM, base.isAmbientOcclusion(), base.isGui3d());
 			MultipartBlock block = model.getOwner();
-			IExtendedBlockState state = (IExtendedBlockState) block.getDefaultState().withProperty(block.baseState, i);
+			IExtendedBlockState state = (IExtendedBlockState)block.getStateFromMeta(i);
 			state = state.withProperty(MultipartBlock.moduleRef, new ModularItemImpl(comps));
 			result.quads[0] = model.getQuads(state, null, 0);
 			for (EnumFacing f : EnumFacing.values())
