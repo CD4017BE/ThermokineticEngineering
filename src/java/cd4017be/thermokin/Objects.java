@@ -4,7 +4,11 @@ import cd4017be.lib.block.AdvancedBlock;
 import cd4017be.lib.item.BaseItemBlock;
 import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
+import cd4017be.thermokin.block.BlockModularMachine;
+import cd4017be.thermokin.item.ItemModularMachine;
+import cd4017be.thermokin.module.Layout;
 import cd4017be.thermokin.tileentity.Assembler;
+import cd4017be.thermokin.tileentity.SolidFuelOven;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -26,23 +30,30 @@ public class Objects {
 
 	public static TabMaterials tabThermokin = new TabMaterials(Main.ID);
 
+	//Machine Layouts
+	public static Layout ovenL;
+
 	//Blocks
 	public static final AdvancedBlock ASSEMBLER = null;
+	public static final BlockModularMachine OVEN = null;
 
 	//ItemBlocks
 	public static final BaseItemBlock assembler = null;
+	public static final ItemModularMachine oven = null;
 
 	//Items
 
 	static void init() {
 		tabThermokin.item = new ItemStack(Blocks.PISTON);
+		ovenL = new Layout(new ItemStack(oven)).inv(1,0,0);
 	}
 
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> ev) {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
-			new AdvancedBlock("assembler", Material.WOOD, SoundType.WOOD, 0, Assembler.class).setCreativeTab(tabThermokin)
+			new AdvancedBlock("assembler", Material.WOOD, SoundType.WOOD, 0, Assembler.class).setCreativeTab(tabThermokin),
+			new BlockModularMachine("oven", Material.ROCK, SoundType.STONE, 0, SolidFuelOven.class).setCreativeTab(tabThermokin)
 		);
 	}
 
@@ -50,7 +61,8 @@ public class Objects {
 	public static void registerItems(RegistryEvent.Register<Item> ev) {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
-			new BaseItemBlock(ASSEMBLER)
+			new BaseItemBlock(ASSEMBLER),
+			new ItemModularMachine(OVEN)
 		);
 	}
 

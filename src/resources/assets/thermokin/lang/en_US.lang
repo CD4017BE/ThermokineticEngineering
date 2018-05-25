@@ -8,6 +8,9 @@ tile.thermokin.assembler.tip=
 #Items
 
 
+#Layouts
+layout.thermokin.oven=Fuel supply
+
 #GUI names
 
 #GUI tooltips
@@ -16,5 +19,5 @@ gui.cd4017be.assembler.core=Core
 gui.cd4017be.assembler.mod=Modules
 gui.cd4017be.assembler.do0=§4invalid/missing core parts!
 gui.cd4017be.assembler.do1=§6missing casings or modules!
-gui.cd4017be.assembler.do1=§2craft machine
-gui.cd4017be.assembler.info=
+gui.cd4017be.assembler.do2=§2craft machine
+gui.cd4017be.assembler.info=Crafting\nModule configuration

@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"normal": { "model": "thermokin:oven" },
+		"inventory": { "model": "thermokin:oven" },
+		"base": { "model": "furnace" }
+	}
+}
