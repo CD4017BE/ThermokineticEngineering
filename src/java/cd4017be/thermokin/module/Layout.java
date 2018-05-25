@@ -7,6 +7,7 @@ import cd4017be.lib.util.ItemKey;
 import cd4017be.thermokin.module.Part.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * 
@@ -22,12 +23,13 @@ public class Layout {
 	public int invIn, invOut, invAcc;
 	public int tankIn, tankOut, tankAcc;
 	/**bit[0,1]: need bottom/top, bits[4-7]: min amount */
-	public byte casings = 0x53;
+	public byte casings = 0x31;
 
 	public Layout(ItemStack item) {
 		this.id = layouts.size();
 		this.item = item;
-		this.name = item.getItem().getRegistryName().toString();
+		ResourceLocation loc = item.getItem().getRegistryName();
+		this.name = "layout." + loc.getResourceDomain() + "." + loc.getResourcePath();
 		layouts.add(this);
 		registry.put(new ItemKey(item), this);
 	}
@@ -36,6 +38,25 @@ public class Layout {
 		this.id = -1;
 		this.item = ItemStack.EMPTY;
 		this.name = "null";
+	}
+
+	public Layout cs(boolean bot, boolean top, int n) {
+		this.casings = (byte)((bot ? 1:0) | (top ? 2:0) | n << 4);
+		return this;
+	}
+
+	public Layout inv(int in, int out, int acc) {
+		this.invIn = in;
+		this.invOut = out;
+		this.invAcc = acc;
+		return this;
+	}
+
+	public Layout tank(int in, int out, int acc) {
+		this.tankIn = in;
+		this.tankOut = out;
+		this.tankAcc = acc;
+		return this;
 	}
 
 	public int ioCount() {

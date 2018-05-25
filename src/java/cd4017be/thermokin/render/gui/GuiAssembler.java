@@ -20,7 +20,8 @@ import net.minecraft.util.ResourceLocation;
 public class GuiAssembler extends AdvancedGui {
 
 	private final IMachineData data;
-	private final Part[] parts = new Part[9];
+	private final Part[] parts = new Part[6];
+	private Layout last;
 
 	public GuiAssembler(IGuiData tile, EntityPlayer player) {
 		super(new TileContainer(tile, player));
@@ -54,16 +55,16 @@ public class GuiAssembler extends AdvancedGui {
 			Part p = data.getPart(i + 6);
 			if (p != parts[i]) {
 				parts[i] = p;
-				if (i < 6) ((ModuleCfg)guiComps.get(i)).onPartChange();
-				else {
-					MainCfg comp = (MainCfg)guiComps.get(6);
-					Layout layout = data.getLayout();
-					int n = layout.ioCount();
-					if (comp.n != n)
-						guiComps.set(6, comp = new MainCfg(6, 7, 15, n));
-					comp.setTooltip(layout.name);
-				}
+				((ModuleCfg)guiComps.get(i)).onPartChange();
 			}
+		}
+		Layout layout = data.getLayout();
+		if (layout != last) {
+			MainCfg comp = (MainCfg)guiComps.get(6);
+			int n = layout.ioCount();
+			if (comp.n != n)
+				guiComps.set(6, comp = new MainCfg(6, 7, 15, n));
+			comp.setTooltip(layout.name);
 		}
 	}
 

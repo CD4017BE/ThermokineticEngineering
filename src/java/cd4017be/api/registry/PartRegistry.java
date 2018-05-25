@@ -41,11 +41,23 @@ public class PartRegistry implements IRecipeHandler {
 			//TODO add casing requirements
 		} else if (CASING.equals(k)) {
 			int id = (int)param.getNumber(1);
-			Part p = new Part(Type.CASING, id, param.get(2, ItemStack.class), (float)param.getNumber(3), (float)param.getNumber(4), (float)param.getNumber(5));
-			BlockRenderLayer layer = param.param.length > 7 ? BlockRenderLayer.valueOf(param.getString(7)) : BlockRenderLayer.SOLID;
+			double[] stats = param.getVector(3);
+			Part p = new Part(Type.CASING, id, param.get(2, ItemStack.class), (float)stats[0], (float)stats[1], (float)stats[2]);
+			String tex = param.getString(4);
+			BlockRenderLayer layer = BlockRenderLayer.SOLID;
+			int i = tex.lastIndexOf('@');
+			if (i > 0) {
+				String code = tex.substring(i+1).toLowerCase();
+				tex = tex.substring(0, i);
+				for (BlockRenderLayer l : BlockRenderLayer.values())
+					if (l.toString().toLowerCase().startsWith(code)) {
+						layer = l;
+						break;
+					}
+			}
 			p.opaque = layer == BlockRenderLayer.SOLID;
 			if (FMLCommonHandler.instance().getSide().isClient())
-				ModularModel.register(p, new ResourceLocation(param.getString(6)), layer);
+				ModularModel.register(p, new ResourceLocation(tex), layer);
 		}
 	}
 

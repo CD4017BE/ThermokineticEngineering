@@ -1,1 +1,10 @@
-VERSION = 1;
+VERSION = 2;
+
+INIT(){
+	!machine casing materials: add("casePlate", <id>, <itemstack>, [<thermalStats>...]#, <texture>);
+	add("casePlate", 1, it("minecraft:stone"), [0.1,1500,0.05]#, "minecraft:blocks/stone_slab_top");
+	add("casePlate", 2, it("minecraft:bricks"), [0,1500,0]#, "minecraft:blocks/brick");
+	
+	!machine assembler recipes: add("machine", <result>, [<core ingreds>...]);
+	add("machine", it("tile.oven"), [it("minecraft:furnace")]);
+}

@@ -15,14 +15,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class Part {
 
+	private static final HashMap<ItemKey, Part> recipes = new HashMap<ItemKey, Part>();
+	private static final Part[] casings = new Part[64], modules = new Part[16], cores = new Part[16];
+
 	public static int MAX_DUR = 250;
 	public static final Part
 			NULL_CASING = new Part(Type.CASING, 0, ItemStack.EMPTY, 1.0F, Float.POSITIVE_INFINITY, 0),
 			NULL_MODULE = new Part(Type.MODULE, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0),
 			NULL_MAIN = new Part(Type.MAIN, 0, ItemStack.EMPTY, 0, Float.POSITIVE_INFINITY, 0);
-
-	private static final HashMap<ItemKey, Part> recipes = new HashMap<ItemKey, Part>();
-	private static final Part[] casings = new Part[64], modules = new Part[16], cores = new Part[16];
 
 	@Nonnull
 	public static Part getPart(ItemStack stack) {

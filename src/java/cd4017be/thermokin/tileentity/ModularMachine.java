@@ -36,7 +36,7 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 	public final byte[] durability = new byte[15];
 	/**bits[0-23 6*4]: module settings (slot * value), bits[24-60 12*3]: resource settings (id * value) */
 	public long cfg;
-	public Orientation orientation;
+	public Orientation orientation = Orientation.N;
 
 	public abstract IBlockModule[] getModules();
 	public boolean isPartValid(int i, Part p) {
@@ -117,6 +117,11 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 	@Override
 	public Part getPart(int i) {
 		return components[i];
+	}
+
+	@Override
+	public int getStatus() {
+		return 2; //TODO maybe necessary to handle different
 	}
 
 	public void setPart(int i, Part part) {

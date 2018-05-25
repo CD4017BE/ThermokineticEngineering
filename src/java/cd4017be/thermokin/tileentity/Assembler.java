@@ -15,6 +15,7 @@ import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.module.IMachineData;
 import cd4017be.thermokin.module.Layout;
 import cd4017be.thermokin.module.Part;
+import cd4017be.thermokin.module.Part.Type;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +30,7 @@ import net.minecraftforge.items.SlotItemHandler;
 public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMachineData, IGuiData, ClientPacketReceiver {
 
 	private BasicInventory inv = new BasicInventory(16);
-	private Part[] parts = new Part[15];
+	private Part[] parts = Utils.init(new Part[15], (i)-> Type.forSlot(i).NULL());
 	private Layout layout = Layout.NULL;
 	/**bits[0-23 6*4]: module settings (slot * value), bits[24-60 12*3]: resource settings (id * value) */
 	private long cfg;
@@ -47,15 +48,18 @@ public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMac
 
 	private void updateItem(ItemStack stack, int slot) {
 		if (slot == 15 || stack.isItemEqual(inv.items[slot])) return;
-		parts[slot] = Part.getPart(stack);
+		Part p = Part.getPart(stack);
+		parts[slot] = p == Part.NULL_MAIN ? Type.forSlot(slot).NULL() : p;
 		if (world.isRemote) return;
-		if (slot >= 12) layout = Layout.fromRecipe(inv.items[12], inv.items[13], inv.items[14]);
+		if (slot >= 12) {
+			inv.items[slot] = stack;
+			layout = Layout.fromRecipe(inv.items[12], inv.items[13], inv.items[14]);
+		}
 		updateStatus();
 	}
 
 	private int insert(int slot, ItemStack stack) {
-		if (slot == 15) return 0;
-		if (inv.items[slot].isEmpty()) {
+		if (slot != 15 && inv.items[slot].isEmpty()) {
 			Part p = Part.getPart(stack);
 			if (slot < p.type.slotS || slot >= p.type.slotE)
 				return 0;
@@ -71,7 +75,7 @@ public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMac
 		for (int i = 0; i < 15; i++) {
 			item = inv.items[i];
 			int n = item.getCount();
-			if (n > 0 && (i < 12 || Part.getPart(item) != Part.NULL_MAIN)) {
+			if (n > 0) {
 				item.setCount(n - 1);
 				update |= n == 1 && i >= 12;
 			}
