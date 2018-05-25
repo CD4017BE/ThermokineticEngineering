@@ -235,6 +235,21 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		return p != Part.NULL_CASING && p != Part.NULL_MODULE && p != Part.NULL_MAIN;
 	}
 
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side) {
+		for (IBlockModule m : getModules())
+			if (m.supportsCapability(cap))
+				return m.hasCapability(cap, side);
+		return false;
+	}
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side) {
+		for (IBlockModule m : getModules())
+			if (m.supportsCapability(cap))
+				return m.getCapability(cap, side);
+		return null;
+	}
+
 	public class PartInventory extends AbstractInventory {
 
 		@Override

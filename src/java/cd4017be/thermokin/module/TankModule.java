@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
@@ -218,6 +219,22 @@ public class TankModule implements ITankContainer, IPartListener, IBlockModule {
 		IFluidHandler acc = caps[cfg];
 		if (acc != null) return acc;
 		return Utils.neighborCapability(tile, EnumFacing.VALUES[cfg], CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side) {
+		return side != null && caps[side.ordinal()] != null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side) {
+		return side == null ? null : (T)caps[side.ordinal()];
+	}
+
+	@Override
+	public boolean supportsCapability(Capability<?> cap) {
+		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	}
 
 	private class Access implements IFluidHandler {

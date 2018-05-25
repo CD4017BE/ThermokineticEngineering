@@ -4,6 +4,8 @@ import cd4017be.api.IBlockModule;
 import cd4017be.api.registry.Environment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Simple implementation of {@link IHeatAccess} and {@link IHeatReservoir} with constant heat capacity.<br>
@@ -82,6 +84,22 @@ public class SimpleHeatReservoir implements IHeatAccess, IBlockModule {
 	@Override
 	public void invalidate() {
 		if (link != null) link.disconnect();
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		return (T)this;
+	}
+
+	@Override
+	public boolean supportsCapability(Capability<?> cap) {
+		return cap == IHeatAccess.CAPABILITY_HEAT_ACCESS;
 	}
 
 }

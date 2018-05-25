@@ -1,13 +1,17 @@
 package cd4017be.api;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 /**
  * 
  * @author CD4017BE
  */
-public interface IBlockModule {
+public interface IBlockModule extends ICapabilityProvider {
 
 	/**
 	 * restores state from a given NBT tag
@@ -32,5 +36,11 @@ public interface IBlockModule {
 	 * invalidates state to perform cleanup
 	 */
 	public void invalidate();
+
+	/**
+	 * @param cap
+	 * @return whether {@link #hasCapability} or {@link #getCapability} should be called on this module to retrieve the given capability (it won't otherwise)
+	 */
+	public boolean supportsCapability(@Nonnull Capability<?> cap);
 
 }

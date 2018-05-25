@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * More advanced implementation of {@link IHeatReservoir} for use in TileEntities.<br>
@@ -66,13 +67,21 @@ public class SidedHeatReservoir implements IHeatAccess, IBlockModule, IUpdatable
 		return this;
 	}
 
-	/**
-	 * @param side the side to access
-	 * @return HeatAccess capability for the given side or null if not available
-	 */
-	public IHeatAccess getCapability(EnumFacing side) {
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing side) {
+		return tile != null && side != null && ref[side.ordinal()] != null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing side) {
 		if (tile == null || side == null) return null;
-		return ref[side.ordinal()];
+		return (T)ref[side.ordinal()];
+	}
+
+	@Override
+	public boolean supportsCapability(Capability<?> cap) {
+		return cap == IHeatAccess.CAPABILITY_HEAT_ACCESS;
 	}
 
 	/**
