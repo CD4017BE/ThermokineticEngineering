@@ -21,8 +21,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * 
@@ -49,14 +52,12 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		super.readFromNBT(nbt);
 		byte[] dur = nbt.getByteArray("dur");
 		System.arraycopy(dur, 0, durability, 0, Math.min(dur.length, durability.length));
-		int[] comps = nbt.getIntArray("comp");
-		if (comps.length >= 15)
-			for (int i = 0; i < components.length; i++)
-				components[i] = Part.getPart(Type.forSlot(i), comps[i]);
+		readState(nbt);
 		cfg = nbt.getLong("cfg");
 		int n = 0;
 		for (IBlockModule m : getModules())
-			m.readNBT(nbt, "M" + (n++));
+			m.readNBT(nbt, "M" + (n++), this);
+		orientation = Orientation.values()[nbt.getByte("orient") & 0xf];
 	}
 
 	@Override
@@ -65,12 +66,37 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		for (IBlockModule m : getModules())
 			m.writeNBT(nbt, "M" + (n++));
 		nbt.setByteArray("dur", durability);
+		writeState(nbt);
+		nbt.setLong("cfg", cfg);
+		nbt.setByte("orient", (byte)orientation.ordinal());
+		return super.writeToNBT(nbt);
+	}
+
+	protected void writeState(NBTTagCompound nbt) {
 		int[] comps = new int[components.length];
 		for (int i = 0; i < comps.length; i++)
 			comps[i] = components[i].id;
 		nbt.setIntArray("comp", comps);
-		nbt.setLong("cfg", cfg);
-		return super.writeToNBT(nbt);
+	}
+
+	protected void readState(NBTTagCompound nbt) {
+		int[] comps = nbt.getIntArray("comp");
+		if (comps.length >= 15)
+			for (int i = 0; i < components.length; i++)
+				components[i] = Part.getPart(Type.forSlot(i), comps[i]);
+		if (world != null) markUpdate();
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeState(nbt);
+		return new SPacketUpdateTileEntity(pos, -1, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		readState(pkt.getNbtCompound());
 	}
 
 	@Override
@@ -138,14 +164,15 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 					((IPartListener)m).onPartChanged(this, i, old);
 			if (this instanceof IPartListener)
 				((IPartListener)this).onPartChanged(this, i, old);
+			markUpdate();
 		}
 	}
 
 	public boolean damagePart(int i, float dmg) {
 		if (dmg < 0) return false;
-		int d = (durability[i] & 0xff) - MathHelper.floor(dmg);
-		if (RAND.nextFloat() < dmg - (float)d) d--;
-		if (d <= 0) {
+		int d = MathHelper.floor(dmg);
+		if (RAND.nextFloat() < dmg - (float)d) d++;
+		if ((d = (durability[i] & 0xff) - d) <= 0) {
 			setPart(i, Type.forSlot(i).NULL());
 			return true;
 		} else {
