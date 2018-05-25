@@ -5,6 +5,7 @@ import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
 import cd4017be.lib.script.Parameters;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.module.Layout;
+import cd4017be.thermokin.module.Part;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -36,7 +37,7 @@ public class PartRegistry implements IRecipeHandler {
 			//TODO add casing requirements
 		} else if (CASING.equals(k)) {
 			double[] stats = param.getVector(3);
-			Objects.casing.addCasing((int)param.getNumber(1), param.getString(2), param.getString(4), (float)stats[0], (float)stats[1], (float)stats[2]);
+			Objects.casing.addCasing((int)param.getNumber(1), param.getString(2), param.getString(4), (float)stats[0] / 20F, (float)stats[1], (float)Part.MAX_DUR / (float)stats[2] / 20F);
 		}
 	}
 

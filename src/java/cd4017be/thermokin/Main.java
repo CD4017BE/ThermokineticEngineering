@@ -2,7 +2,9 @@ package cd4017be.thermokin;
 
 import cd4017be.api.heat.HeatSimulation;
 import cd4017be.api.recipes.RecipeScriptContext;
+import cd4017be.api.registry.Environment;
 import cd4017be.api.registry.PartRegistry;
+import cd4017be.api.registry.ThermodynamicProperties;
 import cd4017be.lib.script.ScriptFiles.Version;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -11,6 +13,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 @Mod(modid = Main.ID, useMetadata = true)
 public class Main {
 
@@ -31,6 +37,7 @@ public class Main {
 	public void preInit(FMLPreInitializationEvent event) {
 		Objects.init();
 		PartRegistry.init();
+		ThermodynamicProperties.register();
 		RecipeScriptContext.instance.run(ConfigName + ".PRE_INIT");
 		proxy.init();
 	}
@@ -42,6 +49,7 @@ public class Main {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		Environment.makeDefEnv();
 		HeatSimulation.register();
 	}
 

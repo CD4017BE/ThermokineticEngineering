@@ -2,10 +2,14 @@ package cd4017be.api.registry;
 
 import java.util.HashMap;
 
+import org.apache.logging.log4j.Level;
+
+import cd4017be.thermokin.Main;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLLog;
 
 /**
  * provides some properties of the world environment like temperatures at certain locations and thermodynamic properties of blocks.
@@ -55,10 +59,10 @@ public class Environment {
 	//----------- Static ------------
 
 	public static final HashMap<Integer, Environment> environments = new HashMap<Integer, Environment>();
-	public static Environment defaultEnv = new Environment(273, 1, 1);
+	public static Environment defaultEnv;
 
 	/** Default Heat resistance for unlisted materials */
-	public static BlockEntry def_block = new BlockEntry(1);
+	public static BlockEntry def_block;
 	/** Heat resistance of registered block materials */
 	public static final HashMap<Material, BlockEntry> materials = new HashMap<Material, BlockEntry>();
 	/** Heat resistance of registered blocks */
@@ -73,6 +77,19 @@ public class Environment {
 		BlockEntry e = blocks.get(state);
 		if (e == null) e = materials.getOrDefault(state.getMaterial(), def_block);
 		return e.R;
+	}
+
+	public static void makeDefEnv() {
+		FMLLog.log(Main.ID, Level.INFO, "Custom thermal environment properties registered for %d dimensions.", environments.size());
+		if (Environment.defaultEnv == null) {
+			FMLLog.log(Main.ID, Level.WARN, "No default thermal environment properties registered! FIX YOUR CONFIG !!!\nCreating environment default with fallback values.");
+			defaultEnv = new Environment(270, 25, 1);
+		}
+		FMLLog.log(Main.ID, Level.INFO, "Custom thermal block properties registered for %d block materials and %d block states.", materials.size(), blocks.size());
+		if (def_block == null) {
+			FMLLog.log(Main.ID, Level.WARN, "No default thermal block properties registered! FIX YOUR CONFIG !!!\nCreating block default with fallback values.");
+			def_block = new BlockEntry(1F);
+		}
 	}
 
 	public static class BlockEntry {

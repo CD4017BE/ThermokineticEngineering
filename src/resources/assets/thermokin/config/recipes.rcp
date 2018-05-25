@@ -1,9 +1,45 @@
-VERSION = 2;
+VERSION = 3;
+
+{
+	!heat transfer resistance for block materials [asCover, asNeighborBlock, environmentMultiplier]
+	Rmat_default =	[2.5, 2.5, 1.0]#;
+	Rmat_IRON =		[0.01, 0.01, 1.0]#;
+	Rmat_GLASS =	[1.0, 1.0, 1.0]#;
+	Rmat_ROCK =		[1.2, 1.2, 1.0]#;
+	Rmat_CLAY =		[1.0, 1.0, 1.0]#;
+	Rmat_GROUND =	[1.5, 1.5, 1.0]#;
+	Rmat_GRASS =	[2.0, 2.0, 1.0]#;
+	Rmat_SAND =		[4.0, 4.0, 1.0]#;
+	Rmat_WOOD =		[5.0, 5.0, 1.0]#;
+	Rmat_PACKED_ICE = [0.4, 0.4, 1.0]#;
+	Rmat_ICE =		[0.5, 0.5, 1.0]#;
+	Rmat_CRAFTED_SNOW = [12.0, 12.0, 1.0]#;
+	Rmat_AIR =		[25.0, 0.0, 10.0]#;
+	Rmat_SNOW =		[15.0, 15.0, 1.0]#;
+	Rmat_CLOTH =	[100.0, 100.0, 1.0]#;
+	Rmat_LAVA =		[2.0, 1.6, 0.5]#;
+	Rmat_WATER =	[1.2, 1.0, 0.25]#;
+}
+
+PRE_INIT() {
+	!define a dimension's environment: (dimId, baseTemp[K], biomeTempMult[K/?], heatResistance[Km²/W])
+	!actual temperature is baseTemp + biomeTempMult * {coldTaiga:-0.6, icePlains:0, plains:0.8, jungle:1.2, savanna:1.5, desert:2.4}
+	add("environment", nil, 270, 25, 0.8); !default
+	add("environment", -1, 350, 10, 2.5); !Nether
+	
+	!machine casing materials: (id, name, [heatCond[W/K], meltTemp[K], overheatDur[Ks] ]#, texture);
+	!assume: for conductivity a crossection/thickness factor x = 12.5m, and for overheat how long it takes for required melt-heat to transfer
+	add("casePlate", 1, "$Wood Plate", [2.5, 600, 0]#, "minecraft:blocks/planks_oak");
+	add("casePlate", 2, "$Stone Plate", [13.75,1500,0]#, "minecraft:blocks/stone_slab_top");
+	add("casePlate", 3, "$Brick Plate", [6.0,2000,0]#, "minecraft:blocks/brick");
+	add("casePlate", 4, "$Nether Brick Plate", [15.0,2500,0]#, "minecraft:blocks/nether_brick");
+	add("casePlate", 5, "$Sandstone Plate", [2.5,2200,0]#, "minecraft:blocks/brick");
+	add("casePlate", 6, "$Glass Plate", [7.5,1300,0]#, "minecraft:blocks/glass");
+	add("casePlate", 7, "$Iron Plate", [640,1813,200000]#, "minecraft:blocks/iron_block");
+	add("casePlate", 8, "$Diamond Plate", [12500,3000,0]#, "minecraft:block/diamond_block");
+}
 
 INIT(){
-	!machine casing materials: add("casePlate", <id>, <itemstack>, [<thermalStats>...]#, <texture>);
-	add("casePlate", 1, "$Stone Plate", [0.1,1500,0.05]#, "minecraft:blocks/stone_slab_top");
-	add("casePlate", 2, "$Brick Plate", [0.1,2000,0.05]#, "minecraft:blocks/brick");
 	
 	!machine assembler recipes: add("machine", <result>, [<core ingreds>...]);
 	add("machine", it("tile.oven"), [it("minecraft:furnace")]);
