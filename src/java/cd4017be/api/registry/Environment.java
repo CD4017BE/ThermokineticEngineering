@@ -55,10 +55,10 @@ public class Environment {
 	//----------- Static ------------
 
 	public static final HashMap<Integer, Environment> environments = new HashMap<Integer, Environment>();
-	public static Environment defaultEnv;
+	public static Environment defaultEnv = new Environment(273, 1, 1);
 
 	/** Default Heat resistance for unlisted materials */
-	public static BlockEntry def_block;
+	public static BlockEntry def_block = new BlockEntry(1);
 	/** Heat resistance of registered block materials */
 	public static final HashMap<Material, BlockEntry> materials = new HashMap<Material, BlockEntry>();
 	/** Heat resistance of registered blocks */

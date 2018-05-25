@@ -1,5 +1,6 @@
 package cd4017be.thermokin;
 
+import cd4017be.api.heat.HeatSimulation;
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.registry.PartRegistry;
 import cd4017be.lib.script.ScriptFiles.Version;
@@ -41,6 +42,7 @@ public class Main {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		HeatSimulation.register();
 	}
 
 }

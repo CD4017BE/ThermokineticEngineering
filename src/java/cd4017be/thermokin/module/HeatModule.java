@@ -4,6 +4,7 @@ import cd4017be.api.heat.SidedHeatReservoir;
 import cd4017be.thermokin.tileentity.ModularMachine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 
@@ -39,9 +40,9 @@ public class HeatModule extends SidedHeatReservoir implements IPartListener, ITi
 	}
 
 	@Override
-	public void readNBT(NBTTagCompound nbt, String k) {
-		super.readNBT(nbt, k);
-		onPlaced((ModularMachine)tile, nbt);
+	public void readNBT(NBTTagCompound nbt, String k, TileEntity te) {
+		super.readNBT(nbt, k, te);
+		onPlaced((ModularMachine)te, nbt);
 	}
 
 	@Override
@@ -65,19 +66,20 @@ public class HeatModule extends SidedHeatReservoir implements IPartListener, ITi
 		if (++timer >= CHECK_INTERVAL) {
 			timer = 0;
 			ModularMachine m = (ModularMachine)tile;
-			if (Tmax == NaN) {
+			if (Float.isNaN(Tmax)) {
 				Tmax = POSITIVE_INFINITY;
 				for (Part p : m.components)
 					if (p.Tmax < Tmax)
 						Tmax = p.Tmax;
 			}
-			Tacc /= CHECK_INTERVAL;
-			if (Tacc > Tmax)
+			float t = Tacc / (float)CHECK_INTERVAL;
+			if (t > Tmax)
 				for (int i = 0; i < m.components.length; i++) {
 					Part p = m.components[i];
-					float dT = Tacc - p.Tmax;
+					float dT = t - p.Tmax;
 					if (dT > 0) m.damagePart(i, dT * p.dmgH * (float)CHECK_INTERVAL);
 				}
+			Tacc = 0;
 		}
 	}
 

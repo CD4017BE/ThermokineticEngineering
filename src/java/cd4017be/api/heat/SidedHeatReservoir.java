@@ -114,7 +114,7 @@ public class SidedHeatReservoir implements IHeatAccess, IBlockModule, IUpdatable
 	}
 
 	@Override
-	public void readNBT(NBTTagCompound nbt, String k) {
+	public void readNBT(NBTTagCompound nbt, String k, TileEntity tile) {
 		this.T = nbt.getFloat(k + "T");
 	}
 
@@ -136,10 +136,13 @@ public class SidedHeatReservoir implements IHeatAccess, IBlockModule, IUpdatable
 
 	@Override
 	public void invalidate() {
-		if (tile == null) return;
 		for (Access acc : ref)
 			if (acc != null && acc.link != null)
 				acc.link.disconnect();
+		if (envCond != null) {
+			envCond.disconnect();
+			envCond = null;
+		}
 		check = false;
 		tile = null;
 	}

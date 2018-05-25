@@ -64,7 +64,7 @@ public class InventoryModule extends AbstractInventory implements IPartListener,
 	}
 
 	@Override
-	public void readNBT(NBTTagCompound nbt, String k) {
+	public void readNBT(NBTTagCompound nbt, String k, TileEntity te) {
 		onPartsLoad();
 		ItemFluidUtil.loadInventory(nbt.getTagList(k + "I", 0), items);
 	}

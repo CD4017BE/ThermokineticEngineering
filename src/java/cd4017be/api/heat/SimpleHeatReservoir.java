@@ -64,7 +64,7 @@ public class SimpleHeatReservoir implements IHeatAccess, IBlockModule {
 	}
 
 	@Override
-	public void readNBT(NBTTagCompound nbt, String k) {
+	public void readNBT(NBTTagCompound nbt, String k, TileEntity tile) {
 		this.T = nbt.getFloat(k + "T");
 	}
 

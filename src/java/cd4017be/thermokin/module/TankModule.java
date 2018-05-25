@@ -44,7 +44,7 @@ public class TankModule implements ITankContainer, IPartListener, IBlockModule {
 	}
 
 	@Override
-	public void readNBT(NBTTagCompound nbt, String k) {
+	public void readNBT(NBTTagCompound nbt, String k, TileEntity te) {
 		onPartsLoad();
 		//TODO load fluids
 	}

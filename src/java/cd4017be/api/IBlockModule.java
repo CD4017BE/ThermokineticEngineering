@@ -14,7 +14,7 @@ public interface IBlockModule {
 	 * @param nbt the CompoundTag to restore from
 	 * @param k the name prefix to use
 	 */
-	public void readNBT(NBTTagCompound nbt, String k);
+	public void readNBT(NBTTagCompound nbt, String k, TileEntity te);
 
 	/**
 	 * saves state to a given NBT tag
