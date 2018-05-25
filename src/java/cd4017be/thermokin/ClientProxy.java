@@ -11,6 +11,10 @@ import cd4017be.thermokin.tileentity.SolidFuelOven;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import static cd4017be.thermokin.Objects.*;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 public class ClientProxy extends CommonProxy {
 
 	public ModularModel modModel;
@@ -32,6 +36,7 @@ public class ClientProxy extends CommonProxy {
 		
 		BlockItemRegistry.registerRender(ASSEMBLER);
 		BlockItemRegistry.registerRender(OVEN);
+		BlockItemRegistry.registerRender(wrench);
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(SolidFuelOven.class, new OvenRenderer());
 	}

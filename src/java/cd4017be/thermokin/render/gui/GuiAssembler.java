@@ -6,6 +6,7 @@ import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.util.TooltipUtil;
 import cd4017be.thermokin.module.IMachineData;
+import cd4017be.thermokin.module.IMachineData.IMachineAccess;
 import cd4017be.thermokin.module.Layout;
 import cd4017be.thermokin.module.Part;
 import cd4017be.thermokin.module.PartIOModule;
@@ -22,10 +23,13 @@ public class GuiAssembler extends AdvancedGui {
 	private final IMachineData data;
 	private final Part[] parts = new Part[6];
 	private Layout last;
+	private final boolean assembled;
 
 	public GuiAssembler(IGuiData tile, EntityPlayer player) {
 		super(new TileContainer(tile, player));
-		this.data = (IMachineData)tile;
+		IMachineAccess acc = (IMachineAccess)tile;
+		this.data = acc.getMachine();
+		this.assembled = acc.isAssembled();
 		this.MAIN_TEX = new ResourceLocation("thermokin:textures/gui/assembler.png");
 		this.drawBG = 5;
 	}
@@ -45,7 +49,7 @@ public class GuiAssembler extends AdvancedGui {
 		guiComps.add(new Text<>(8, 29, 34, 108, 8, "assembler.mod").center());
 		guiComps.add(new Text<>(9, 146, 4, 45, 8, "assembler.core").center());
 		guiComps.add(new InfoTab(10, 7, 6, 7, 8, "assembler.info"));
-		guiComps.add(new Button(11, 174, 52, 16, 16, 0, ()-> data.getStatus(), (b)-> sendPkt((byte)-20)).texture(224, 96).setTooltip("assembler.do#"));
+		guiComps.add(new Button(11, 174, assembled ? 34 : 52, 16, 16, 0, ()-> data.getStatus(), (b)-> sendPkt((byte)-20)).texture(224, 96).setTooltip("assembler.do#"));
 	}
 
 	@Override

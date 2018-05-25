@@ -15,6 +15,7 @@ import cd4017be.lib.util.Utils;
 import cd4017be.thermokin.module.IMachineData;
 import cd4017be.thermokin.module.Layout;
 import cd4017be.thermokin.module.Part;
+import cd4017be.thermokin.module.IMachineData.IMachineAccess;
 import cd4017be.thermokin.module.Part.Type;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,7 +28,7 @@ import net.minecraftforge.items.SlotItemHandler;
  * 
  * @author cd4017be
  */
-public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMachineData, IGuiData, ClientPacketReceiver {
+public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMachineData, IMachineAccess, IGuiData, ClientPacketReceiver {
 
 	private BasicInventory inv = new BasicInventory(16);
 	private Part[] parts = Utils.init(new Part[15], (i)-> Type.forSlot(i).NULL());
@@ -167,6 +168,16 @@ public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMac
 		List<ItemStack> list = makeDefaultDrops(null);
 		inv.addToList(list);
 		return list;
+	}
+
+	@Override
+	public IMachineData getMachine() {
+		return this;
+	}
+
+	@Override
+	public boolean isAssembled() {
+		return false;
 	}
 
 }

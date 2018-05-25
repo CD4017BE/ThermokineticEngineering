@@ -54,4 +54,12 @@ public interface IMachineData {
 		return false;
 	}
 
+	public interface IMachineAccess {
+
+		public IMachineData getMachine();
+
+		public boolean isAssembled();
+
+	}
+
 }

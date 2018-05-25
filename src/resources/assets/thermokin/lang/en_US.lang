@@ -2,11 +2,12 @@
 #CreativeTab
 itemGroup.thermokin=Thermokinetic Engineering
 #Blocks
-tile.thermokin.assembler.name=Machine Assembling Table
-tile.thermokin.assembler.tip=
+tile.thermokin.assembler.name=Machine Assembly Workbench
+tile.thermokin.assembler.tip=Used to build most machines in this mod.
 
 #Items
-
+item.thermokin.wrench.name=Machine Assembly Wrench
+item.thermokin.wrench.tip=Allows exchange and reconfiguration of modules in an already build machine.\nSneak-right-click on a machine in world to open GUI.
 
 #Layouts
 layout.thermokin.oven=Fuel supply
@@ -20,4 +21,6 @@ gui.cd4017be.assembler.mod=Modules
 gui.cd4017be.assembler.do0=§4invalid/missing core parts!
 gui.cd4017be.assembler.do1=§6missing casings or modules!
 gui.cd4017be.assembler.do2=§2craft machine
+gui.cd4017be.assembler.do3=§2machine can operate
+
 gui.cd4017be.assembler.info=Crafting\nModule configuration
