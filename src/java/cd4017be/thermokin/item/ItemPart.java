@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.TooltipUtil;
+import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.module.Part;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,13 +18,14 @@ import net.minecraftforge.common.util.Constants;
  * 
  * @author CD4017BE
  */
-public class ItemMachinePart extends BaseItem {
+public class ItemPart extends BaseItem {
 
 	public static int MAX_DUR = 250;
 
-	public ItemMachinePart(String id) {
+	public ItemPart(String id) {
 		super(id);
 		setMaxDamage(MAX_DUR);
+		setCreativeTab(Objects.tabThermokin);
 	}
 
 	@Override
@@ -34,7 +36,9 @@ public class ItemMachinePart extends BaseItem {
 	@Override
 	public void setDamage(ItemStack stack, int damage) {
 		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt == null) stack.setTagCompound(nbt = new NBTTagCompound());
+		if (nbt == null)
+			if (damage == 0) return;
+			else stack.setTagCompound(nbt = new NBTTagCompound());
 		nbt.setByte("dmg", (byte)damage);
 	}
 

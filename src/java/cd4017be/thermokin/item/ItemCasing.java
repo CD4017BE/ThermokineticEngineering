@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  * @author CD4017BE
  *
  */
-public class ItemCasing extends ItemMachinePart {
+public class ItemCasing extends ItemPart {
 
 	public HashMap<Integer, String> names = new HashMap<Integer, String>();
 
