@@ -1,13 +1,11 @@
 package cd4017be.thermokin.tileentity;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nonnull;
 
 import cd4017be.api.IBlockModule;
-import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.capability.AbstractInventory;
@@ -21,11 +19,9 @@ import cd4017be.thermokin.module.Part;
 import cd4017be.thermokin.module.Part.Type;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
@@ -35,7 +31,7 @@ import net.minecraftforge.common.capabilities.Capability;
  * 
  * @author cd4017be
  */
-public abstract class ModularMachine extends BaseTileEntity implements IMachineData, ITilePlaceHarvest, IModularTile, ClientPacketReceiver {
+public abstract class ModularMachine extends BaseTileEntity implements IMachineData, ITilePlaceHarvest, IModularTile {
 
 	protected static final Random RAND = new Random();
 
@@ -125,7 +121,7 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 
 	@Override
 	public int getCfg(int i) {
-		return (int)(i < 6 ? cfg >> (i * 4) & 15L : cfg >> (i * 3 - 6) & 7L) - 1;
+		return (int)(i < 6 ? cfg >> (i * 4) & 15L : cfg >> (i * 3 + 6) & 7L) - 1;
 	}
 
 	@Override
@@ -141,7 +137,7 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 			for (IBlockModule m : getModules())
 				if (m instanceof IPartListener)
 					((IPartListener)m).onCfgChange(this, i, v);
-			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 - 6, mod ? 15L : 7L, v + 1);
+			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 + 6, mod ? 15L : 7L, v + 1);
 		}
 		return flag;
 	}
@@ -154,15 +150,6 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 	@Override
 	public int getStatus() {
 		return isComplete ? 3 : 1;
-	}
-
-	@Override
-	public void onPacketFromClient(PacketBuffer data, EntityPlayer sender) throws IOException {
-		byte cmd = data.readByte();
-		if (cmd <= 0) {
-			if (!setCfg(-cmd, data.readByte()))
-				setCfg(-cmd, -1);
-		}
 	}
 
 	public void setPart(int i, Part part) {
@@ -200,6 +187,7 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 	@Override
 	public void onPlaced(EntityLivingBase entity, ItemStack item) {
 		NBTTagCompound nbt = item.getTagCompound();
+		if (nbt == null) nbt = new NBTTagCompound();
 		orientation = Orientation.fromFacing(entity.getHorizontalFacing().getOpposite());
 		byte[] dur = nbt.getByteArray("dur");
 		int[] comps = nbt.getIntArray("comp");
@@ -313,7 +301,8 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 		@Override
 		public void setStackInSlot(int slot, ItemStack stack) {
 			Part part = Part.getPart(stack);
-			if (part.item.getCount() > 0) {
+			if (part == Part.NULL_MAIN) part = Type.forSlot(slot).NULL();
+			else if (part.item.getCount() > 0) {
 				int m = stack.getMaxDamage();
 				durability[slot] = (byte) (m > 0 ? (m - stack.getItemDamage()) * Part.MAX_DUR / m : Part.MAX_DUR);
 			}

@@ -42,7 +42,7 @@ public class GuiAssembler extends AdvancedGui {
 		for (int i = 0; i < parts.length; i++)
 			parts[i] = data.getPart(i + 6);
 		for (int i = 0; i < 6; i++)
-			guiComps.add(new ModuleCfg(i, 29, 42, 18, 9));
+			guiComps.add(new ModuleCfg(i, 29 + i * 18, 42, 9, 9));
 		Layout layout = data.getLayout();
 		guiComps.add(new MainCfg(6, 7, 15, layout.ioCount()).setTooltip(layout.name));
 		guiComps.add(new Text<>(7, 29, 4, 108, 8, "assembler.case").center());
@@ -107,15 +107,17 @@ public class GuiAssembler extends AdvancedGui {
 
 		@Override
 		public void draw() {
-			if (cfg)
+			if (cfg) {
+				mc.renderEngine.bindTexture(MAIN_TEX);
 				drawTexturedModalRect(px, py, 247, 9 * data.getCfg(id) + 9, w, h);
+			}
 		}
 
 		@Override
 		public boolean mouseIn(int x, int y, int b, int d) {
 			if (!cfg) return false;
 			int next;
-			if (d == 1) next = b == 0 ? 2 : 16;
+			if (d == 0) next = b == 0 ? 2 : 16;
 			else if (d == 3) next = b > 0 ? 2 : 16;		
 			else return false;
 			int s = data.getCfg(id), k = s;
@@ -178,7 +180,7 @@ public class GuiAssembler extends AdvancedGui {
 		@Override
 		public boolean mouseIn(int x, int y, int b, int d) {
 			int next;
-			if (d == 1) next = b == 0 ? 2 : 7;
+			if (d == 0) next = b == 0 ? 2 : 7;
 			else if (d == 3) next = b > 0 ? 2 : 7;		
 			else return false;
 			int i = (y - py) / 9 + 6;

@@ -97,14 +97,14 @@ public class Assembler extends BaseTileEntity implements ITilePlaceHarvest, IMac
 
 	@Override
 	public int getCfg(int i) {
-		return (int)(i < 6 ? cfg >> (i * 4) & 15L : cfg >> (i * 3 - 6) & 7L) - 1;
+		return (int)(i < 6 ? cfg >> (i * 4) & 15L : cfg >> (i * 3 + 6) & 7L) - 1;
 	}
 
 	@Override
 	public boolean setCfg(int i, int v) {
 		if (IMachineData.super.setCfg(i, v)) {
 			boolean mod = i < 6;
-			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 - 6, mod ? 15L : 7L, v + 1);
+			cfg = Utils.setState(cfg, mod ? i * 4 : i * 3 + 6, mod ? 15L : 7L, v + 1);
 			return true;
 		}
 		return false;

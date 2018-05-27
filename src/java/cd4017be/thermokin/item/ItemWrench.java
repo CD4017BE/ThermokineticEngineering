@@ -60,12 +60,19 @@ public class ItemWrench extends BaseItem implements IGuiItem, ClientItemPacketRe
 
 	@Override
 	public void onPacketFromClient(PacketBuffer data, EntityPlayer player, ItemStack item, int slot) throws IOException {
-		byte cmd = data.readByte();
-		if (cmd == 0 && player.openContainer instanceof TileContainer) {//set all reference ItemStacks to null, so the server thinks they changed and sends the data again.
-			for (Slot s : player.openContainer.inventorySlots)
-				if (s instanceof GlitchSaveSlot)
-					player.openContainer.inventoryItemStacks.set(s.slotNumber, ItemStack.EMPTY);
-			Arrays.fill(((TileContainer)player.openContainer).refInts, 0);
+		if (player.openContainer instanceof TileContainer) {
+			TileContainer cont = (TileContainer)player.openContainer;
+			byte cmd = data.readByte();
+			if (cmd == 1) {//set all reference ItemStacks to null, so the server thinks they changed and sends the data again.
+				for (Slot s : cont.inventorySlots)
+					if (s instanceof GlitchSaveSlot)
+						cont.inventoryItemStacks.set(s.slotNumber, ItemStack.EMPTY);
+				Arrays.fill(cont.refInts, 0);
+			} else if (cmd <= 0 && cmd > -20 && cont.data instanceof GuiData) {
+				GuiData gd = (GuiData)cont.data;
+				if (!gd.tile.setCfg(-cmd, data.readByte()))
+					gd.tile.setCfg(-cmd, -1);
+			}
 		}
 	}
 
@@ -101,7 +108,7 @@ public class ItemWrench extends BaseItem implements IGuiItem, ClientItemPacketRe
 				inv = new BasicInventory(tile.components.length);
 				//Workaround to fix an inventory sync bug. Sends a request to server that it should send the inventory data again.
 				PacketBuffer dos = BlockGuiHandler.getPacketForItem(slot);
-				dos.writeByte(0);
+				dos.writeByte(1);
 				BlockGuiHandler.sendPacketToServer(dos);
 			} else inv = tile.new PartInventory();
 			for (int j = 0; j < 2; j++)
