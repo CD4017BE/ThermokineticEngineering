@@ -2,18 +2,22 @@ package cd4017be.thermokin.tileentity;
 
 import cd4017be.api.IBlockModule;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
+import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.util.ItemFluidUtil;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.module.HeatModule;
 import cd4017be.thermokin.module.InventoryModule;
 import cd4017be.thermokin.module.Layout;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 
 
@@ -21,7 +25,7 @@ import net.minecraftforge.items.IItemHandler;
  * @author CD4017BE
  *
  */
-public class SolidFuelOven extends ModularMachine implements ITickable, IInteractiveTile {
+public class SolidFuelOven extends ModularMachine implements ITickable, IInteractiveTile, INeighborAwareTile {
 
 	public static int MAX_FUEL = 6400;
 	public static float C = 10000, FUEL_VALUE = 10000F, BURN_TEMP = 2500F, HEATING_POWER = 10000F; // efficiency = 1.0 - (Tcase - Tenv) / BURN_TEMP
@@ -36,7 +40,8 @@ public class SolidFuelOven extends ModularMachine implements ITickable, IInterac
 	public void update() {
 		if (world.isRemote) return;
 		heat.update();
-		if (fuel > 0) {
+		if (!isComplete) fuel = 0;
+		else if (fuel > 0) {
 			if (fuel <= HEATING_POWER) refuel();
 			float dQ = Math.min(fuel, HEATING_POWER); //[J] released combustion energy
 			float C = dQ / BURN_TEMP; //[J/K] heat capacity of combustion gases
@@ -99,5 +104,14 @@ public class SolidFuelOven extends ModularMachine implements ITickable, IInterac
 	public void onClicked(EntityPlayer player) {
 	}
 
-	//TODO delete fuel and stop working when bottom casing breaks
+	@Override
+	public void neighborBlockChange(Block b, BlockPos src) {
+		heat.markUpdate();
+	}
+
+	@Override
+	public void neighborTileChange(TileEntity te, EnumFacing side) {
+		heat.markUpdate();
+	}
+
 }

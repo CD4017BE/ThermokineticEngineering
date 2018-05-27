@@ -1,25 +1,26 @@
 VERSION = 3;
 
 {
-	!heat transfer resistance for block materials [asCover, asNeighborBlock, environmentMultiplier]
-	Rmat_default =	[2.5, 2.5, 1.0]#;
-	Rmat_IRON =		[0.01, 0.01, 1.0]#;
-	Rmat_GLASS =	[1.0, 1.0, 1.0]#;
-	Rmat_ROCK =		[1.2, 1.2, 1.0]#;
-	Rmat_CLAY =		[1.0, 1.0, 1.0]#;
-	Rmat_GROUND =	[1.5, 1.5, 1.0]#;
-	Rmat_GRASS =	[2.0, 2.0, 1.0]#;
-	Rmat_SAND =		[4.0, 4.0, 1.0]#;
-	Rmat_WOOD =		[5.0, 5.0, 1.0]#;
-	Rmat_PACKED_ICE = [0.4, 0.4, 1.0]#;
-	Rmat_ICE =		[0.5, 0.5, 1.0]#;
-	Rmat_CRAFTED_SNOW = [12.0, 12.0, 1.0]#;
-	Rmat_AIR =		[25.0, 0.0, 10.0]#;
-	Rmat_SNOW =		[15.0, 15.0, 1.0]#;
-	Rmat_CLOTH =	[100.0, 100.0, 1.0]#;
-	Rmat_LAVA =		[2.0, 1.6, 0.5]#;
-	Rmat_WATER =	[1.2, 1.0, 0.25]#;
+	!heat transfer resistance for block materials [asCover, asNeighborBlock[K/W], effDissipationSurf[m²]]#
+	Rmat_default =	[2.5, 2.5, 5.0]#;
+	Rmat_IRON =		[0.01, 0.01, 5.0]#;
+	Rmat_GLASS =	[1.0, 1.0, 5.0]#;
+	Rmat_ROCK =		[1.2, 1.2, 5.0]#;
+	Rmat_CLAY =		[1.0, 1.0, 5.0]#;
+	Rmat_GROUND =	[1.5, 1.5, 5.0]#;
+	Rmat_GRASS =	[2.0, 2.0, 5.0]#;
+	Rmat_SAND =		[4.0, 4.0, 5.0]#;
+	Rmat_WOOD =		[5.0, 5.0, 5.0]#;
+	Rmat_PACKED_ICE = [0.4, 0.4, 5.0]#;
+	Rmat_ICE =		[0.5, 0.5, 5.0]#;
+	Rmat_CRAFTED_SNOW = [12.0, 12.0, 5.0]#;
+	Rmat_AIR =		[25.0, 0.0, 1.0]#;
+	Rmat_SNOW =		[15.0, 15.0, 5.0]#;
+	Rmat_CLOTH =	[100.0, 40.0, 5.0]#;
+	Rmat_LAVA =		[2.0, 1.6, 8.0]#;
+	Rmat_WATER =	[1.2, 1.0, 12.0]#;
 }
+casePlate_air_cond = 0.3125; ![W/K] heat conductivity for faces with no casing plate (air)
 
 PRE_INIT() {
 	!define a dimension's environment: (dimId, baseTemp[K], biomeTempMult[K/?], heatResistance[Km²/W])

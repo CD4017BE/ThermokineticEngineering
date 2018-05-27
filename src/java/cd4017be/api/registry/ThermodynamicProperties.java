@@ -26,23 +26,23 @@ public class ThermodynamicProperties implements IRecipeHandler {
 	}
 
 	public static void init(ConfigConstants cfg) {
-		addMat(cfg, "default", null, 2.5F, 2.5F, 1.0F);
-		addMat(cfg, "IRON", Material.IRON, 0.01F, 0.01F, 1.0F);
-		addMat(cfg, "GLASS", Material.GLASS, 1.0F, 1.0F, 1.0F);
-		addMat(cfg, "ROCK", Material.ROCK, 1.2F, 1.2F, 1.0F);
-		addMat(cfg, "CLAY", Material.CLAY, 1.0F, 1.0F, 1.0F);
-		addMat(cfg, "GROUND", Material.GROUND, 1.5F, 1.5F, 1.0F);
-		addMat(cfg, "GRASS", Material.GRASS, 2.0F, 2.0F, 1.0F);
-		addMat(cfg, "SAND", Material.SAND, 4.0F, 4.0F, 1.0F);
-		addMat(cfg, "WOOD", Material.WOOD, 5.0F, 5.0F, 1.0F);
-		addMat(cfg, "PACKED_ICE", Material.PACKED_ICE, 0.4F, 0.4F, 1.0F);
-		addMat(cfg, "ICE", Material.ICE, 0.5F, 0.5F, 1.0F);
-		addMat(cfg, "CRAFTED_SNOW", Material.CRAFTED_SNOW, 12.0F, 12.0F, 1.0F);
-		addMat(cfg, "AIR", Material.AIR, 25.0F, 0.0F, 10.0F);
-		addMat(cfg, "SNOW", Material.SNOW, 15.0F, 15.0F, 1.0F);
-		addMat(cfg, "CLOTH", Material.CLOTH, 100.0F, 100.0F, 1.0F);
-		addMat(cfg, "LAVA", Material.LAVA, 2.0F, 1.6F, 0.5F);
-		addMat(cfg, "WATER", Material.WATER, 1.2F, 1.0F, 0.25F);
+		addMat(cfg, "default", null, 2.5F, 2.5F, 5.0F);
+		addMat(cfg, "IRON", Material.IRON, 0.01F, 0.01F, 5.0F);
+		addMat(cfg, "GLASS", Material.GLASS, 1.0F, 1.0F, 5.0F);
+		addMat(cfg, "ROCK", Material.ROCK, 1.2F, 1.2F, 5.0F);
+		addMat(cfg, "CLAY", Material.CLAY, 1.0F, 1.0F, 5.0F);
+		addMat(cfg, "GROUND", Material.GROUND, 1.5F, 1.5F, 5.0F);
+		addMat(cfg, "GRASS", Material.GRASS, 2.0F, 2.0F, 5.0F);
+		addMat(cfg, "SAND", Material.SAND, 4.0F, 4.0F, 5.0F);
+		addMat(cfg, "WOOD", Material.WOOD, 5.0F, 5.0F, 5.0F);
+		addMat(cfg, "PACKED_ICE", Material.PACKED_ICE, 0.4F, 0.4F, 5.0F);
+		addMat(cfg, "ICE", Material.ICE, 0.5F, 0.5F, 5.0F);
+		addMat(cfg, "CRAFTED_SNOW", Material.CRAFTED_SNOW, 12.0F, 12.0F, 5.0F);
+		addMat(cfg, "AIR", Material.AIR, 25.0F, 0.0F, 1.0F);
+		addMat(cfg, "SNOW", Material.SNOW, 15.0F, 15.0F, 5.0F);
+		addMat(cfg, "CLOTH", Material.CLOTH, 100.0F, 100.0F, 5.0F);
+		addMat(cfg, "LAVA", Material.LAVA, 2.0F, 1.6F, 8.0F);
+		addMat(cfg, "WATER", Material.WATER, 1.2F, 1.0F, 10.0F);
 	}
 
 	private static void addMat(ConfigConstants cfg, String tag, Material m, float... R) {

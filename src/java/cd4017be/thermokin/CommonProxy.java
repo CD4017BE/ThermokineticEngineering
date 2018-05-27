@@ -5,6 +5,7 @@ import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.api.registry.ThermodynamicProperties;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.TickRegistry;
+import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.thermokin.module.Part;
 import cd4017be.thermokin.module.PartIOModule;
@@ -23,11 +24,14 @@ public class CommonProxy {
 		setConfig();
 		
 		BlockGuiHandler.registerContainer(Objects.ASSEMBLER, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.DEBUG, DataContainer.class);
 	}
 
 	private void setConfig() {
 		ConfigConstants cfg = new ConfigConstants(RecipeScriptContext.instance.modules.get(Main.ConfigName));
 		ThermodynamicProperties.init(cfg);
+		
+		Part.NULL_CASING.Lh = (float)cfg.getNumber("casePlate_air_cond", 0.3125) / 20F;
 		
 		double[] t = cfg.getVect("module_itemIO", new double[] {0,1500,25000});
 		float Lh = (float)t[0] / 20F, Tmax = (float)t[1], dmgH = (float)Part.MAX_DUR / (float)t[2] / 20F;

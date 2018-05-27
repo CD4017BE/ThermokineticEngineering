@@ -11,6 +11,7 @@ import cd4017be.thermokin.item.ItemModularMachine;
 import cd4017be.thermokin.item.ItemWrench;
 import cd4017be.thermokin.module.Layout;
 import cd4017be.thermokin.tileentity.Assembler;
+import cd4017be.thermokin.tileentity.Debug;
 import cd4017be.thermokin.tileentity.SolidFuelOven;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -38,10 +39,12 @@ public class Objects {
 
 	//Blocks
 	public static final AdvancedBlock ASSEMBLER = null;
+	public static final BlockModularMachine DEBUG = null;
 	public static final BlockModularMachine OVEN = null;
 
 	//ItemBlocks
 	public static final BaseItemBlock assembler = null;
+	public static final ItemModularMachine debug = null;
 	public static final ItemModularMachine oven = null;
 
 	//Items
@@ -59,6 +62,7 @@ public class Objects {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
 			new AdvancedBlock("assembler", Material.WOOD, SoundType.WOOD, 0, Assembler.class).setCreativeTab(tabThermokin),
+			new BlockModularMachine("debug", Material.ROCK, SoundType.STONE, 0, Debug.class).setCreativeTab(tabThermokin),
 			new BlockModularMachine("oven", Material.ROCK, SoundType.STONE, 0, SolidFuelOven.class).setCreativeTab(tabThermokin)
 		);
 	}
@@ -68,6 +72,7 @@ public class Objects {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
 			new BaseItemBlock(ASSEMBLER),
+			new ItemModularMachine(DEBUG),
 			new ItemModularMachine(OVEN),
 			new ItemWrench("wrench").setCreativeTab(tabThermokin),
 			new ItemCasing("casing"),

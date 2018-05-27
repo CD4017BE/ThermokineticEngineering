@@ -56,6 +56,7 @@ public class SidedHeatReservoir implements IHeatAccess, IBlockModule, IUpdatable
 				} else {
 					acc.R = R;
 					if (acc.link != null) acc.link.updateHeatCond();
+					else markUpdate();
 				}
 			} else if (acc != null) {
 				if (acc.link != null) acc.link.disconnect();
@@ -117,6 +118,7 @@ public class SidedHeatReservoir implements IHeatAccess, IBlockModule, IUpdatable
 			Renv = 1F / l;
 			if (l != 0) {
 				if (envCond == null) new HeatConductor(this, new InfiniteReservoir(envTemp, 0));
+				envCond.updateHeatCond();
 			} else if (envCond != null) envCond.disconnect();
 			check = false;
 		}

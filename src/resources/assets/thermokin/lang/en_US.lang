@@ -14,6 +14,7 @@ item.thermokin.part.tipA=Heat conductivity: %.3u W/K\nMelting temperature: %.0f 
 layout.thermokin.oven=Fuel supply
 
 #GUI names
+gui.thermokin.debug.name=Thermal Test
 
 #GUI tooltips
 gui.cd4017be.assembler.case=Casings
@@ -25,3 +26,6 @@ gui.cd4017be.assembler.do2=§2craft machine
 gui.cd4017be.assembler.do3=§2machine can operate
 
 gui.cd4017be.assembler.info=Crafting\nModule configuration
+gui.cd4017be.debug.reset=Reset Counter
+gui.cd4017be.debug.T=Set casing temperature
+gui.cd4017be.debug.dQ=%.1fK\n%.4uJ\n%.4uW\n%.4uW\n%.4uW\n%.4uW\n%.4uW\n%.4uW\n%.4uW\n%.4uW
