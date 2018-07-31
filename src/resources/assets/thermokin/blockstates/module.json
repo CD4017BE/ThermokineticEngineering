@@ -1,0 +1,9 @@
+{
+	"variants": {
+		"inventory": { "model": "thermokin:item/casing" },
+		"inv_io": { "model": "stone" },
+		"inv_acc": { "model": "stone" },
+		"inv_buff_s": { "model": "stone" },
+		"inv_buff_m": { "model": "stone" }
+	}
+}

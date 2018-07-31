@@ -6,6 +6,7 @@ import cd4017be.lib.ClientInputHandler;
 import cd4017be.lib.render.SpecialModelLoader;
 import cd4017be.thermokin.render.CasingModel;
 import cd4017be.thermokin.render.ModularModel;
+import cd4017be.thermokin.render.PartMeshDefinition;
 import cd4017be.thermokin.render.gui.GuiAssembler;
 import cd4017be.thermokin.render.gui.GuiDebug;
 import cd4017be.thermokin.render.tesr.OvenRenderer;
@@ -44,6 +45,7 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRender(OVEN);
 		BlockItemRegistry.registerRender(wrench);
 		BlockItemRegistry.registerRender(casing, null);
+		BlockItemRegistry.registerRender(module, new PartMeshDefinition(module));
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(SolidFuelOven.class, new OvenRenderer());
 	}

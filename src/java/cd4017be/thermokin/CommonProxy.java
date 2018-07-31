@@ -10,7 +10,6 @@ import cd4017be.lib.Gui.TileContainer;
 import cd4017be.thermokin.module.Part;
 import cd4017be.thermokin.module.PartIOModule;
 import cd4017be.thermokin.module.PartIOModule.IOType;
-import net.minecraft.item.ItemStack;
 import static cd4017be.thermokin.Objects.*;
 
 /**
@@ -23,8 +22,8 @@ public class CommonProxy {
 		TickRegistry.register();
 		setConfig();
 		
-		BlockGuiHandler.registerContainer(Objects.ASSEMBLER, TileContainer.class);
-		BlockGuiHandler.registerContainer(Objects.DEBUG, DataContainer.class);
+		BlockGuiHandler.registerContainer(ASSEMBLER, TileContainer.class);
+		BlockGuiHandler.registerContainer(DEBUG, DataContainer.class);
 	}
 
 	private void setConfig() {
@@ -35,10 +34,10 @@ public class CommonProxy {
 		
 		double[] t = cfg.getVect("module_itemIO", new double[] {0,1500,25000});
 		float Lh = (float)t[0] / 20F, Tmax = (float)t[1], dmgH = (float)Part.MAX_DUR / (float)t[2] / 20F;
-		new PartIOModule(IOType.INT_ACC, 0x1, 1, new ItemStack(inv_io), Lh, Tmax, dmgH, 0);
-		new PartIOModule(IOType.EXT_ACC, 0x1, 2, new ItemStack(inv_acc), Lh, Tmax, dmgH, 0);
-		new PartIOModule(IOType.BUFFER, 0x1, 3, new ItemStack(inv_buff_s), Lh, Tmax, dmgH, 1);
-		new PartIOModule(IOType.BUFFER, 0x1, 4, new ItemStack(inv_buff_m), Lh, Tmax, dmgH, 3);
+		module.add(new PartIOModule(IOType.INT_ACC, 0x1, 1, module.get(1), Lh, Tmax, dmgH, 0), "inv_io");
+		module.add(new PartIOModule(IOType.EXT_ACC, 0x1, 2, module.get(2), Lh, Tmax, dmgH, 0), "inv_acc");
+		module.add(new PartIOModule(IOType.BUFFER, 0x1, 3, module.get(3), Lh, Tmax, dmgH, 1), "inv_buff_s");
+		module.add(new PartIOModule(IOType.BUFFER, 0x1, 4, module.get(4), Lh, Tmax, dmgH, 3), "inv_buff_m");
 	}
 
 	public void registerRenderers() {

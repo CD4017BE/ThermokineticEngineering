@@ -6,7 +6,12 @@ import cd4017be.lib.script.Parameters;
 import cd4017be.thermokin.Objects;
 import cd4017be.thermokin.module.Layout;
 import cd4017be.thermokin.module.Part;
+import cd4017be.thermokin.module.Part.Type;
+import cd4017be.thermokin.render.ModularModel;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * 
@@ -37,8 +42,28 @@ public class PartRegistry implements IRecipeHandler {
 			//TODO add casing requirements
 		} else if (CASING.equals(k)) {
 			double[] stats = param.getVector(3);
-			Objects.casing.addCasing((int)param.getNumber(1), param.getString(2), param.getString(4), (float)stats[0] / 20F, (float)stats[1], (float)Part.MAX_DUR / (float)stats[2] / 20F);
+			addCasing((int)param.getNumber(1), param.getString(2), param.getString(4), (float)stats[0] / 20F, (float)stats[1], (float)Part.MAX_DUR / (float)stats[2] / 20F);
 		}
+	}
+
+	public static Part addCasing(int id, String name, String texture, float Lh, float Tmax, float dmgH) {
+		Part p = new Part(Type.CASING, id, Objects.casing.get(id), Lh, Tmax, dmgH);
+		Objects.casing.add(p, name);
+		BlockRenderLayer layer = BlockRenderLayer.SOLID;
+		int i = texture.lastIndexOf('@');
+		if (i > 0) {
+			String code = texture.substring(i+1).toLowerCase();
+			texture = texture.substring(0, i);
+			for (BlockRenderLayer l : BlockRenderLayer.values())
+				if (l.toString().toLowerCase().startsWith(code)) {
+					layer = l;
+					break;
+				}
+		}
+		p.opaque = layer == BlockRenderLayer.SOLID;
+		if (FMLCommonHandler.instance().getSide().isClient())
+			ModularModel.register(p, new ResourceLocation(texture), layer);
+		return p;
 	}
 
 }

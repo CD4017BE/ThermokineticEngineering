@@ -31,9 +31,9 @@ public class TankModule implements ITankContainer, IPartListener, IBlockModule {
 	public final Access[] caps = new Access[6];
 
 	private final ModularMachine tile;
-	private final Restriction<FluidStack> limiterIn;
-	private final IntPredicate limiterOut;
-	private final IntConsumer updater;
+	private  Restriction<FluidStack> limiterIn;
+	private  IntPredicate limiterOut;
+	private  IntConsumer updater;
 
 	private final int size;
 
