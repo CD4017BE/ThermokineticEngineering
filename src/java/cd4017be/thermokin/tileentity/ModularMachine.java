@@ -261,10 +261,19 @@ public abstract class ModularMachine extends BaseTileEntity implements IMachineD
 	public <T> T getModuleState(int m) {
 		return PropertyByte.cast(components[m].modelId);
 	}
+
 	@Override
 	public boolean isModulePresent(int m) {
 		Part p = components[m];
 		return p != Part.NULL_CASING && p != Part.NULL_MODULE && p != Part.NULL_MAIN;
+	}
+
+	@Override
+	public boolean isOpaque() {
+		for (int i = 0; i < 6; i++)
+			if (!components[i].opaque)
+				return false;
+		return true;
 	}
 
 	@Override

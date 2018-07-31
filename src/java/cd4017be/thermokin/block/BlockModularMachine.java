@@ -5,6 +5,11 @@ import cd4017be.thermokin.tileentity.ModularMachine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -47,6 +52,25 @@ public class BlockModularMachine extends MultipartBlock {
 	@Override
 	protected PropertyInteger createBaseState() {
 		return null;
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+		return te instanceof ModularMachine && ((ModularMachine)te).isOpaque() ? 15 : 3;
+	}
+
+	@Override
+	public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+		TileEntity te = world.getTileEntity(pos);
+		if (te instanceof ModularMachine)
+			return ((ModularMachine)te).components[face.getIndex()].opaque;
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
 	}
 
 }

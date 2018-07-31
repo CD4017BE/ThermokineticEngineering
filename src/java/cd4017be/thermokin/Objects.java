@@ -62,8 +62,8 @@ public class Objects {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
 			new AdvancedBlock("assembler", Material.WOOD, SoundType.WOOD, 0, Assembler.class).setCreativeTab(tabThermokin),
-			new BlockModularMachine("debug", Material.ROCK, SoundType.STONE, 0, Debug.class).setCreativeTab(tabThermokin),
-			new BlockModularMachine("oven", Material.ROCK, SoundType.STONE, 0, SolidFuelOven.class).setCreativeTab(tabThermokin)
+			new BlockModularMachine("debug", Material.ROCK, SoundType.STONE, 2, Debug.class).setCreativeTab(tabThermokin),
+			new BlockModularMachine("oven", Material.ROCK, SoundType.STONE, 2, SolidFuelOven.class).setCreativeTab(tabThermokin)
 		);
 	}
 
