@@ -1,0 +1,20 @@
+[
+{
+  "modid": "kineng",
+  "name": "Kinetic Engineering",
+  "description": "Introduces realistic rotational mechanics into Minecraft. In other words: Rotary Craft ported to 1.12.2 but very different!",
+  "version": "0.0.0",
+  "acceptableRemoteVersions": "[0.0.0,0.1.0)",
+  "acceptableSaveVersions": "[0.0.0,0.1.0)",
+  "acceptedMinecraftVersions": "[1.12,1.13)",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CD4017BE"],
+  "credits": "When 'Formelsammlung bis zum Abitur' turns out more useful for writing Minecraft mods than for its actually intended purpose in school ...",
+  "logoFile": "thumbnail.png",
+  "screenshots": [],
+  "useDependencyInformation": true,
+  "requiredMods": ["cd4017be_lib@[6.5.0,6.7.0)"],
+  "dependencies": ["cd4017be_lib@[6.5.0,6.7.0)"]
+}
+]

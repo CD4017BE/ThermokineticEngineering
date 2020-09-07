@@ -1,0 +1,21 @@
+#PARSE_ESCAPES
+itemGroup.kineng=Mechanical Engineering
+
+#Blocks
+tile.kineng.shaft_wood.name=Wooden Shaft
+tile.kineng.gear_wood\:1.name=Wooden Gear 8
+tile.kineng.gear_wood\:2.name=Wooden Gear 16
+tile.kineng.gear_wood\:3.name=Wooden Gear 24
+tile.kineng.gear_wood\:4.name=Wooden Gear 32
+tile.kineng.gear_wood\:5.name=Wooden Gear 40
+#added by ingame editor:
+gui.kineng.debug.mode3=Friction Force
+gui.kineng.debug.name=Debug Shaft Force
+gui.kineng.debug.par0=No mode selected!
+gui.kineng.debug.par1=Power supply\n"Zero" velocity
+gui.kineng.debug.par2=Target Velocity\nStrength
+gui.kineng.debug.par3=Friction Torque\n"Zero" Velocity
+gui.kineng.debug.reset=Reset Counters
+gui.kineng.debug.mode1=Constant Power
+gui.kineng.debug.mode2=Target Velocity
+tile.kineng.shaft_debug.name=Debug Force Supply Shaft
