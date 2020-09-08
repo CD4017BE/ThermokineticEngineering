@@ -24,7 +24,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 
 	/** [m^5] moment of inertia per density */
 	public static final double J_ρ = Formula.J_cylinder(0.25, 1.0);
-	public static double BASE_STRENGHT = 1;
+	public static final double BASE_STRENGHT = Formula.torsionStrength_circle(0.25);
 	protected ShaftAxis shaft;
 	protected double vSave;
 
@@ -39,13 +39,12 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 
 	@Override
 	public double maxTorque() {
-		return material().strength * BASE_STRENGHT;
+		return material().R * BASE_STRENGHT;
 	}
 
 	@Override
 	public void onOverload(double F, double lim) {
-		// world.createExplosion(null, pos.getX() + .5, pos.getY() + .5, pos.getZ() +
-		// .5, 1F, true);
+		world.createExplosion(null, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 1F, true);
 	}
 
 	@Override

@@ -19,11 +19,13 @@ import net.minecraft.util.*;
 public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStateInteractionHandler {
 
 	final ForceCon con = new ForceCon(this, 1.0);
+	{
+		con.maxF = Double.POSITIVE_INFINITY;
+	}
 	
 	byte type;
-	float c0, c1, v, P;
+	float c0, c1, v, P, F;
 	double Eacc;
-	long t0;
 
 	@Override
 	public double setShaft(ShaftAxis shaft) {
@@ -68,13 +70,13 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 			} catch (NumberFormatException e) {}
 		});
 		new Button(frame, 32, 20, 27, 15, 0, ()-> type, null).texture(208, 0).tooltip("gui.kineng.debug.par#");
-		new FormatText(frame, 70, 7, 66, 44, "\\%0$.6u\n%1$.6u\n%2$.6u\n%4$.1f", ()-> new Object[] {v, P, Eacc, t0 * Δt})
+		new FormatText(frame, 70, 7, 66, 44, "\\%0$.6u\n%1$.6u\n%2$.6u\n%3$.6u", ()-> new Object[] {v, F, P, Eacc})
 		.align(0F).color(0xff202020);
 		gui.compGroup = frame;
 		return gui;
 	}
 
-	private static final StateSynchronizer.Builder ssb = StateSynchronizer.builder().addFix(1, 4, 4, 4, 4, 8, 4);
+	private static final StateSynchronizer.Builder ssb = StateSynchronizer.builder().addFix(1, 4, 4, 4, 4, 4, 8);
 
 	private byte getType() {
 		DynamicForce f = con.force;
@@ -89,8 +91,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		state.putAll(
 			getType(),
 			c0, c1,
-			v, P, Eacc,
-			(int)(world.getTotalWorldTime() - t0)
+			v, F, P, Eacc
 		).endFixed();
 	}
 
@@ -100,9 +101,9 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		c0 = state.get(c0);
 		c1 = state.get(c1);
 		v = state.get(v);
+		F = state.get(F);
 		P = state.get(P);
 		Eacc = state.get(Eacc);
-		t0 = state.get((int)t0);
 	}
 
 	@Override
@@ -135,7 +136,6 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 			break;
 		case A_RESET:
 			Eacc = 0;
-			t0 = world.getTotalWorldTime();
 			break;
 		}
 	}
@@ -158,6 +158,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 			Fdv = -F / v_;
 			v = (float)v1;
 			P = (float)(dE / Δt);
+			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
 		}
 
@@ -175,6 +176,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 			Fdv = -c0 / (Math.abs(v1) + c1);
 			v = (float)v1;
 			P = (float)(dE / Δt);
+			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
 		}
 
@@ -193,6 +195,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 			Fdv = -c1;
 			v = (float)v1;
 			P = (float)(dE / Δt);
+			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
 		}
 

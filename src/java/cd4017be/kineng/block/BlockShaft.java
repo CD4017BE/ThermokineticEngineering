@@ -73,8 +73,11 @@ public class BlockShaft extends AdvancedBlock {
 		public double ρ;
 		/** [1] friction coefficient */
 		public double μR;
-		/** [N/m²]*/
-		public double strength;
+		/** [N/m²] mechanical robustness */
+		public double R;
+		//real values: Lead = 10...15 MPa, Tin = 15 MPa, Aluminum Alloy = 200...640 MPa
+		//Cast Iron = 100...350 MPa, Titanium Alloy = 290...1200(Ti-Al6-V4) MPa, Steel = 310...690 MPa
+		//Steel Alloy = 1100...1300 MPa, Carbon Nanotubes = 63 GPa
 
 		public ShaftMaterial(Material material, SoundType blockSound) {
 			this.material = material;

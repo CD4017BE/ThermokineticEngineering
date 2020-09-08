@@ -10,7 +10,7 @@ import cd4017be.kineng.physics.*;
 /** @author CD4017BE */
 public class Gear extends ShaftPart implements IGear {
 
-	public static double F_FRICTION = 0;
+	public static double F_FRICTION = 0, A_CONTACT = 0.0625;
 	private static final double[] J_ρ = new double[6];
 	static {
 		for (int i = 0; i < J_ρ.length; i++)
@@ -36,7 +36,7 @@ public class Gear extends ShaftPart implements IGear {
 		if (con != null) return con;
 		con = new GearLink(this, diameter() * d * (side.getAxisDirection() == NEGATIVE ? 0.5 : -0.5));
 		ShaftMaterial mat = material();
-		con.maxF = mat.strength;
+		con.maxF = mat.R * A_CONTACT;
 		con.fricD = mat.μR;
 		con.fricS = mat.μR * F_FRICTION;
 		return cons[i] = con;

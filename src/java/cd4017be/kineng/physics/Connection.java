@@ -21,7 +21,7 @@ public abstract class Connection {
 
 	/** @return [Nm] torque limit */
 	public double maxTorque() {
-		return maxF / translation();
+		return maxF / Math.abs(translation());
 	}
 
 	public void setShaft(ShaftAxis shaft) {

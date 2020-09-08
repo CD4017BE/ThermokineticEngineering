@@ -110,7 +110,7 @@ public interface ForceFlow {
 
 		@Override
 		public void process(double[] vars) {
-			double F = vars[i];
+			double F = Math.abs(vars[i]);
 			if(F > limit) handler.onOverload(F, limit);
 		}
 
