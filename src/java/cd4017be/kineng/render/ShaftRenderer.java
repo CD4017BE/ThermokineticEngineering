@@ -26,7 +26,7 @@ import static java.lang.Float.floatToIntBits;
  */
 public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> implements Function<String, IntArrayModel> {
 
-	public static boolean debug = true;
+	public static boolean debug = true, motionBlur = true;
 
 	@Override
 	public void render(ShaftPart te, double x, double y, double z, float t, int destroyStage, float alpha) {
@@ -41,6 +41,7 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> implemen
 		z += pos.getZ();
 		pushMatrix();
 		Util.moveAndOrientToBlock(x, y, z, te.getOrientation());
+		if (motionBlur) t += Util.FakeMotionBlur;
 		rotate((float)Math.toDegrees(shaft.φ() + t * Ticking.Δt * shaft.ω()), 0, 0, -1);
 		disableLighting();
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
