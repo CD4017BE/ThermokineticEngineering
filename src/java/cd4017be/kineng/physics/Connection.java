@@ -8,6 +8,8 @@ public abstract class Connection {
 	/** [m] force lever radius */
 	public final double r;
 	public double maxF;
+	/** [Nm] last torque on axis (scaled by translation) */
+	double M;
 
 	protected Connection(IShaftPart host, double r) {
 		this.host = host;
@@ -21,12 +23,13 @@ public abstract class Connection {
 
 	/** @return [Nm] torque limit */
 	public double maxTorque() {
-		return maxF / Math.abs(translation());
+		return maxF * Math.abs(translation());
 	}
 
 	public void setShaft(ShaftAxis shaft) {
 		this.axis = shaft;
 		if (shaft != null) shaft.cons.add(this);
+		M = 0;
 	}
 
 }

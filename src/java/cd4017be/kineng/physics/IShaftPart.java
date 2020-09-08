@@ -1,6 +1,5 @@
 package cd4017be.kineng.physics;
 
-import cd4017be.kineng.physics.ForceFlow.OverloadHandler;
 import net.minecraft.util.EnumFacing.Axis;
 
 /** @author CD4017BE */

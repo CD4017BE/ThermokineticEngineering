@@ -1,9 +1,11 @@
 package cd4017be.kineng.physics;
 
+import static cd4017be.kineng.physics.ShaftStructure.*;
 import java.util.ArrayList;
+import cd4017be.lib.util.IndexedSet;
 
 /** @author CD4017BE */
-public class ShaftAxis {
+public class ShaftAxis extends IndexedSet.Element {
 
 	public ShaftStructure struct;
 	public final ArrayList<IShaftPart> parts = new ArrayList<>();
@@ -13,12 +15,14 @@ public class ShaftAxis {
 	public double J;
 	/** gear translation factor: how fast this part rotates compared to the core part */
 	public double x;
+	/** [Nm] torque limit of weakest shaft */
+	private double M_weak;
 	boolean invalid;
 
 	public ShaftAxis(boolean client) {
 		this.struct = new ShaftStructure(client);
 		this.renderInfo = client ? new ShaftRenderInfo() : null;
-		struct.axes.add(this);
+		struct.add(this);
 		x = 1.0;
 	}
 
@@ -38,25 +42,28 @@ public class ShaftAxis {
 	/** must be called after modifying {@link #parts} */
 	public void refreshParts() {
 		cons.clear();
+		M_weak = Double.POSITIVE_INFINITY;
 		double J1 = 0, L = 0;
 		for (IShaftPart part : parts) {
 			double J = part.J();
 			J1 += J;
 			L += J * part.setShaft(this);
+			M_weak = Math.min(M_weak, part.maxTorque());
 		}
 		double ax = Math.abs(x);
+		M_weak *= ax;
 		struct.ω = (struct.ω * (struct.J -= J * ax) + L * x) / (struct.J += J1 * ax);
 		J = J1;
-		struct.flow = null;
 		if(renderInfo != null) renderInfo.invalidate();
-		if (parts.isEmpty()) struct.invalidStruc = true;
+		struct.flowMat = null;
+		if (parts.isEmpty()) struct.markDirty(INV_STRUC);
 		else struct.register();
 		invalid = false;
 	}
 
 	public void markInvalid() {
 		invalid = true;
-		struct.invalidAxes = true;
+		struct.markDirty(INV_AXES);
 	}
 
 	void rescan() {
@@ -85,10 +92,53 @@ public class ShaftAxis {
 		refreshParts();
 	}
 
+	@Override
+	public void setIdx(int idx) {
+		if (idx == getIdx()) return;
+		super.setIdx(idx);
+		struct.flowMat = null;
+	}
+
 	public void onSpeedSync(double ω, double φ) {
 		if (!struct.client()) throw new IllegalStateException("Shaft.onSpeedSync() called server side!");
 		struct.ω = ω / x;
 		struct.φ = φ / x;
+	}
+
+	/**@param α [r/s²] shaft acceleration */
+	public void checkOverload(double α) {
+		// fast upper bound check
+		double ΣM = 0;
+		for (Connection con : cons)
+			ΣM += Math.abs(con.M);
+		if (ΣM < M_weak) return;
+		// overload possible: do exact check
+		α *= x;
+		ΣM = 0;
+		double J = 0;
+		int j = 0;
+		IShaftPart next = cons.get(j).host;
+		for (IShaftPart part : parts) {
+			double J_ = part.J();
+			J += J_;
+			double M = J_ * α * 0.5, maxM = part.maxTorque();
+			ΣM -= M;
+			if (ΣM > maxM || ΣM < -maxM)
+				Ticking.overloads.add(part);
+			if (part == next) {
+				do {
+					ΣM += cons.get(j).M;
+					next = ++j < cons.size() ? cons.get(j).host : null;
+				} while(next == part);
+				if (ΣM > maxM || ΣM < -maxM)
+					Ticking.overloads.add(part);
+			}
+			ΣM -= M;
+		}
+		//TODO the last axis sometimes has torque left over for unknown reasons!
+		/*if (Math.getExponent(ΣM) > 0)
+			Main.LOG.warn("left over torque in overload check: {} Nm, J = {} should be {}, acceleration: {} Nm", ΣM, this.J, J, J * α);
+		*/
 	}
 
 }

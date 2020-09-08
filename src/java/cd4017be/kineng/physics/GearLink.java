@@ -1,5 +1,7 @@
 package cd4017be.kineng.physics;
 
+import static cd4017be.kineng.physics.ShaftStructure.INV_STRUC;
+
 public class GearLink extends Connection {
 
 	public GearLink other;
@@ -12,13 +14,14 @@ public class GearLink extends Connection {
 	public void disconnect() {
 		if (other != null) {
 			other.other = null;
-			if (axis != null) axis.struct.invalidStruc = true;
+			if (axis != null) axis.struct.markDirty(INV_STRUC);
 		}
 		other = null;
 	}
 
 	public void connect(GearLink other) {
 		if (other == this.other) return;
+		M = 0;
 		this.disconnect();
 		if (other != null) {
 			other.disconnect();
@@ -36,10 +39,21 @@ public class GearLink extends Connection {
 			return;
 		}
 		if (this.axis != null)
-			this.axis.struct.invalidStruc = true;
+			this.axis.struct.markDirty(INV_STRUC);
 		super.setShaft(axis);
 		if (other == null || this.axis == null || other.axis == null) return;
 		ShaftStructure.merge(this.axis.struct, other.axis.struct, this.translation(), other.translation());
+	}
+
+	public double dynamicFriction(double M) {
+		this.M = -M;
+		other.M = M;
+		M = Math.abs(M);
+		if (M > this.maxTorque()) 
+			Ticking.overloads.add(this.host);
+		if (M > other.maxTorque()) 
+			Ticking.overloads.add(other.host);
+		return (this.fricD + other.fricD) * M;
 	}
 
 	public double staticFriction() {

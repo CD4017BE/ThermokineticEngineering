@@ -12,6 +12,8 @@ public abstract class DynamicForce {
 	public double Fdv;
 	/** [m] gear translation radius */
 	public double r;
+	/** the connection this is linked to */
+	public ForceCon con;
 
 	/** update physics on this device. called from the shaft every tick. 
 	 * @param dE [J] amount of energy added to the shaft

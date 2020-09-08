@@ -43,7 +43,8 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 	}
 
 	@Override
-	public void onOverload(double F, double lim) {
+	public void handleOverload() {
+		//TODO actually break the block (Explosion is too weak)
 		world.createExplosion(null, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 1F, true);
 	}
 

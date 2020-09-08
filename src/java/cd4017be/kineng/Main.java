@@ -46,4 +46,9 @@ public class Main {
 		Ticking.init();
 	}
 
+	@Mod.EventHandler
+	public void onShutdown(FMLServerStoppingEvent event) {
+		Ticking.clear();
+	}
+
 }

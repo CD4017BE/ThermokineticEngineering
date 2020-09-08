@@ -14,9 +14,14 @@ public class ForceCon extends Connection {
 
 	public void link(DynamicForce link) {
 		if (link == this.force) return;
-		if (this.force != null && axis != null && axis.struct.forces != null)
-			axis.struct.forces.remove(this.force);
+		M = 0;
+		if (this.force != null) {
+			this.force.con = null;
+			if (axis != null && axis.struct.forces != null)
+				axis.struct.forces.remove(this.force);
+		}
 		this.force = link;
+		link.con = this;
 		relink();
 	}
 
@@ -37,6 +42,13 @@ public class ForceCon extends Connection {
 			this.axis.struct.forces.remove(force);
 		super.setShaft(axis);
 		relink();
+	}
+
+	public int updateTorque(double M) {
+		this.M = M;
+		if (Math.abs(M) > maxTorque())
+			Ticking.overloads.add(host);
+		return axis.getIdx();
 	}
 
 }
