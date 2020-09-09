@@ -67,8 +67,8 @@ public class Ticking {
 	private void updateShafts() {
 		if (!updateCon.isEmpty()) {
 			int l = structs.size();
-			for (IShaftPart part : updateCon)
-				part.connect(client);
+			for (int i = 0; i < updateCon.size(); i++)
+				updateCon.get(i).connect(client);
 			if (DEBUG) LOG.info("shaft part updates: {}, structures: {} -> {}", updateCon.size(), l, structs.size());
 			updateCon.clear();
 		}

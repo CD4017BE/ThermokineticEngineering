@@ -129,6 +129,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 			if (Math.getExponent(xA / xB - 1.0) < -24) return;
 			A.J = Double.NaN;
 			A.av = 0;
+			A.ang = 0;
 			return;
 		}
 		//merge smaller structure into larger one
@@ -281,17 +282,15 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 		//fill matrix with [ tr(F * S)  tr(S) ]
 		for (int i = 0; i < m; i++) {
 			GearLink con1 = links.get(i), con2 = con1.other;
-			
+			float t = Math.abs((float)con1.translation());
 			int j1 = con1.axis.getIdx(), j2 = con2.axis.getIdx();
 			if (j1 < n) {
-				float t = (float)con1.translation();
 				float[] row = Formula.MATRIX[j1];
 				row[n + i] = t;
 				row[j1] += t;
 				if (j2 < n) row[j2] -= t;
 			}
 			if (j2 < n) {
-				float t = (float)con2.translation();
 				float[] row = Formula.MATRIX[j2];
 				row[n + i] = -t;
 				row[j2] += t;

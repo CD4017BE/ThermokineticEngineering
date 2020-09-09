@@ -1,6 +1,8 @@
 package cd4017be.kineng.physics;
 
 import java.util.Arrays;
+import java.util.Formatter;
+import cd4017be.kineng.Main;
 
 /** 
  * @author CD4017BE */
@@ -53,13 +55,16 @@ public class Formula {
 	 */
 	public static void solveMatrix() {
 		if (n < m) throw new IllegalStateException("can't solve with less columns than rows!");
-		for(int i = 0; i < m; i++) {
+		if (Ticking.DEBUG) Main.LOG.info(printMatrix());
+		rows: for(int i = 0; i < m; i++) {
 			float[] row = MATRIX[i];
 			int j = i;
 			//find row with non-zero in diagonal
 			while(row[i] == 0)
-				if (++j >= m) throw new ArithmeticException("div / 0");
-				else row = MATRIX[j];
+				if (++j >= m) {
+					Main.LOG.fatal("div / 0 @ ij = {} in {}", i, printMatrix());
+					continue rows;
+				} else row = MATRIX[j];
 			if (j != i) {
 				//swap rows
 				MATRIX[j] = MATRIX[i];
@@ -87,6 +92,21 @@ public class Formula {
 						row2[l] -= row[l] * x;
 			}
 		}
+	}
+
+	public static String printMatrix() {
+		StringBuilder sb = new StringBuilder();
+		Formatter f = new Formatter(sb);
+		f.format("%d*%d Matrix:", m, n);
+		for (int i = 0; i < m; i++) {
+			f.format("\n%2d:[", i);
+			float[] row = MATRIX[i];
+			for (int j = 0; j < n; j++)
+				f.format("%+9.3g ", row[j]);
+			sb.setCharAt(sb.length() - 1, ']');
+		}
+		f.close();
+		return sb.toString();
 	}
 
 }

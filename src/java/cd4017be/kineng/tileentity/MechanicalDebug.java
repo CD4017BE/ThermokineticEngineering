@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** 
  * @author CD4017BE */
@@ -80,6 +82,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	private static final ResourceLocation GUI_TEX = new ResourceLocation(Main.ID, "textures/gui/debug.png");
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ModularGui getGuiScreen(EntityPlayer player, int id) {
 		ModularGui gui = new ModularGui(getContainer(player, id));
 		GuiFrame frame = new GuiFrame(gui, 144, 86, 5)

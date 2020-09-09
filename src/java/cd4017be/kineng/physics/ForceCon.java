@@ -38,7 +38,7 @@ public class ForceCon extends Connection {
 			super.setShaft(axis);
 			return;
 		}
-		if (this.axis != null && force != null)
+		if (this.axis != null && force != null && this.axis.struct.forces != null)
 			this.axis.struct.forces.remove(force);
 		super.setShaft(axis);
 		relink();
