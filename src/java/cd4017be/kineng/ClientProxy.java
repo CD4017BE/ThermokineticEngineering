@@ -13,6 +13,8 @@ import static net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEnti
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.kineng.render.ShaftRenderer;
 import cd4017be.kineng.tileentity.ShaftPart;
+import cd4017be.lib.block.AdvancedBlock;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumBlockRenderType;
@@ -20,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import scala.annotation.meta.setter;
 
 /** @author CD4017BE */
 public class ClientProxy extends CommonProxy {
@@ -42,20 +45,25 @@ public class ClientProxy extends CommonProxy {
 	@SubscribeEvent
 	public void registerModels(ModelRegistryEvent ev) {
 		setMod(Main.ID);
-		StateMap map = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();
-		SHAFT_WOOD.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
-		GEAR_WOOD.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
-		SHAFT_DEBUG.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
-		FILL_DIR.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
-		FILL_SHARE.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
-		setCustomStateMapper(SHAFT_WOOD, map);
-		setCustomStateMapper(GEAR_WOOD, map);
-		setCustomStateMapper(SHAFT_DEBUG, map);
-		setCustomStateMapper(FILL_DIR, map);
-		setCustomStateMapper(FILL_SHARE, map);
+		setShaftRender(
+			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG,
+			GEAR_WOOD, GEAR_IRON,
+			FILL_DIR, FILL_SHARE
+		);
 		registerRender(shaft_wood);
+		registerRender(shaft_iron);
 		registerRender(gear_wood, 1, 5);
+		registerRender(gear_iron, 1, 5);
 		registerRender(shaft_debug);
+	}
+
+	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();
+
+	private static void setShaftRender(AdvancedBlock... blocks) {
+		for (AdvancedBlock block : blocks) {
+			block.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
+			setCustomStateMapper(block, SHAFT_MAPPER);
+		}
 	}
 
 }

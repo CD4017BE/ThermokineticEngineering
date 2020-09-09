@@ -3,11 +3,11 @@ itemGroup.kineng=Mechanical Engineering
 
 #Blocks
 tile.kineng.shaft_wood.name=Wooden Shaft
-tile.kineng.gear_wood\:1.name=Wooden Gear 8
-tile.kineng.gear_wood\:2.name=Wooden Gear 16
-tile.kineng.gear_wood\:3.name=Wooden Gear 24
-tile.kineng.gear_wood\:4.name=Wooden Gear 32
-tile.kineng.gear_wood\:5.name=Wooden Gear 40
+tile.kineng.gear_wood\:1.name=Wooden Gear 1m ⦰
+tile.kineng.gear_wood\:2.name=Wooden Gear 2m ⦰
+tile.kineng.gear_wood\:3.name=Wooden Gear 3m ⦰
+tile.kineng.gear_wood\:4.name=Wooden Gear 4m ⦰
+tile.kineng.gear_wood\:5.name=Wooden Gear 5m ⦰
 #added by ingame editor:
 gui.kineng.debug.mode3=Friction Force
 gui.kineng.debug.name=Debug Shaft Force
@@ -19,3 +19,9 @@ gui.kineng.debug.reset=Reset Counters
 gui.kineng.debug.mode1=Constant Power
 gui.kineng.debug.mode2=Target Velocity
 tile.kineng.shaft_debug.name=Debug Force Supply Shaft
+tile.kineng.gear_iron\:5.name=Iron Gear 5m ⦰
+tile.kineng.shaft_iron.name=Iron Shaft
+tile.kineng.gear_iron\:2.name=Iron Gear 2m ⦰
+tile.kineng.gear_iron\:3.name=Iron Gear 3m ⦰
+tile.kineng.gear_iron\:4.name=Iron Gear 4m ⦰
+tile.kineng.gear_iron\:1.name=Iron Gear 1m ⦰

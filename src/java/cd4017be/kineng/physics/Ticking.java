@@ -2,7 +2,6 @@ package cd4017be.kineng.physics;
 
 import java.util.ArrayList;
 import java.util.Random;
-import cd4017be.kineng.Main;
 import static cd4017be.kineng.Main.LOG;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;

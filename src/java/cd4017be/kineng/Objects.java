@@ -30,16 +30,14 @@ public class Objects {
 	public static TabMaterials tabKinetic = new TabMaterials(Main.ID);
 
 	// Blocks
-	public static final BlockShaft SHAFT_WOOD = null;
-	public static final BlockGear GEAR_WOOD = null;
-	public static final BlockShaft SHAFT_DEBUG = null;
+	public static final BlockShaft SHAFT_WOOD = null, SHAFT_IRON = null, SHAFT_DEBUG = null;
+	public static final BlockGear GEAR_WOOD = null, GEAR_IRON = null;
 	public static final BlockFillDirected FILL_DIR = null;
 	public static final BlockFillShared FILL_SHARE = null;
 
 	// ItemBlocks
-	public static final BaseItemBlock shaft_wood = null;
-	public static final ItemBlockGear gear_wood = null;
-	public static final BaseItemBlock shaft_debug = null;
+	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
+	public static final ItemBlockGear gear_wood = null, gear_iron = null;
 
 	// Items
 
@@ -54,10 +52,12 @@ public class Objects {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
 			new BlockShaft("shaft_wood", M_WOOD, 0.25, ShaftPart.class).setCreativeTab(tabKinetic).setLightOpacity(0).setHardness(0.5F),
+			new BlockShaft("shaft_iron", M_IRON, 0.25, ShaftPart.class).setCreativeTab(tabKinetic).setLightOpacity(0).setHardness(1.5F),
 			new BlockGear("gear_wood", M_WOOD, Gear.class).setCreativeTab(tabKinetic).setLightOpacity(0).setHardness(0.5F),
+			new BlockGear("gear_iron", M_IRON, Gear.class).setCreativeTab(tabKinetic).setLightOpacity(0).setHardness(1.5F),
 			new BlockShaft("shaft_debug", M_BEDROCK, 0.25, MechanicalDebug.class).setCreativeTab(tabKinetic).setLightOpacity(0).setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY),
-			new BlockFillDirected("fill_dir", null).setLightOpacity(0).setHardness(0.5F),
-			new BlockFillShared("fill_share", null).setLightOpacity(0).setHardness(0.5F)
+			new BlockFillDirected("fill_dir", null).setLightOpacity(0).setHardness(1.0F),
+			new BlockFillShared("fill_share", null).setLightOpacity(0).setHardness(1.0F)
 		);
 	}
 
@@ -66,7 +66,9 @@ public class Objects {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
 			new BaseItemBlock(SHAFT_WOOD),
+			new BaseItemBlock(SHAFT_IRON),
 			new ItemBlockGear(GEAR_WOOD),
+			new ItemBlockGear(GEAR_IRON),
 			new BaseItemBlock(SHAFT_DEBUG)
 		);
 	}

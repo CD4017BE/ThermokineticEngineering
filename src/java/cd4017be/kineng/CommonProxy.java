@@ -18,7 +18,7 @@ public class CommonProxy {
 		M_IRON.ρ = 7860;
 		M_IRON.R = 150e6;
 		M_IRON.μR = 0.01;
-		M_BEDROCK.ρ = 50;
+		M_BEDROCK.ρ = 1000;
 		M_BEDROCK.R = Double.POSITIVE_INFINITY;
 	}
 
