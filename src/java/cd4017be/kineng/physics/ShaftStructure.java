@@ -126,6 +126,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 
 	public static void merge(ShaftStructure A, ShaftStructure B, double xA, double xB) {
 		if (A == B) {
+			if (Math.getExponent(xA / xB - 1.0) < -24) return;
 			A.J = Double.NaN;
 			A.ω = 0;
 			return;
@@ -186,10 +187,10 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 		boolean client = struct.client();
 		ArrayList<ShaftAxis> stack = Ticking.of(client).AXIS_STACK;
 		stack.clear(); //in case someone else used this and forgot to clear.
-		for(ShaftAxis axis : struct) {
+		while(!struct.isEmpty()) {
+			ShaftAxis axis = struct.remove(0);
 			if(axis.struct != struct || axis.parts.isEmpty()) continue;
 			ShaftStructure nstruct = new ShaftStructure(client);
-			struct.remove(axis);
 			nstruct.add(axis);
 			axis.struct = nstruct;
 			double J = axis.J;
@@ -222,7 +223,6 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 			if(Double.isNaN(nstruct.ω)) nstruct.ω = 0;
 			nstruct.register();
 		}
-		struct.clear();
 		if(struct.forces != null)
 			struct.forces.clear();
 	}
