@@ -11,6 +11,7 @@ import cd4017be.lib.network.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 
@@ -38,6 +39,37 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
 	) {
 		return false;
+	}
+
+	@Override
+	protected void storeState(NBTTagCompound nbt, int mode) {
+		super.storeState(nbt, mode);
+		nbt.setFloat("c0", c0);
+		nbt.setFloat("c1", c1);
+		nbt.setByte("mode", getType());
+	}
+
+	@Override
+	protected void loadState(NBTTagCompound nbt, int mode) {
+		super.loadState(nbt, mode);
+		type = nbt.getByte("mode");
+		if (type != getType()) {
+			switch(type) {
+			case A_CONST_PWR:
+				con.link(new ConstPower());
+				break;
+			case A_CONST_VEL:
+				con.link(new ConstSpeed());
+				break;
+			case A_FRICTION:
+				con.link(new Friction());
+				break;
+			default:
+				con.link(null);
+			}
+		}
+		c0 = nbt.getFloat("c0");
+		c1 = nbt.getFloat("c1");
 	}
 
 	@Override
@@ -173,7 +205,13 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 
 		@Override
 		public void work(double dE, double ds, double v1) {
-			Fdv = -c0 / (Math.abs(v1) + c1);
+			if (c1 <= 0) {
+				Fdv = 0;
+				F = c0;
+			} else {
+				Fdv = -c0 / (Math.abs(v1) + c1);
+				F = 0;
+			}
 			v = (float)v1;
 			P = (float)(dE / Δt);
 			MechanicalDebug.this.F = (float)(dE / ds);
