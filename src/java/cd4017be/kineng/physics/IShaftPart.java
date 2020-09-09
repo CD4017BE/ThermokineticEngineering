@@ -35,7 +35,7 @@ public interface IShaftPart extends OverloadHandler {
 	default double setShaft(ShaftAxis shaft, double av0) {
 		ShaftAxis old = getShaft();
 		if (old == null) return av0;
-		if(shaft != old) old.markInvalid();
+		if(shaft != old) old.markInvalid(true);
 		return old.av();
 	}
 
@@ -59,7 +59,7 @@ public interface IShaftPart extends OverloadHandler {
 		if(shaft == null) shaft = new ShaftAxis(client);
 		else {
 			if (shaft.struct.client() != client) throw new IllegalStateException("mixed server and client structures!");
-			if(shaft.invalid) shaft.rescan();
+			if(shaft.state >= 2) shaft.rescan();
 			shaft.parts.clear();
 		}
 		do {

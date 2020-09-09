@@ -41,9 +41,11 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 
 	public void update() {
 		if((state & INV_AXES) != 0) {
-			for(int i = 0; i < count && i < array.length; i++)
-				if(array[i].invalid)
-					array[i].rescan();
+			for(int i = 0; i < count && i < array.length; i++) {
+				ShaftAxis axis = array[i];
+				if (axis.state >= 2) axis.rescan();
+				else if (axis.state != 0) axis.refreshParts();
+			}
 		}
 		if((state & INV_STRUC) != 0) {
 			rescan(this);
@@ -220,7 +222,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 							nstruct.add(axis);
 							stack.add(axis);
 						} else if(Formula.relDeltaExp(axis.x, x) >= -24)
-							nstruct.J = Double.NaN;
+							J = Double.NaN;
 					}
 			nstruct.J = J;
 			nstruct.av = L / J;

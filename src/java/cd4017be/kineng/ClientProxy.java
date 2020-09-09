@@ -16,6 +16,8 @@ import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.kineng.render.*;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.block.AdvancedBlock;
+import cd4017be.lib.render.SpecialModelLoader;
+import cd4017be.lib.render.model.BlockMimicModel;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;

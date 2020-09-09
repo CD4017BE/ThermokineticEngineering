@@ -1,0 +1,2 @@
+{textures = ["minecraft:blocks/bedrock"];}
+main() {}

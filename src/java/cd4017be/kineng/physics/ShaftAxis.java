@@ -17,7 +17,8 @@ public class ShaftAxis extends IndexedSet.Element {
 	public double x;
 	/** [Nm] torque limit of weakest shaft */
 	private double M_weak;
-	boolean invalid;
+	/** 0: valid, 1:update parts, 2:rescan */
+	byte state;
 
 	public ShaftAxis(boolean client) {
 		this.struct = new ShaftStructure(client);
@@ -45,9 +46,9 @@ public class ShaftAxis extends IndexedSet.Element {
 		M_weak = Double.POSITIVE_INFINITY;
 		double J1 = 0, L = 0;
 		for (IShaftPart part : parts) {
-			double J = part.J();
+			double J;
+			L += part.setShaft(this) * (J = part.J());
 			J1 += J;
-			L += J * part.setShaft(this);
 			M_weak = Math.min(M_weak, part.maxTorque());
 		}
 		L *= Math.signum(x);
@@ -60,11 +61,11 @@ public class ShaftAxis extends IndexedSet.Element {
 		struct.flowMat = null;
 		if (parts.isEmpty()) struct.markDirty(INV_STRUC);
 		else struct.register();
-		invalid = false;
+		state = 0;
 	}
 
-	public void markInvalid() {
-		invalid = true;
+	public void markInvalid(boolean rescan) {
+		state |= rescan ? 2 : 1;
 		struct.markDirty(INV_AXES);
 	}
 

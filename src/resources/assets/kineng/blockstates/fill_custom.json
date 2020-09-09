@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "link=true": { "model": "kineng:_null" },
+		"link=false": { "model": "kineng:fill_custom" }
+    }
+}
