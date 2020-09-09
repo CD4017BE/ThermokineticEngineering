@@ -28,13 +28,13 @@ public interface IShaftPart extends OverloadHandler {
 
 	/** Helper method to implement {@link #setShaft(ShaftAxis)}
 	 * @param shaft the new shaft to assign
-	 * @param ω0 default initial angular velocity
+	 * @param av0 default initial angular velocity
 	 * @return retained shaft velocity */
-	default double setShaft(ShaftAxis shaft, double ω0) {
+	default double setShaft(ShaftAxis shaft, double av0) {
 		ShaftAxis old = getShaft();
-		if (old == null) return ω0;
+		if (old == null) return av0;
 		if(shaft != old) old.markInvalid();
-		return old.ω();
+		return old.av();
 	}
 
 	/** @return the part's orientation axis */

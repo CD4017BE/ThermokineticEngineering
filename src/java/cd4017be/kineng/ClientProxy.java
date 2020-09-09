@@ -14,7 +14,6 @@ import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.kineng.render.ShaftRenderer;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.block.AdvancedBlock;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumBlockRenderType;
@@ -22,7 +21,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import scala.annotation.meta.setter;
 
 /** @author CD4017BE */
 public class ClientProxy extends CommonProxy {

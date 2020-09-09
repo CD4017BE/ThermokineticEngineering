@@ -23,7 +23,7 @@ import net.minecraft.util.text.TextComponentString;
 public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiveTile {
 
 	/** [m^5] moment of inertia per density */
-	public static final double J_ρ = Formula.J_cylinder(0.25, 1.0);
+	public static final double J_dens = Formula.J_cylinder(0.25, 1.0);
 	public static final double BASE_STRENGHT = Formula.torsionStrength_circle(0.25);
 	protected ShaftAxis shaft;
 	protected double vSave;
@@ -34,12 +34,12 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 
 	@Override
 	public double J() {
-		return material().ρ * J_ρ;
+		return material().density * J_dens;
 	}
 
 	@Override
 	public double maxTorque() {
-		return material().R * BASE_STRENGHT;
+		return material().strength * BASE_STRENGHT;
 	}
 
 	@Override
@@ -109,8 +109,8 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 	@Override
 	protected void storeState(NBTTagCompound nbt, int mode) {
 		if(shaft != null) {
-			nbt.setDouble("v", shaft.ω());
-			if(mode == SYNC) nbt.setDouble("s", shaft.φ());
+			nbt.setDouble("v", shaft.av());
+			if(mode == SYNC) nbt.setDouble("s", shaft.ang());
 		} else nbt.setDouble("v", vSave);
 	}
 
@@ -131,10 +131,10 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 		double d = player.getPositionEyes(0).subtract(pos.getX() + X, pos.getY() + Y, pos.getZ() + Z)
 		.crossProduct(new Vec3d(EnumFacing.getFacingFromAxis(POSITIVE, axis()).getDirectionVec()))
 		.normalize().dotProduct(new Vec3d(X - 0.5, Y - 0.5, Z - 0.5));
-		double v = shaft.ω() / hitSpeed * d, f = 1 / (1.0 + v * v);
+		double v = shaft.av() / hitSpeed * d, f = 1 / (1.0 + v * v);
 		shaft.pulse(hitForce * f * d);
 		player.addExhaustion((float)Math.max(v * f * 2, 0));
-		player.sendStatusMessage(new TextComponentString(String.format("v = %.3g r/t", shaft.ω())), true);
+		player.sendStatusMessage(new TextComponentString(String.format("v = %.3g r/t", shaft.av())), true);
 		return true;
 	}
 

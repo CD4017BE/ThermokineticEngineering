@@ -1,6 +1,6 @@
 package cd4017be.kineng.tileentity;
 
-import static cd4017be.kineng.physics.Ticking.Δt;
+import static cd4017be.kineng.physics.Ticking.dt;
 import cd4017be.kineng.Main;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.Gui.AdvancedContainer;
@@ -184,12 +184,12 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 
 		@Override
 		public void work(double dE, double ds, double v1) {
-			E += c0 * Δt - dE;
+			E += c0 * dt - dE;
 			double v_ = c1 * (Math.abs(v1 / c1) + 1.0);
-			F = E / (v_ * Δt);
+			F = E / (v_ * dt);
 			Fdv = -F / v_;
 			v = (float)v1;
-			P = (float)(dE / Δt);
+			P = (float)(dE / dt);
 			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
 		}
@@ -213,7 +213,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 				F = 0;
 			}
 			v = (float)v1;
-			P = (float)(dE / Δt);
+			P = (float)(dE / dt);
 			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
 		}
@@ -232,7 +232,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 			F = c0 * c1;
 			Fdv = -c1;
 			v = (float)v1;
-			P = (float)(dE / Δt);
+			P = (float)(dE / dt);
 			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
 		}

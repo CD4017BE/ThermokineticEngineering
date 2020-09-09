@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class Ticking {
 
 	/** [s] time passing per tick */
-	public static final double Δt = 0.05;
+	public static final double dt = 0.05;
 	public static final Ticking SERVER = new Ticking(false);
 	private static Ticking CLIENT;
 	static boolean DEBUG = true;

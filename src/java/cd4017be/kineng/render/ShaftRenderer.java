@@ -42,7 +42,7 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> implemen
 		pushMatrix();
 		Util.moveAndOrientToBlock(x, y, z, te.getOrientation());
 		if (motionBlur) t += Util.FakeMotionBlur;
-		rotate((float)Math.toDegrees(shaft.φ() + t * Ticking.Δt * shaft.ω()), 0, 0, -1);
+		rotate((float)Math.toDegrees(shaft.ang() + t * Ticking.dt * shaft.av()), 0, 0, -1);
 		disableLighting();
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		Tessellator.getInstance().draw();

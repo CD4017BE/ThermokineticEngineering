@@ -17,6 +17,8 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+compileJava.options.encoding = 'UTF-8'
+
 /*
 // for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
 plugins {
@@ -97,7 +99,7 @@ dependencies {
 	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
 	runtime "mezz.jei:jei_${mc_version}:${jei_version}"
 	// OC
-	compile "li.cil.oc:OpenComputers:MC${mc_version}-${oc_version}:api"
+	compile "li.cil.oc:OpenComputers:${oc_version}:api"
 	// CD4017BE_lib
 	compileOnly "com.cd4017be.lib:CD4017BE_lib:${mc_version}-${lib_version}:deobf"
 	runtime "com.cd4017be.lib:CD4017BE_lib:${mc_version}-${lib_version}"

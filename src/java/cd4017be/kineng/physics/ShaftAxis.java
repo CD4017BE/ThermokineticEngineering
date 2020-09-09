@@ -26,17 +26,17 @@ public class ShaftAxis extends IndexedSet.Element {
 		x = 1.0;
 	}
 
-	public double ω() {
-		return struct.ω * x;
+	public double av() {
+		return struct.av * x;
 	}
 
-	public double φ() {
-		return struct.φ * x;
+	public double ang() {
+		return struct.ang * x;
 	}
 
 	/** @param L [N*m*s] impulse to add to the shaft */
 	public void pulse(double L) {
-		struct.ω += L * x / struct.J;
+		struct.av += L * x / struct.J;
 	}
 
 	/** must be called after modifying {@link #parts} */
@@ -52,7 +52,7 @@ public class ShaftAxis extends IndexedSet.Element {
 		}
 		double ax = Math.abs(x);
 		M_weak *= ax;
-		struct.ω = (struct.ω * (struct.J -= J * ax) + L * x) / (struct.J += J1 * ax);
+		struct.av = (struct.av * (struct.J -= J * ax) + L * x) / (struct.J += J1 * ax);
 		J = J1;
 		if(renderInfo != null) renderInfo.invalidate();
 		struct.flowMat = null;
@@ -99,41 +99,38 @@ public class ShaftAxis extends IndexedSet.Element {
 		struct.flowMat = null;
 	}
 
-	public void onSpeedSync(double ω, double φ) {
+	public void onSpeedSync(double av, double ang) {
 		if (!struct.client()) throw new IllegalStateException("Shaft.onSpeedSync() called server side!");
-		struct.ω = ω / x;
-		struct.φ = φ / x;
+		struct.av = av / x;
+		struct.ang = ang / x;
 	}
 
-	/**@param α [r/s²] shaft acceleration */
-	public void checkOverload(double α) {
+	/**@param aacc [r/s²] shaft acceleration */
+	public void checkOverload(double aacc) {
 		// fast upper bound check
-		double ΣM = 0;
+		double M = 0;
 		for (Connection con : cons)
-			ΣM += Math.abs(con.M);
-		if (ΣM < M_weak) return;
+			M += Math.abs(con.M);
+		if (M < M_weak) return;
 		// overload possible: do exact check
-		α *= x;
-		ΣM = 0;
-		double J = 0;
+		aacc *= x;
+		M = 0;
 		int j = 0;
 		IShaftPart next = cons.get(j).host;
 		for (IShaftPart part : parts) {
-			double J_ = part.J();
-			J += J_;
-			double M = J_ * α * 0.5, maxM = part.maxTorque();
-			ΣM -= M;
-			if (ΣM > maxM || ΣM < -maxM)
+			double dM = part.J() * aacc * 0.5, maxM = part.maxTorque();
+			M -= dM;
+			if (M > maxM || M < -maxM)
 				Ticking.overloads.add(part);
 			if (part == next) {
 				do {
-					ΣM += cons.get(j).M;
+					M += cons.get(j).M;
 					next = ++j < cons.size() ? cons.get(j).host : null;
 				} while(next == part);
-				if (ΣM > maxM || ΣM < -maxM)
+				if (M > maxM || M < -maxM)
 					Ticking.overloads.add(part);
 			}
-			ΣM -= M;
+			M -= dM;
 		}
 		//TODO the last axis sometimes has torque left over for unknown reasons!
 		/*if (Math.getExponent(ΣM) > 0)
