@@ -50,9 +50,11 @@ public class ShaftAxis extends IndexedSet.Element {
 			L += J * part.setShaft(this);
 			M_weak = Math.min(M_weak, part.maxTorque());
 		}
+		L *= Math.signum(x);
 		double ax = Math.abs(x);
 		M_weak *= ax;
-		struct.av = (struct.av * (struct.J -= J * ax) + L * x) / (struct.J += J1 * ax);
+		struct.J -= J * ax;
+		struct.av = (struct.av * struct.J + L) / (struct.J += J1 * ax);
 		J = J1;
 		if(renderInfo != null) renderInfo.invalidate();
 		struct.flowMat = null;
@@ -75,11 +77,15 @@ public class ShaftAxis extends IndexedSet.Element {
 		i = 1; l = parts.size();
 		while (i < l && parts.get(i).getShaft() == this) i++;
 		//split off remaining valid sections
+		boolean wasSplit = false;
 		ShaftAxis shaft = null;
 		for (int j = i; j < l; j++) {
 			IShaftPart part = parts.get(j);
 			if (part.getShaft() == this) {
-				if (shaft == null) shaft = new ShaftAxis(struct.client());
+				if (shaft == null) {
+					shaft = new ShaftAxis(struct.client());
+					wasSplit = true;
+				}
 				shaft.parts.add(part);
 			} else if (shaft != null) {
 				shaft.refreshParts();
@@ -89,6 +95,13 @@ public class ShaftAxis extends IndexedSet.Element {
 		if (shaft != null) shaft.refreshParts();
 		//only keep first valid section
 		if (i < l) parts.subList(i, l).clear();
+		if (wasSplit) {
+			//evacuate this axis entirely
+			shaft = new ShaftAxis(struct.client());
+			shaft.parts.addAll(parts);
+			shaft.refreshParts();
+			parts.clear();
+		}
 		refreshParts();
 	}
 

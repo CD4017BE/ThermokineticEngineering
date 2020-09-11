@@ -125,8 +125,11 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 	}
 
 	public static void merge(ShaftStructure A, ShaftStructure B, double xA, double xB) {
-		if (A == B) {
-			if (Math.getExponent(xA / xB - 1.0) < -24) return;
+		//if structures are invalid we do merging later as part of rescan()
+		if (((A.state | B.state) & INV_STRUC) != 0) return;
+		if (A == B) { //internal merge
+			if (Formula.relDeltaExp(xA, xB) < -24) return;
+			//gear ratios don't match -> shafts are jammed
 			A.J = Double.NaN;
 			A.av = 0;
 			A.ang = 0;
@@ -193,9 +196,9 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 			if(axis.struct != struct || axis.parts.isEmpty()) continue;
 			ShaftStructure nstruct = new ShaftStructure(client);
 			nstruct.add(axis);
-			axis.struct = nstruct;
 			double J = axis.J;
 			double L = axis.J * axis.struct.av * axis.x;
+			axis.struct = nstruct;
 			axis.x = 1.0;
 			stack.add(axis);
 			while(!stack.isEmpty())
@@ -209,14 +212,14 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 						axis = link.axis;
 						if(axis.struct != nstruct) {
 							J += axis.J * Math.abs(x);
-							L += axis.struct.av * axis.J * axis.x;
+							L += axis.struct.av * axis.J * axis.x * Math.signum(x);
 							axis.x = x;
 							axis.struct.remove(axis);
 							axis.struct.markDirty(INV_STRUC);
 							axis.struct = nstruct;
 							nstruct.add(axis);
 							stack.add(axis);
-						} else if(Math.getExponent(axis.x / x - 1.0) > -24)
+						} else if(Formula.relDeltaExp(axis.x, x) >= -24)
 							nstruct.J = Double.NaN;
 					}
 			nstruct.J = J;

@@ -24,6 +24,13 @@ public class Formula {
 		return r * r * r * PI2_3;
 	}
 
+	/**@param a
+	 * @param b
+	 * @return the exponent base 2 of the relative difference between a and b (usually < 0) */
+	public static int relDeltaExp(double a, double b) {
+		return Math.getExponent(a - b) - Math.getExponent(a + b);
+	}
+
 	/** global matrix for linear algebra (only the server main thread should use this)*/
 	public static float[][] MATRIX = new float[4][8];
 	public static int m, n;

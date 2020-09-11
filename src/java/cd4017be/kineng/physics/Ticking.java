@@ -74,9 +74,8 @@ public class Ticking {
 		}
 		if (!updateStruct.isEmpty()) {
 			int l = structs.size();
-			for (ShaftStructure struct : updateStruct) {
-				struct.update();
-			}
+			for (int i = 0; i < updateStruct.size(); i++)
+				updateStruct.get(i).update();
 			if (DEBUG) LOG.info("structure updates: {}, structures: {} -> {}", updateStruct.size(), l, structs.size());
 			updateStruct.clear();
 			for (int i = 0; i < structs.size(); i++) {
