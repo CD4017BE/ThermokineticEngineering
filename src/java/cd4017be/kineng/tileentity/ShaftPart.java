@@ -16,30 +16,35 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** @author CD4017BE */
 public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiveTile {
 
-	/** [m^5] moment of inertia per density */
-	public static final double J_dens = Formula.J_cylinder(0.25, 1.0);
-	public static final double BASE_STRENGHT = Formula.torsionStrength_circle(0.25);
 	protected ShaftAxis shaft;
 	protected double vSave;
 
+	@SuppressWarnings("unchecked")
+	protected <T extends BlockShaft> T block() {
+		return (T)getBlockState().getBlock();
+	}
+
 	protected ShaftMaterial material() {
-		return ((BlockShaft)getBlockType()).shaftMat;
+		return block().shaftMat;
 	}
 
 	@Override
 	public double J() {
-		return material().density * J_dens;
+		return block().J(getBlockState());
 	}
 
 	@Override
 	public double maxTorque() {
-		return material().strength * BASE_STRENGHT;
+		return block().maxM(getBlockState());
 	}
 
 	@Override
@@ -98,7 +103,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 
 	@Override
 	public String model() {
-		return "shaft " + material().texture.toString();
+		return block().model(getBlockState());
 	}
 
 	@Override
@@ -140,5 +145,11 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 
 	@Override
 	public void onClicked(EntityPlayer player) {}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		return block().getSize(pos, getBlockState());
+	}
 
 }
