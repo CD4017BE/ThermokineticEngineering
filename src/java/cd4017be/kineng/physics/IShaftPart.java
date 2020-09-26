@@ -1,6 +1,8 @@
 package cd4017be.kineng.physics;
 
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** @author CD4017BE */
 public interface IShaftPart extends OverloadHandler {
@@ -70,8 +72,10 @@ public interface IShaftPart extends OverloadHandler {
 	/** Called server side by the ShaftStructure to make this part synchronize shaft speed to the client. */
 	void syncToClient();
 
-	String model();
-	String capModel(boolean end);
+	@SideOnly(Side.CLIENT)
+	int[] model();
+	@SideOnly(Side.CLIENT)
+	int[] capModel(boolean end);
 
 	/** whether this part is invalid, usually reflects tileEntityInvalid */
 	boolean invalid();

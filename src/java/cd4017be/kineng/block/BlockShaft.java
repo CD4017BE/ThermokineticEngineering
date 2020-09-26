@@ -11,7 +11,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -29,7 +28,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 	public final double r;
 	public double J_dens = DEFAULT_J_dens;
 	public double strength = DEFAULT_strength;
-	public String model = "shaft";
+	public int[] model;
 
 	public BlockShaft(String id, ShaftMaterial m, double r, Class<? extends TileEntity> tile) {
 		super(id, m.material, m.blockSound, 3, tile);
@@ -54,6 +53,10 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 		return this;
 	}
 
+	public void setModel(int... modelArgs) {
+		this.model = modelArgs;
+	}
+
 	public double J(IBlockState state) {
 		return shaftMat.density * J_dens;
 	}
@@ -62,8 +65,9 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 		return shaftMat.strength * strength;
 	}
 
-	public String model(IBlockState state) {
-		return model + ' ' + shaftMat.texture;
+	public int[] model(IBlockState state) {
+		model[1] = shaftMat.texture;
+		return model;
 	}
 
 	@Override
@@ -115,7 +119,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 
 		public final Material material;
 		public final SoundType blockSound;
-		public ResourceLocation texture;
+		public int texture;
 		/** [kg/m³] density*/
 		public double density;
 		/** [1] friction coefficient */

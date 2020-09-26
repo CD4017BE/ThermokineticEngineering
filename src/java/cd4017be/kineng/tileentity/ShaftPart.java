@@ -5,6 +5,7 @@ import static net.minecraft.util.EnumFacing.AxisDirection.*;
 import cd4017be.kineng.block.BlockShaft;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.physics.*;
+import cd4017be.kineng.render.PartModels;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Orientation;
@@ -102,16 +103,6 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 	}
 
 	@Override
-	public String model() {
-		return block().model(getBlockState());
-	}
-
-	@Override
-	public String capModel(boolean end) {
-		return (end ? "cap1 " : "cap0 ") + material().texture.toString();
-	}
-
-	@Override
 	protected void storeState(NBTTagCompound nbt, int mode) {
 		if(shaft != null) {
 			nbt.setDouble("v", shaft.av());
@@ -145,6 +136,18 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 
 	@Override
 	public void onClicked(EntityPlayer player) {}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int[] model() {
+		return block().model(getBlockState());
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int[] capModel(boolean end) {
+		return new int[] {PartModels.SHAFT_CAPS, material().texture, end ? 4 : -4};
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

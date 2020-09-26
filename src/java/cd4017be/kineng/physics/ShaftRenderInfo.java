@@ -1,17 +1,12 @@
 package cd4017be.kineng.physics;
 
+import static cd4017be.kineng.render.IPartModel.render;
 import static net.minecraft.util.EnumFacing.getFacingFromAxis;
 import static net.minecraft.util.EnumFacing.AxisDirection.*;
-import java.util.function.Function;
-import org.lwjgl.opengl.GL11;
+import cd4017be.kineng.render.QuadBuilder;
 import cd4017be.lib.render.Util;
-import cd4017be.lib.render.model.IntArrayModel;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -31,13 +26,11 @@ public class ShaftRenderInfo {
 		vertexCache = null;
 	}
 
-	public void draw(ShaftAxis shaft, Function<String, IntArrayModel> models) {
+	public void draw(ShaftAxis shaft, QuadBuilder qb) {
 		lastFrame = Util.RenderFrame;
-		BufferBuilder vb = Tessellator.getInstance().getBuffer();
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		if (vertexCache != null) {
 			if (--t <= 0) updateLight(shaft);
-			vb.addVertexData(vertexCache);
+			qb.vb.addVertexData(vertexCache);
 			return;
 		}
 		if (shaft.parts.isEmpty()) return;
@@ -50,17 +43,17 @@ public class ShaftRenderInfo {
 			TileEntity te = (TileEntity)part;
 			World world = te.getWorld();
 			BlockPos pos = te.getPos();
-			if (i == 0) partPtrs[0] = drawModel(
-				vb, models.apply(part.capModel(false)), world,
-				pos.offset(getFacingFromAxis(NEGATIVE, part.axis())), i
+			if (i == 0) partPtrs[0] = render(
+				qb, part.capModel(false), i, world,
+				pos.offset(getFacingFromAxis(NEGATIVE, part.axis()))
 			);
-			partPtrs[i + 1] = drawModel(vb, models.apply(part.model()), world, pos, i);
-			if (i == l - 1) partPtrs[l + 1] = drawModel(
-				vb, models.apply(part.capModel(true)), world,
-				pos.offset(getFacingFromAxis(POSITIVE, part.axis())), i
+			partPtrs[i + 1] = render(qb, part.model(), i, world, pos);
+			if (i == l - 1) partPtrs[l + 1] = render(
+				qb, part.capModel(true), i, world,
+				pos.offset(getFacingFromAxis(POSITIVE, part.axis()))
 			);
 		}
-		vertexCache = Util.extractData(vb, 0, vb.getVertexCount());
+		vertexCache = Util.extractData(qb.vb, 0, qb.vb.getVertexCount());
 		t = LIGHT_UPDATE_INTERVAL;
 	}
 
@@ -75,15 +68,6 @@ public class ShaftRenderInfo {
 			for (int p = partPtrs[i]; j < p; j+=7)
 				vertexCache[j] = l;
 		}
-	}
-
-	private static int drawModel(BufferBuilder vb, IntArrayModel m, World world, BlockPos pos, int i) {
-		if (m != null) {
-			m.setBrightness(world.getCombinedLight(pos, 0));
-			m.setOffset(i, Axis.Z);
-			vb.addVertexData(m.vertexData);
-		}
-		return vb.getVertexCount() * 7;
 	}
 
 }

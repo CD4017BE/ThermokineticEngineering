@@ -2,6 +2,7 @@ package cd4017be.kineng;
 
 import static cd4017be.kineng.Objects.*;
 import static cd4017be.kineng.block.BlockGear.DIAMETER;
+import static cd4017be.kineng.render.IPartModel.registerTexture;
 import static net.minecraft.block.BlockDirectional.FACING;
 import static cd4017be.kineng.block.BlockFillShared.ORIENT;
 import static cd4017be.kineng.block.BlockFillDirected.HALF;
@@ -10,11 +11,13 @@ import static cd4017be.lib.render.SpecialModelLoader.setMod;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
 import static net.minecraftforge.client.model.ModelLoader.setCustomStateMapper;
 import static net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEntitySpecialRenderer;
+import org.apache.commons.lang3.tuple.Pair;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
-import cd4017be.kineng.render.ShaftRenderer;
+import cd4017be.kineng.render.*;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.block.AdvancedBlock;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
@@ -35,14 +38,32 @@ public class ClientProxy extends CommonProxy {
 	public void registerTextures(TextureStitchEvent.Pre event) {
 		TextureMap map = event.getMap();
 		if (!"textures".equals(map.getBasePath())) return;
-		map.registerSprite(M_WOOD.texture = new ResourceLocation("blocks/planks_oak"));
-		map.registerSprite(M_IRON.texture = new ResourceLocation("blocks/iron_block"));
-		map.registerSprite(M_BEDROCK.texture = new ResourceLocation("blocks/bedrock"));
+		for (Pair<ResourceLocation, TextureAtlasSprite> e : IPartModel.TEXTURES)
+			map.registerSprite(e.getLeft());
+	}
+
+	@SubscribeEvent
+	public void registerTextures(TextureStitchEvent.Post event) {
+		TextureMap map = event.getMap();
+		if (!"textures".equals(map.getBasePath())) return;
+		for (Pair<ResourceLocation, TextureAtlasSprite> e : IPartModel.TEXTURES)
+			e.setValue(map.getAtlasSprite(e.getLeft().toString()));
 	}
 
 	@SubscribeEvent
 	public void registerModels(ModelRegistryEvent ev) {
 		setMod(Main.ID);
+		M_WOOD.texture = registerTexture(new ResourceLocation("blocks/planks_oak"));
+		M_IRON.texture = registerTexture(new ResourceLocation("blocks/iron_block"));
+		M_BEDROCK.texture = registerTexture(new ResourceLocation("blocks/bedrock"));
+		int[]
+		m = new int[] {PartModels.SHAFT, 0, 4};
+		SHAFT_WOOD.model = m;
+		SHAFT_IRON.model = m;
+		SHAFT_DEBUG.model = m;
+		m = new int[] {PartModels.GEAR, 0, 4, 0};
+		GEAR_WOOD.model = m;
+		GEAR_IRON.model = m;
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG,
 			GEAR_WOOD, GEAR_IRON,
