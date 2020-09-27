@@ -30,6 +30,7 @@ public class BlockFillShared extends AdvancedBlock {
 	 */
 	public BlockFillShared(String id, Class<? extends TileEntity> tile) {
 		super(id, Material.BARRIER, SoundType.STONE, 3, tile);
+		setLightOpacity(0);
 	}
 
 	@Override

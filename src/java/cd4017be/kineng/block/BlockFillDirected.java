@@ -30,6 +30,7 @@ public class BlockFillDirected extends AdvancedBlock implements IFillBlockSrc {
 	 */
 	public BlockFillDirected(String id, Class<? extends TileEntity> tile) {
 		super(id, Material.BARRIER, SoundType.STONE, 3, tile);
+		setLightOpacity(0);
 		boundingBox = new AxisAlignedBB[] {
 			FULL_BLOCK_AABB,
 			new AxisAlignedBB(0, 0, 0, 1, .5, 1),

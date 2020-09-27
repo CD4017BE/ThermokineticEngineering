@@ -1,1 +1,24 @@
-VERSION = 0;
+VERSION = 5;
+
+POST_INIT() {
+	! add("grinder", input, force[N], distance[m], outputs...);
+	add("grinder", ore("cobblestone"),   10000, 10, it("minecraft:gravel"));
+	add("grinder", ore("gravel", 2),      5000, 20, it("minecraft:sand", 2), it("minecraft:flint"));
+	add("grinder", ore("sandstone"),      5000, 10, it("minecraft:sand", 4));
+	add("grinder", ore("oreCoal"),       10000, 10, it("minecraft:coal", 2), it("minecraft:gravel"));
+	add("grinder", ore("oreRedstone"),   12500, 10, it("minecraft:redstone", 8), it("minecraft:gravel"));
+	add("grinder", ore("oreLapis"),      12500, 10, it("minecraft:dye", 8, 4), it("minecraft:gravel"));
+	add("grinder", ore("oreDiamond"),    20000, 10, it("minecraft:diamond", 2), it("minecraft:gravel"));
+	add("grinder", ore("bone"),           5000,  4, it("minecraft:dye", 6, 15));
+	
+	!create a sawmill recipe for each log -> plank crafting recipe
+	for(rcp : list("craftRes", ore("plankWood"))) {
+		Loc in = rcp:1;
+		if (#in == 1) { !recipe has 1 ingredient
+			in = in:0; !get first ingredient
+			if (in >= ore("logWood")) { !allowed items contains a logWood
+				add("sawmill", in, 1000, 5, (rcp:0) * 6);
+			}
+		}
+	}
+}

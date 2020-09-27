@@ -64,9 +64,12 @@ public class ClientProxy extends CommonProxy {
 		m = new int[] {PartModels.GEAR, 0, 4, 0};
 		GEAR_WOOD.model = m;
 		GEAR_IRON.model = m;
+		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/stone_granite")), 16, 10};
+		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/iron_block")), 16, 1};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG,
 			GEAR_WOOD, GEAR_IRON,
+			GRINDSTONE, SAWBLADE,
 			FILL_DIR, FILL_SHARE
 		);
 		registerRender(shaft_wood);
@@ -74,6 +77,9 @@ public class ClientProxy extends CommonProxy {
 		registerRender(gear_wood, 1, 5);
 		registerRender(gear_iron, 1, 5);
 		registerRender(shaft_debug);
+		registerRender(processing);
+		registerRender(grindstone);
+		registerRender(sawblade);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

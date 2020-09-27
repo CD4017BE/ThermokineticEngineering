@@ -87,4 +87,39 @@ public class PartModels {
 		}
 	});
 
+	/** model arguments: [id, shaft_texture, shaft_radius*16, wheel_texture, wheel_radius*16, wheel_width*16] */
+	public static final int WHEEL = registerModel((qb, args, z0) -> {
+		shaft.render(qb, args, z0);
+		texture(qb, args[3]).uv(0, 0, 16, 16);
+		int n = args[4];
+		float z1 = z0 + args[5] * 0.03125F; z0 -= args[5] * 0.03125F;
+		CplxF rot = C_pol(1.0, 2.0 * Math.PI / (n & -2));
+		CplxF xy0 = C_(n * 0.0625F);
+		CplxF xy1 = new CplxF().prod(xy0, rot);
+		CplxF xy2 = new CplxF();
+		rot.mul(rot);
+		n &= -2;
+		for (int i = 0; i < n; i++) {
+			xy2.prod(xy0, rot);
+			qb.xyz(xy1.r, xy1.i, z0).next();
+			qb.xyz(xy0.r, xy0.i, z0).next();
+			qb.xyz(0    , 0    , z0).next();
+			qb.xyz(xy2.r, xy2.i, z0).next();
+			qb.xyz(0    , 0    , z1).next();
+			qb.xyz(xy0.r, xy0.i, z1).next();
+			qb.xyz(xy1.r, xy1.i, z1).next();
+			qb.xyz(xy2.r, xy2.i, z1).next();
+			qb.xyz(xy0.r, xy0.i, z0).next();
+			qb.xyz(xy1.r, xy1.i, z0).next();
+			qb.xyz(xy1.r, xy1.i, z1).next();
+			qb.xyz(xy0.r, xy0.i, z1).next();
+			qb.xyz(xy1.r, xy1.i, z0).next();
+			qb.xyz(xy2.r, xy2.i, z0).next();
+			qb.xyz(xy2.r, xy2.i, z1).next();
+			qb.xyz(xy1.r, xy1.i, z1).next();
+			xy1.mul(rot);
+			xy0.set(xy2);
+		}
+	});
+
 }

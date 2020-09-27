@@ -45,6 +45,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 				new AxisAlignedBB(min, min, 0, max, max, 1),
 			};
 		}
+		setLightOpacity(0);
 	}
 
 	public BlockShaft setShape(double r0, double l) {
