@@ -18,6 +18,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
 
@@ -72,6 +74,7 @@ public class ProcessingBox extends BaseTileEntity implements IForceProvider, IGu
 	private static final byte A_STOP = 0;
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public ModularGui getGuiScreen(EntityPlayer player, int id) {
 		ModularGui gui = new ModularGui(getContainer(player, id));
 		GuiFrame frame = new GuiFrame(gui, 176, 150, 6)

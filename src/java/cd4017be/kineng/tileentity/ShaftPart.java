@@ -2,6 +2,8 @@ package cd4017be.kineng.tileentity;
 
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
 import static net.minecraft.util.EnumFacing.AxisDirection.*;
+import java.util.ArrayList;
+import java.util.Random;
 import cd4017be.kineng.block.BlockShaft;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.physics.*;
@@ -10,18 +12,20 @@ import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Orientation;
 import cd4017be.lib.util.Utils;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 /** @author CD4017BE */
 public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiveTile {
@@ -49,9 +53,40 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 	}
 
 	@Override
+	public double maxSpeed() {
+		return block().maxAv(getBlockState());
+	}
+
+	@Override
 	public void handleOverload() {
-		//TODO actually break the block (Explosion is too weak)
-		world.createExplosion(null, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, 1F, true);
+		EnumFacing dir = EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis());
+		Orientation o = Orientation.fromFacing(dir);
+		double E = shaft.av();
+		Vec3d vel = new Vec3d(dir.getDirectionVec()).scale(MathHelper.clamp(E * Ticking.dt, -1, 1));
+		E = MathHelper.clamp(Math.log(E * E * J() * 0.001), 0.5, 16.0);
+		ArrayList<ItemStack> items = new ArrayList<>();
+		double r = block().getDebris(getBlockState(), items);
+		world.setBlockToAir(pos);
+		double x0 = pos.getX() + 0.5, y0 = pos.getY() + 0.5, z0 = pos.getZ() + 0.5;
+		world.createExplosion(null, x0, y0, z0, (float)E, false);
+		Random rand = world.rand;
+		for (ItemStack stack : items) {
+			int n = stack.getCount();
+			while(n > 0) {
+				Vec3d vec = new Vec3d(rand.nextDouble() * 2.0 - 1.0, rand.nextFloat() * 2.0 - 1.0, 0.0);
+				if (vec.lengthSquared() > 1.0) continue;
+				vec = o.rotate(vec).scale(r);
+				EntityItem ei = new EntityItem(world);
+				ei.setItem(ItemHandlerHelper.copyStackWithSize(stack, 1));
+				ei.setPosition(vec.x + x0, vec.y + y0, vec.z + z0);
+				vec = vec.crossProduct(vel);
+				ei.motionX = vec.x;
+				ei.motionY = vec.y;
+				ei.motionZ = vec.z;
+				world.spawnEntity(ei);
+				n--;
+			}
+		}
 	}
 
 	@Override

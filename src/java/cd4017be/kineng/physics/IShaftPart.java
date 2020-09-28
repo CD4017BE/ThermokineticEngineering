@@ -14,6 +14,9 @@ public interface IShaftPart extends OverloadHandler {
 	/** @return [N*m] max torque allowed on this part before ... something happens. */
 	double maxTorque();
 
+	/** @return [1/r] max speed allowed on this part before ... something happens. */
+	double maxSpeed();
+
 	/** @param dir towards positive axis
 	 * @return neighboring IShaftPart on the given side. */
 	IShaftPart next(boolean dir);

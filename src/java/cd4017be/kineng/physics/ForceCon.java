@@ -21,7 +21,7 @@ public class ForceCon extends Connection {
 				axis.struct.forces.remove(this.force);
 		}
 		this.force = link;
-		link.con = this;
+		if (link != null) link.con = this;
 		relink();
 	}
 

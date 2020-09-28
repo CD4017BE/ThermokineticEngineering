@@ -17,6 +17,8 @@ public class ShaftAxis extends IndexedSet.Element {
 	public double x;
 	/** [Nm] torque limit of weakest shaft */
 	private double M_weak;
+	/** [1/r] speed limit of weakest shaft */
+	private double av_weak;
 	/** 0: valid, 1:update parts, 2:rescan */
 	byte state;
 
@@ -43,13 +45,14 @@ public class ShaftAxis extends IndexedSet.Element {
 	/** must be called after modifying {@link #parts} */
 	public void refreshParts() {
 		cons.clear();
-		M_weak = Double.POSITIVE_INFINITY;
+		M_weak = av_weak = Double.POSITIVE_INFINITY;
 		double J1 = 0, L = 0;
 		for (IShaftPart part : parts) {
 			double J;
 			L += part.setShaft(this) * (J = part.J());
 			J1 += J;
 			M_weak = Math.min(M_weak, part.maxTorque());
+			av_weak = Math.min(av_weak, part.maxSpeed());
 		}
 		L *= Math.signum(x);
 		double ax = Math.abs(x);
@@ -122,10 +125,10 @@ public class ShaftAxis extends IndexedSet.Element {
 	/**@param aacc [r/s²] shaft acceleration */
 	public void checkOverload(double aacc) {
 		// fast upper bound check
-		double M = 0;
+		double M = 0, av = Math.abs(struct.av * x);
 		for (Connection con : cons)
 			M += Math.abs(con.M);
-		if (M < M_weak) return;
+		if (M < M_weak && av < av_weak) return;
 		// overload possible: do exact check
 		aacc *= x;
 		M = 0;
@@ -134,7 +137,7 @@ public class ShaftAxis extends IndexedSet.Element {
 		for (IShaftPart part : parts) {
 			double dM = part.J() * aacc * 0.5, maxM = part.maxTorque();
 			M -= dM;
-			if (M > maxM || M < -maxM)
+			if (M > maxM || M < -maxM || av > part.maxSpeed())
 				Ticking.overloads.add(part);
 			if (part == next) {
 				do {

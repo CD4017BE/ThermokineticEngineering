@@ -1,6 +1,8 @@
 package cd4017be.kineng.block;
 
+import java.util.List;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 /** 
@@ -9,6 +11,7 @@ public class BlockRotaryTool extends BlockShaft {
 
 	public double maxF;
 	public final int type;
+	public ItemStack scrap = ItemStack.EMPTY;
 
 	/**
 	 * @param id
@@ -24,6 +27,13 @@ public class BlockRotaryTool extends BlockShaft {
 	@Override
 	public double J(IBlockState state) {
 		return J_dens;
+	}
+
+	@Override
+	public double getDebris(IBlockState state, List<ItemStack> items) {
+		items.add(shaftMat.scrap);
+		items.add(scrap);
+		return r;
 	}
 
 }

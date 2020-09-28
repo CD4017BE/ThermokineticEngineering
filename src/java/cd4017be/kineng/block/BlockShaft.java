@@ -5,11 +5,13 @@ import static cd4017be.kineng.physics.Formula.J_cylinder;
 import static cd4017be.kineng.physics.Formula.torsionStrength_circle;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
 import static net.minecraft.util.EnumFacing.Axis.*;
+import java.util.List;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +30,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 	public final double r;
 	public double J_dens = DEFAULT_J_dens;
 	public double strength = DEFAULT_strength;
+	public double av_max = Double.NaN; 
 	public int[] model;
 
 	public BlockShaft(String id, ShaftMaterial m, double r, Class<? extends TileEntity> tile) {
@@ -64,6 +67,11 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 
 	public double maxM(IBlockState state) {
 		return shaftMat.strength * strength;
+	}
+
+	public double maxAv(IBlockState blockState) {
+		if (Double.isNaN(av_max)) av_max = Math.sqrt(3.0 * shaftMat.strength / shaftMat.density) / r;
+		return av_max;
 	}
 
 	public int[] model(IBlockState state) {
@@ -116,6 +124,11 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 		return r > 0.5;
 	}
 
+	public double getDebris(IBlockState state, List<ItemStack> items) {
+		items.add(shaftMat.scrap);
+		return r;
+	}
+
 	public static class ShaftMaterial {
 
 		public final Material material;
@@ -130,6 +143,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 		//real values: Lead = 10...15 MPa, Tin = 15 MPa, Aluminum Alloy = 200...640 MPa
 		//Cast Iron = 100...350 MPa, Titanium Alloy = 290...1200(Ti-Al6-V4) MPa, Steel = 310...690 MPa
 		//Steel Alloy = 1100...1300 MPa, Carbon Nanotubes = 63 GPa
+		public ItemStack scrap = ItemStack.EMPTY;
 
 		public ShaftMaterial(Material material, SoundType blockSound) {
 			this.material = material;
