@@ -110,23 +110,24 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 		return boundingBox[state.getValue(AXIS).ordinal()];
 	}
 
-	public AxisAlignedBB getSize(BlockPos pos, IBlockState state) {
-		return getSize(pos, state.getValue(AXIS), r);
+	public double radius(IBlockState state) {
+		return r;
 	}
 
-	public static AxisAlignedBB getSize(BlockPos pos, Axis ax, double r) {
-		double a = -0.01; r -= 0.51;
+	public AxisAlignedBB getSize(BlockPos pos, IBlockState state) {
+		Axis ax = state.getValue(AXIS);
+		double a = -0.01, r = radius(state) - 0.51;
 		return new AxisAlignedBB(pos).grow(ax == X ? a : r, ax == Y ? a : r, ax == Z ? a : r);
 	}
 
 	@Override
 	public boolean supportsFill(IBlockState state, EnumFacing side) {
-		return r > 0.5;
+		return radius(state) > 0.5;
 	}
 
 	public double getDebris(IBlockState state, List<ItemStack> items) {
 		items.add(shaftMat.scrap);
-		return r;
+		return radius(state);
 	}
 
 	public static class ShaftMaterial {

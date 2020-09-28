@@ -34,7 +34,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 	protected double vSave;
 
 	@SuppressWarnings("unchecked")
-	protected <T extends BlockShaft> T block() {
+	public <T extends BlockShaft> T block() {
 		return (T)getBlockState().getBlock();
 	}
 

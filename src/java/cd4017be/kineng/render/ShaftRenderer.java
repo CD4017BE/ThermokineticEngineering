@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
  */
 public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> {
 
-	public static boolean debug = true, motionBlur = true;
+	public static boolean debug = true, motionBlur = true, global = true;
 
 	@Override
 	public void render(ShaftPart te, double x, double y, double z, float t, int destroyStage, float alpha) {
@@ -99,6 +99,11 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> {
 			BlockPos pos1 = ((ShaftPart)part).getPos().subtract(pos);
 			EntityRenderer.drawNameplate(fr, String.format("%.3g kg*m", part.mass()), X + pos1.getX(), Y + pos1.getY() + 0.5F, Z + pos1.getZ(), 0, f, f1, false, false);
 		}*/
+	}
+
+	@Override
+	public boolean isGlobalRenderer(ShaftPart te) {
+		return global && te.block().radius(te.getBlockState()) > 0.5;
 	}
 
 }
