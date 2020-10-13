@@ -94,23 +94,20 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 			for (ShaftAxis axis : this)
 				axis.checkOverload(aacc);
 		// compute new velocity after applying force, average velocity and average force
-		double av0 = av, av_;
+		double av0 = av, av_, dan;
 		if(M_av == 0) {
 			// apply static force (needs special case to avoid NaN)
 			av += M / J * dt;
 			av_ = (av0 + av) * .5;
+			dan = av_ * dt;
 		} else {
 			// apply dynamic force
-			av += Math.expm1(M_av / J * dt) * (M / M_av + av);
-			av_ = (av0 + av) * .5;
-			M += av_ * M_av;
+			double exp = Math.exp(M_av / J * dt), av8 = M / M_av;
+			av = exp * (av0 + av8) - av8;
+			dan = J / M_av * (av - av0) - av8 * dt; 
+			av_ = Math.getExponent(dan) < -64 ? dan / dt
+				: (av * av - av0 * av0) * 0.5 * J / (M_av * dan) - av8;
 		}
-		// computing actual distance moved and integrating forces would be very complicated
-		// so instead just approximate using average force and maintaining energy conservation.
-		double davsq = av * av - av0 * av0, dan;
-		if(M == 0 || Math.getExponent(av_) * 2 - Math.getExponent(davsq) > 32)
-			dan = av_ * dt; // special case for tiny velocity changes to avoid precision issues
-		else dan = davsq * .5 * J / M;
 		for(DynamicForce f : forces) {
 			double ds = dan * f.r;
 			f.work((av_ * f.r * f.Fdv + f.F) * ds, ds, av * f.r);

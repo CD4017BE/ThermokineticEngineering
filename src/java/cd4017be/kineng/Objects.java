@@ -36,15 +36,15 @@ public class Objects {
 	public static final BlockGear GEAR_WOOD = null, GEAR_IRON = null;
 	public static final BlockFillDirected FILL_DIR = null;
 	public static final BlockFillShared FILL_SHARE = null;
-	public static final BlockProcessing PROCESSING = null;
-	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null;
+	public static final BlockProcessing PROCESSING = null, RF_COIL = null;
+	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null, MAGNETS = null;
 	public static final BlockRotaryTool LATHE = null, SHAFT_MAN = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
 	public static final ItemBlockGear gear_wood = null, gear_iron = null;
-	public static final BaseItemBlock processing = null;
-	public static final BaseItemBlock grindstone = null, sawblade = null;
+	public static final BaseItemBlock processing = null, rf_coil = null;
+	public static final BaseItemBlock grindstone = null, sawblade = null, magnets = null;
 	public static final BaseItemBlock lathe = null, shaft_man = null;
 
 	// Items
@@ -68,10 +68,12 @@ public class Objects {
 			new BlockRotaryTool("shaft_man", M_WOOD, -1, 1.0, ManualPower.class).setShape(0.25, 0.125).setHardness(0.5F),
 			new BlockFillDirected("fill_dir", null).setHardness(1.0F),
 			new BlockFillShared("fill_share", null).setHardness(1.0F),
-			new BlockProcessing("processing", Material.ROCK, SoundType.STONE, 18, ProcessingBox.class).addRcp(0, T_GRINDER, T_SAWBLADE),
+			new BlockProcessing("processing", Material.ROCK, SoundType.STONE, 18, ProcessingBox.class).addRcp(0, T_GRINDER, T_SAWBLADE).setLightOpacity(0),
+			new BlockProcessing("rf_coil", Material.IRON, SoundType.METAL, 18, FluxCoil.class).setLightOpacity(0),
 			new BlockRotaryTool("grindstone", M_WOOD, T_GRINDER, 1.0, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.0F),
 			new BlockRotaryTool("sawblade", M_WOOD, T_SAWBLADE, 1.0, RotaryTool.class).setShape(0.25, 0.125).setHardness(1.0F),
-			new BlockRotaryTool("lathe", M_WOOD, T_ANGULAR, 0.5, ProcessingShaft.class).setShape(0.25, 0.5).setHardness(1.0F)
+			new BlockRotaryTool("lathe", M_WOOD, T_ANGULAR, 0.5, ProcessingShaft.class).setShape(0.25, 0.5).setHardness(1.0F),
+			new BlockRotaryTool("magnets", M_IRON, IKineticLink.T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F)
 		);
 	}
 
@@ -86,9 +88,11 @@ public class Objects {
 			new BaseItemBlock(SHAFT_DEBUG).setCreativeTab(tabKinetic),
 			new BaseItemBlock(SHAFT_MAN).setCreativeTab(tabKinetic),
 			new BaseItemBlock(PROCESSING).setCreativeTab(tabKinetic),
+			new BaseItemBlock(RF_COIL).setCreativeTab(tabKinetic),
 			new BaseItemBlock(GRINDSTONE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(SAWBLADE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic),
+			new BaseItemBlock(MAGNETS).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
 		);
 	}

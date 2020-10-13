@@ -65,13 +65,19 @@ public class ClientProxy extends CommonProxy {
 		m = new int[] {PartModels.GEAR, 0, 4, 0};
 		GEAR_WOOD.model = m;
 		GEAR_IRON.model = m;
-		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/stone_granite")), 16, 10};
-		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/iron_block")), 16, 1};
-		LATHE.model = new int[] {PartModels.WHEEL, 0, 4, M_WOOD.texture, 8, 8};
+		int t = registerTexture(new ResourceLocation("blocks/stone_granite"));
+		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, t, 16, 10, t};
+		t = registerTexture(new ResourceLocation("blocks/iron_block"));
+		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, t, 16, 1, t};
+		t = M_WOOD.texture;
+		LATHE.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 8, t};
+		t = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets"));
+		int t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets1"));
+		MAGNETS.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 10, t1};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
-			GRINDSTONE, SAWBLADE, LATHE,
+			GRINDSTONE, SAWBLADE, LATHE, MAGNETS,
 			FILL_DIR, FILL_SHARE
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
@@ -83,7 +89,9 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(grindstone, GRINDSTONE);
 		new ShaftItemRenderer(sawblade, SAWBLADE);
 		new ShaftItemRenderer(lathe, LATHE);
+		new ShaftItemRenderer(magnets, MAGNETS);
 		registerRender(processing);
+		registerRender(rf_coil);
 		registerRender(flint_knife);
 	}
 

@@ -47,6 +47,10 @@ public class CommonProxy {
 		LATHE.maxF = 10000;
 		LATHE.av_max = Math.sqrt(3.0 * M_WOOD.strength / M_WOOD.density) / 0.5;
 		LATHE.scrap = new ItemStack(Items.FLINT, 2);
+		MAGNETS.J_dens = Formula.J_cylinder(0.25, 0.375) * M_IRON.density + Formula.J_cylinder(0.5, 0.625) * M_IRON.density;
+		MAGNETS.maxF = 2500000;
+		MAGNETS.av_max = Math.sqrt(3.0 * M_IRON.strength / M_IRON.density) / 0.5;
+		MAGNETS.scrap = new ItemStack(Items.IRON_INGOT, 6);
 		SHAFT_MAN.J_dens *= M_WOOD.density;
 		SHAFT_MAN.maxF = 5000;
 		SHAFT_MAN.av_max = Math.sqrt(M_WOOD.strength / M_WOOD.density) / 2.0;

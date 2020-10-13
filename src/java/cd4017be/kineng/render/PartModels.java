@@ -87,11 +87,10 @@ public class PartModels {
 		}
 	});
 
-	/** model arguments: [id, shaft_texture, shaft_radius*16, wheel_texture, wheel_radius*16, wheel_width*16] */
+	/** model arguments: [id, shaft_texture, shaft_radius*16, wheel_texture, wheel_radius*16, wheel_width*16, outer_texture] */
 	public static final int WHEEL = registerModel((qb, args, z0) -> {
 		shaft.render(qb, args, z0);
-		texture(qb, args[3]).uv(0, 0, 16, 16);
-		int n = args[4];
+		int n = args[4], t0 = args[3], t1 = args[6];
 		float z1 = z0 + args[5] * 0.03125F; z0 -= args[5] * 0.03125F;
 		CplxF rot = C_pol(1.0, 2.0 * Math.PI / (n & -2));
 		CplxF xy0 = C_(n * 0.0625F);
@@ -101,18 +100,21 @@ public class PartModels {
 		n &= -2;
 		for (int i = 0; i < n; i++) {
 			xy2.prod(xy0, rot);
-			qb.xyz(xy1.r, xy1.i, z0).next();
-			qb.xyz(xy0.r, xy0.i, z0).next();
+			texture(qb, t0).uv(0, 0, 16, 16);
 			qb.xyz(0    , 0    , z0).next();
 			qb.xyz(xy2.r, xy2.i, z0).next();
+			qb.xyz(xy1.r, xy1.i, z0).next();
+			qb.xyz(xy0.r, xy0.i, z0).next();
 			qb.xyz(0    , 0    , z1).next();
 			qb.xyz(xy0.r, xy0.i, z1).next();
 			qb.xyz(xy1.r, xy1.i, z1).next();
 			qb.xyz(xy2.r, xy2.i, z1).next();
+			texture(qb, t1).uv(0, 0, 16, 16);
 			qb.xyz(xy0.r, xy0.i, z0).next();
 			qb.xyz(xy1.r, xy1.i, z0).next();
 			qb.xyz(xy1.r, xy1.i, z1).next();
 			qb.xyz(xy0.r, xy0.i, z1).next();
+			qb.uv(16, 0, 0, 16);
 			qb.xyz(xy1.r, xy1.i, z0).next();
 			qb.xyz(xy2.r, xy2.i, z0).next();
 			qb.xyz(xy2.r, xy2.i, z1).next();
