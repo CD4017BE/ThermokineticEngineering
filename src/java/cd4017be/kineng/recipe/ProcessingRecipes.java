@@ -1,5 +1,7 @@
 package cd4017be.kineng.recipe;
 
+import static cd4017be.kineng.tileentity.IKineticLink.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
 import cd4017be.lib.script.Parameters;
@@ -14,6 +16,13 @@ public class ProcessingRecipes implements IRecipeHandler {
 
 	public final HashMap<ItemKey, KineticRecipe> recipes = new HashMap<>();
 
+	public ProcessingRecipes(int type) {
+		type >>= 8;
+		if (type >= recipeList.length)
+			recipeList = Arrays.copyOf(recipeList, recipeList.length << 1);
+		recipeList[type] = this;
+	}
+
 	public KineticRecipe get(ItemStack ing) {
 		KineticRecipe rcp = recipes.get(new ItemKey(ing));
 		if (rcp == null && ing.getHasSubtypes())
@@ -24,9 +33,6 @@ public class ProcessingRecipes implements IRecipeHandler {
 	public void add(KineticRecipe rcp) {
 		recipes.put(new ItemKey(rcp.io[0]), rcp);
 	}
-
-	public static final ProcessingRecipes SAWMILL = new ProcessingRecipes();
-	public static final ProcessingRecipes GRINDER = new ProcessingRecipes();
 
 	@Override
 	public void addRecipe(Parameters param) {
@@ -42,6 +48,16 @@ public class ProcessingRecipes implements IRecipeHandler {
 				if (rcp.io[0] == null) rcp.io[0] = (ItemStack)e;
 				recipes.put(new ItemKey((ItemStack)e), rcp);
 			}
+	}
+
+	public static ProcessingRecipes[] recipeList = new ProcessingRecipes[16];
+	public static final ProcessingRecipes SAWMILL = new ProcessingRecipes(T_SAWBLADE);
+	public static final ProcessingRecipes GRINDER = new ProcessingRecipes(T_GRINDER);
+	public static final ProcessingRecipes LATHE = new ProcessingRecipes(T_ANGULAR);
+
+	public static ProcessingRecipes getRecipeList(int mode) {
+		mode >>>= 8;
+		return mode < recipeList.length ? recipeList[mode] : null;
 	}
 
 }

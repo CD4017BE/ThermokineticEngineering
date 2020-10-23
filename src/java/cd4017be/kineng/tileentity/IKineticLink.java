@@ -2,10 +2,7 @@ package cd4017be.kineng.tileentity;
 
 import static net.minecraft.util.EnumFacing.VALUES;
 import cd4017be.kineng.physics.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 /** 
  * @author CD4017BE */
@@ -24,7 +21,7 @@ public interface IKineticLink extends IShaftPart {
 
 	ForceCon getCon(EnumFacing side);
 
-	int radius();
+	IForceProvider findLink(EnumFacing side);
 
 	@Override
 	default double setShaft(ShaftAxis shaft, double v0) {
@@ -42,17 +39,17 @@ public interface IKineticLink extends IShaftPart {
 	@Override
 	default void connect(boolean client) {
 		if (invalid()) return;
-		World world = ((TileEntity)this).getWorld();
-		BlockPos pos = ((TileEntity)this).getPos();
-		int r = radius();
-		for(EnumFacing side : VALUES) {
-			ForceCon con = getCon(side);
-			if(con == null || con.force != null) continue;
-			TileEntity te = world.getTileEntity(pos.offset(side, r));
-			if (te instanceof IForceProvider)
-				con.link(((IForceProvider)te).connect(this, side.getOpposite()));
-		}
+		if (!client)
+			for(EnumFacing side : VALUES)
+				check(side);
 		IShaftPart.super.connect(client);
+	}
+
+	default void check(EnumFacing side) {
+		ForceCon con = getCon(side);
+		if(con == null) return;
+		IForceProvider fp = findLink(side);
+		con.link(fp == null ? null : fp.connect(this, side.getOpposite()));
 	}
 
 }

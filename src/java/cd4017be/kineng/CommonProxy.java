@@ -19,6 +19,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(this);
 		RecipeAPI.Handlers.put("grinder", ProcessingRecipes.GRINDER);
 		RecipeAPI.Handlers.put("sawmill", ProcessingRecipes.SAWMILL);
+		RecipeAPI.Handlers.put("lathe", ProcessingRecipes.LATHE);
 	}
 
 	public void init(ConfigConstants c) {
@@ -41,6 +42,10 @@ public class CommonProxy {
 		SAWBLADE.maxF = 10000;
 		SAWBLADE.av_max = Math.sqrt(3.0 * M_IRON.strength / M_IRON.density) / 1.0;
 		SAWBLADE.scrap = M_IRON.scrap;
+		LATHE.J_dens = (Formula.J_cylinder(0.25, 0.5) + Formula.J_cylinder(0.5, 0.5)) * M_WOOD.density;
+		LATHE.maxF = 10000;
+		LATHE.av_max = Math.sqrt(3.0 * M_WOOD.strength / M_WOOD.density) / 0.5;
+		LATHE.scrap = new ItemStack(Items.FLINT, 2);
 		
 		ManualPower.ENTITY_STRENGTH.put(EntityPig.class, CplxF.C_(400F, 1200F));
 		ManualPower.ENTITY_STRENGTH.put(EntityCow.class, CplxF.C_(400F, 1600F));

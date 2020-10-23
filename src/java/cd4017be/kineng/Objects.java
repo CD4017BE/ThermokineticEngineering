@@ -1,12 +1,11 @@
 package cd4017be.kineng;
 
+import static cd4017be.kineng.tileentity.IKineticLink.*;
 import cd4017be.kineng.block.*;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.item.ItemBlockGear;
 import cd4017be.kineng.tileentity.*;
-import cd4017be.lib.block.OrientedBlock;
 import cd4017be.lib.item.BaseItemBlock;
-import cd4017be.lib.property.PropertyOrientation;
 import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
@@ -36,14 +35,16 @@ public class Objects {
 	public static final BlockGear GEAR_WOOD = null, GEAR_IRON = null;
 	public static final BlockFillDirected FILL_DIR = null;
 	public static final BlockFillShared FILL_SHARE = null;
-	public static final OrientedBlock PROCESSING = null;
+	public static final BlockProcessing PROCESSING = null;
 	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null;
+	public static final BlockRotaryTool LATHE = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null, shaft_man = null;
 	public static final ItemBlockGear gear_wood = null, gear_iron = null;
 	public static final BaseItemBlock processing = null;
 	public static final BaseItemBlock grindstone = null, sawblade = null;
+	public static final BaseItemBlock lathe = null;
 
 	// Items
 
@@ -65,9 +66,10 @@ public class Objects {
 			new BlockShaft("shaft_man", M_WOOD, 1.0, ManualPower.class).setHardness(0.5F),
 			new BlockFillDirected("fill_dir", null).setHardness(1.0F),
 			new BlockFillShared("fill_share", null).setHardness(1.0F),
-			new OrientedBlock("processing", Material.ROCK, SoundType.STONE, 18, ProcessingBox.class, PropertyOrientation.XY_12_ROT),
-			new BlockRotaryTool("grindstone", M_WOOD, IKineticLink.T_GRINDER, 1.0, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.0F),
-			new BlockRotaryTool("sawblade", M_WOOD, IKineticLink.T_SAWBLADE, 1.0, RotaryTool.class).setShape(0.25, 0.125).setHardness(1.0F)
+			new BlockProcessing("processing", Material.ROCK, SoundType.STONE, 18, ProcessingBox.class).addRcp(0, T_GRINDER, T_SAWBLADE),
+			new BlockRotaryTool("grindstone", M_WOOD, T_GRINDER, 1.0, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.0F),
+			new BlockRotaryTool("sawblade", M_WOOD, T_SAWBLADE, 1.0, RotaryTool.class).setShape(0.25, 0.125).setHardness(1.0F),
+			new BlockRotaryTool("lathe", M_WOOD, T_ANGULAR, 0.5, ProcessingShaft.class).setShape(0.25, 0.5).setHardness(1.0F)
 		);
 	}
 
@@ -83,7 +85,8 @@ public class Objects {
 			new BaseItemBlock(SHAFT_MAN).setCreativeTab(tabKinetic),
 			new BaseItemBlock(PROCESSING).setCreativeTab(tabKinetic),
 			new BaseItemBlock(GRINDSTONE).setCreativeTab(tabKinetic),
-			new BaseItemBlock(SAWBLADE).setCreativeTab(tabKinetic)
+			new BaseItemBlock(SAWBLADE).setCreativeTab(tabKinetic),
+			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic)
 		);
 	}
 

@@ -2,12 +2,17 @@ package cd4017be.kineng.tileentity;
 
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.*;
+import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
+import cd4017be.lib.util.Utils;
+import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.BlockPos;
 
 /** 
  * @author CD4017BE */
-public class RotaryTool extends ShaftPart implements IKineticLink {
+public class RotaryTool extends ShaftPart implements IKineticLink, INeighborAwareTile {
 
 	private ForceCon[] cons = new ForceCon[4];
 
@@ -35,13 +40,23 @@ public class RotaryTool extends ShaftPart implements IKineticLink {
 	}
 
 	@Override
-	public int radius() {
-		return (int)Math.ceil(block().r);
+	public IForceProvider findLink(EnumFacing side) {
+		TileEntity te = world.getTileEntity(pos.offset(side));
+		return te instanceof IForceProvider ? (IForceProvider)te : null;
 	}
 
 	@Override
 	public int type() {
 		return this.<BlockRotaryTool>block().type;
 	}
+
+	@Override
+	public void neighborBlockChange(Block b, BlockPos src) {
+		EnumFacing side = Utils.getSide(src, pos);
+		if (side != null) check(side);
+	}
+
+	@Override
+	public void neighborTileChange(TileEntity te, EnumFacing side) {}
 
 }

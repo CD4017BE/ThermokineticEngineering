@@ -67,10 +67,11 @@ public class ClientProxy extends CommonProxy {
 		GEAR_IRON.model = m;
 		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/stone_granite")), 16, 10};
 		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/iron_block")), 16, 1};
+		LATHE.model = new int[] {PartModels.WHEEL, 0, 4, M_WOOD.texture, 8, 8};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
-			GRINDSTONE, SAWBLADE,
+			GRINDSTONE, SAWBLADE, LATHE,
 			FILL_DIR, FILL_SHARE
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
@@ -81,6 +82,7 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(shaft_man, SHAFT_MAN);
 		new ShaftItemRenderer(grindstone, GRINDSTONE);
 		new ShaftItemRenderer(sawblade, SAWBLADE);
+		new ShaftItemRenderer(lathe, LATHE);
 		registerRender(processing);
 	}
 
