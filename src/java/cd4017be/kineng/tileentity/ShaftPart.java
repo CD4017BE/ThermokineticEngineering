@@ -61,7 +61,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 	public void handleOverload() {
 		EnumFacing dir = EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis());
 		Orientation o = Orientation.fromFacing(dir);
-		double E = shaft.av();
+		double E = shaft != null ? shaft.av() : 0;
 		Vec3d vel = new Vec3d(dir.getDirectionVec()).scale(MathHelper.clamp(E * Ticking.dt, -1, 1));
 		E = MathHelper.clamp(Math.log(E * E * J() * 0.001), 0.5, 16.0);
 		ArrayList<ItemStack> items = new ArrayList<>();

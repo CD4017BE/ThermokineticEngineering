@@ -44,17 +44,16 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> {
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		tess.draw();
 		popMatrix();
-		if (debug) drawDebug(shaft, x, y, z);
+		if (debug) drawDebug(shaft, te.axis(), x, y, z);
 	}
 
-	private void drawDebug(ShaftAxis shaft, double x, double y, double z) {
+	private void drawDebug(ShaftAxis shaft, Axis axis, double x, double y, double z) {
 		BlockPos pos = shaft.renderInfo.origin;
 		double d0 = rendererDispatcher.entity.getDistanceSqToCenter(pos);
 		if (d0 > 1024D) return; 
 		float f = this.rendererDispatcher.entityYaw;
 		float f1 = this.rendererDispatcher.entityPitch;
 		FontRenderer fr = getFontRenderer();
-		Axis axis = shaft.parts.get(0).axis();
 		int l = shaft.parts.size();
 		float X = (float)x + 0.5F, Y = (float)y + 0.5F, Z = (float)z + 0.5F;
 		disableDepth();
