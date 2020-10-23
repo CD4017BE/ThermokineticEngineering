@@ -3,8 +3,7 @@ package cd4017be.kineng;
 import static cd4017be.kineng.tileentity.IKineticLink.*;
 import cd4017be.kineng.block.*;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
-import cd4017be.kineng.item.ItemBlockGear;
-import cd4017be.kineng.item.ItemBreakRecipe;
+import cd4017be.kineng.item.*;
 import cd4017be.kineng.tileentity.*;
 import cd4017be.lib.item.BaseItemBlock;
 import cd4017be.lib.templates.TabMaterials;
@@ -40,6 +39,7 @@ public class Objects {
 	public static final BlockProcessing PROCESSING = null, RF_COIL = null;
 	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null, MAGNETS = null;
 	public static final BlockRotaryTool LATHE = null, PRESS = null, SHAFT_MAN = null;
+	public static final BlockTurbine WIND_MILL = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
@@ -47,9 +47,11 @@ public class Objects {
 	public static final BaseItemBlock processing = null, rf_coil = null;
 	public static final BaseItemBlock grindstone = null, sawblade = null, magnets = null;
 	public static final BaseItemBlock lathe = null, press = null, shaft_man = null;
+	public static final ItemBlockGear wind_mill = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
+	public static final ItemAerometer anemometer = null;
 
 	// Sounds
 
@@ -63,8 +65,8 @@ public class Objects {
 		ev.getRegistry().registerAll(
 			new BlockShaft("shaft_wood", M_WOOD, 0.25, ShaftPart.class).setHardness(0.5F),
 			new BlockShaft("shaft_iron", M_IRON, 0.25, ShaftPart.class).setHardness(1.5F),
-			new BlockGear("gear_wood", M_WOOD, Gear.class).setShape(0.25, 0.25).setHardness(0.5F),
-			new BlockGear("gear_iron", M_IRON, Gear.class).setShape(0.25, 0.25).setHardness(1.5F),
+			new BlockGear("gear_wood", M_WOOD, 0.5, Gear.class).setShape(0.25, 0.25).setHardness(0.5F),
+			new BlockGear("gear_iron", M_IRON, 0.5, Gear.class).setShape(0.25, 0.25).setHardness(1.5F),
 			new BlockShaft("shaft_debug", M_BEDROCK, 0.25, MechanicalDebug.class).setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY),
 			new BlockRotaryTool("shaft_man", M_WOOD, -1, 1.0, ManualPower.class).setShape(0.25, 0.125).setHardness(0.5F),
 			new BlockFillDirected("fill_dir", null).setHardness(1.0F),
@@ -75,7 +77,8 @@ public class Objects {
 			new BlockRotaryTool("sawblade", M_WOOD, T_SAWBLADE, 1.0, RotaryTool.class).setShape(0.25, 0.125).setHardness(1.0F),
 			new BlockRotaryTool("lathe", M_WOOD, T_ANGULAR, 0.5, ProcessingShaft.class).setShape(0.25, 0.5).setHardness(1.0F),
 			new BlockRotaryTool("press", M_STONE, T_BELT, 0.25, ProcessingShaft.class).setHardness(1.0F),
-			new BlockRotaryTool("magnets", M_IRON, T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F)
+			new BlockRotaryTool("magnets", M_IRON, T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F),
+			new BlockTurbine("wind_mill", M_IRON, 2.5, WindTurbine.class).setHardness(1.0F)
 		);
 	}
 
@@ -96,7 +99,9 @@ public class Objects {
 			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(PRESS).setCreativeTab(tabKinetic),
 			new BaseItemBlock(MAGNETS).setCreativeTab(tabKinetic),
-			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
+			new ItemBlockGear(WIND_MILL).setCreativeTab(tabKinetic),
+			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
+			new ItemAerometer("anemometer").setCreativeTab(tabKinetic)
 		);
 	}
 

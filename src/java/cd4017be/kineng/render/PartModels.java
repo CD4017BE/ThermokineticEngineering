@@ -168,4 +168,32 @@ public class PartModels {
 		}
 	});
 
+	/** model arguments: [id, shaft_texture, shaft_radius*16, blade_radius*16, blade_texture, blade_width*16] */
+	public static final int TURBINE = registerModel((qb, args, z0) -> {
+		shaft.render(qb, args, z0);
+		texture(qb, args[4]);
+		float z1 = z0 + args[5] * 0.03125F; z0 -= args[5] * 0.03125F;
+		CplxF xy0 = C_pol(1.0, Math.PI / 16.0);
+		CplxF xy1 = xy0.clone().conj().mul(ROTATE45);
+		float r0 = args[2] * 0.0625F, r1 = args[3] * 0.0625F;
+		for (int i = 0; i < 8; i++) {
+			int v = (i & 3) << 2;
+			qb.uv(0, v, 16, v + 4);
+			for (float r = r1; r > r0;) {
+				float r_ = r * 0.5F;
+				qb.xyz(xy0.r * r, xy0.i * r, z0).next();
+				qb.xyz(xy0.r * r_, xy0.i * r_, z0).next();
+				qb.xyz(xy1.r * r_, xy1.i * r_, z1).next();
+				qb.xyz(xy1.r * r, xy1.i * r, z1).next();
+				qb.xyz(xy1.r * r_, xy1.i * r_, z1).next();
+				qb.xyz(xy0.r * r_, xy0.i * r_, z0).next();
+				qb.xyz(xy0.r * r, xy0.i * r, z0).next();
+				qb.xyz(xy1.r * r, xy1.i * r, z1).next();
+				r = r_;
+			}
+			xy0.mul(ROTATE45);
+			xy1.mul(ROTATE45);
+		}
+	});
+
 }
