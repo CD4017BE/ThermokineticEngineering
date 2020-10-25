@@ -10,7 +10,6 @@ import cd4017be.lib.Gui.comp.*;
 import cd4017be.lib.network.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
@@ -34,13 +33,6 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	public double setShaft(ShaftAxis shaft) {
 		con.setShaft(shaft);
 		return super.setShaft(shaft);
-	}
-
-	@Override
-	public boolean onActivated(
-		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
-	) {
-		return false;
 	}
 
 	@Override

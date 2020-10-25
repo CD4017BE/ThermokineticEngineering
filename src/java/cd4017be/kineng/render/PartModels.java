@@ -122,4 +122,50 @@ public class PartModels {
 		}
 	});
 
+	/** model arguments: [id, shaft_texture, shaft_radius*16, handle_radius*16 */
+	public static final int MANUAL = registerModel((qb, args, z0) -> {
+		shaft.render(qb, args, z0);
+		float r0 = args[2] * 0.0625F, r1 = args[3] * 0.0625F;
+		float d = 0.415F * r0, z1 = z0 + d; z0 -= d;
+		CplxF xy = C_(0.5F);
+		xy.add(xy.clone().mul(ROTATE45));
+		CplxF pl0 = C_(r0, d), pl1 = C_(r1, d);
+		CplxF pr0 = new CplxF().prod(pl0, xy);
+		CplxF pr1 = new CplxF().prod(pl1, xy);
+		pl0.conj().mul(xy);
+		pl1.conj().mul(xy);
+		for (int i = 0; i < 8; i++) {
+			qb.xyz(pl1.r, pl1.i, z1).uv(0, 0).next();
+			qb.xyz(pl1.r, pl1.i, z0).uv(0, 4).next();
+			qb.xyz(pr1.r, pr1.i, z0).uv(4, 4).next();
+			qb.xyz(pr1.r, pr1.i, z1).uv(4, 0).next();
+			
+			qb.xyz(pl0.r, pl0.i, z1).uv(0, 0).next();
+			qb.xyz(pl0.r, pl0.i, z0).uv(0, 4).next();
+			qb.xyz(pl1.r, pl1.i, z0).uv(16, 4).next();
+			qb.xyz(pl1.r, pl1.i, z1).uv(16, 0).next();
+			
+			qb.xyz(pr0.r, pr0.i, z1).uv(0, 4).next();
+			qb.xyz(pl0.r, pl0.i, z1).uv(0, 8).next();
+			qb.xyz(pl1.r, pl1.i, z1).uv(16, 8).next();
+			qb.xyz(pr1.r, pr1.i, z1).uv(16, 4).next();
+			
+			qb.xyz(pr0.r, pr0.i, z0).uv(0, 8).next();
+			qb.xyz(pr0.r, pr0.i, z1).uv(0, 12).next();
+			qb.xyz(pr1.r, pr1.i, z1).uv(16, 12).next();
+			qb.xyz(pr1.r, pr1.i, z0).uv(16, 8).next();
+			
+			qb.xyz(pl0.r, pl0.i, z0).uv(0, 12).next();
+			qb.xyz(pr0.r, pr0.i, z0).uv(0, 16).next();
+			qb.xyz(pr1.r, pr1.i, z0).uv(16, 16).next();
+			qb.xyz(pl1.r, pl1.i, z0).uv(16, 12).next();
+			
+			pl0.mul(ROTATE45);
+			pr0.mul(ROTATE45);
+			pl1.mul(ROTATE45);
+			pr1.mul(ROTATE45);
+		}
+		//TODO add 8 sticks
+	});
+
 }

@@ -16,8 +16,6 @@ import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.kineng.render.*;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.block.AdvancedBlock;
-import cd4017be.lib.render.SpecialModelLoader;
-import cd4017be.lib.render.model.BlockMimicModel;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -63,13 +61,14 @@ public class ClientProxy extends CommonProxy {
 		SHAFT_WOOD.model = m;
 		SHAFT_IRON.model = m;
 		SHAFT_DEBUG.model = m;
+		SHAFT_MAN.model = new int[] {PartModels.MANUAL, 0, 4, 24};
 		m = new int[] {PartModels.GEAR, 0, 4, 0};
 		GEAR_WOOD.model = m;
 		GEAR_IRON.model = m;
 		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/stone_granite")), 16, 10};
 		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, registerTexture(new ResourceLocation("blocks/iron_block")), 16, 1};
 		setShaftRender(
-			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG,
+			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
 			GRINDSTONE, SAWBLADE,
 			FILL_DIR, FILL_SHARE
@@ -79,6 +78,7 @@ public class ClientProxy extends CommonProxy {
 		registerRender(gear_wood, 1, 5);
 		registerRender(gear_iron, 1, 5);
 		registerRender(shaft_debug);
+		registerRender(shaft_man);
 		registerRender(processing);
 		registerRender(grindstone);
 		registerRender(sawblade);

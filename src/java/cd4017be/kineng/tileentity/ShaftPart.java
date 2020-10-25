@@ -8,27 +8,23 @@ import cd4017be.kineng.block.BlockShaft;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.physics.*;
 import cd4017be.kineng.render.PartModels;
-import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Orientation;
 import cd4017be.lib.util.Utils;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /** @author CD4017BE */
-public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiveTile {
+public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	protected ShaftAxis shaft;
 	protected double vSave;
@@ -152,25 +148,6 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart, IInteractiv
 		else if(shaft != null)
 			shaft.onSpeedSync(nbt.getDouble("v"), nbt.getDouble("s"));
 	}
-
-	@Override
-	public boolean onActivated(
-		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
-	) {
-		if(world.isRemote) return true;
-		final double hitSpeed = 0.05, hitForce = 1.0;
-		double d = player.getPositionEyes(0).subtract(pos.getX() + X, pos.getY() + Y, pos.getZ() + Z)
-		.crossProduct(new Vec3d(EnumFacing.getFacingFromAxis(POSITIVE, axis()).getDirectionVec()))
-		.normalize().dotProduct(new Vec3d(X - 0.5, Y - 0.5, Z - 0.5));
-		double v = shaft.av() / hitSpeed * d, f = 1 / (1.0 + v * v);
-		shaft.pulse(hitForce * f * d);
-		player.addExhaustion((float)Math.max(v * f * 2, 0));
-		player.sendStatusMessage(new TextComponentString(String.format("v = %.3g r/t", shaft.av())), true);
-		return true;
-	}
-
-	@Override
-	public void onClicked(EntityPlayer player) {}
 
 	@Override
 	@SideOnly(Side.CLIENT)
