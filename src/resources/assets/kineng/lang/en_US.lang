@@ -35,3 +35,4 @@ gui.kineng.pr_status1=missing input or output full\n§oclick to cancel recipe
 gui.kineng.pr_status2=Running\n§oclick to cancel recipe
 tile.kineng.sawblade.name=Sawblade
 gui.kineng.pr_mode1=Saw
+tile.kineng.shaft_man.name=Hand Wheel

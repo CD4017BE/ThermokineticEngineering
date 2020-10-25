@@ -1,12 +1,14 @@
 package cd4017be.kineng.render;
 
 import static java.lang.Float.floatToIntBits;
+import static java.lang.Float.intBitsToFloat;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,7 +20,7 @@ public class QuadBuilder implements AutoCloseable {
 	/** vertex indices */
 	public static final int VA = 0, VB = 7, VC = 14, VD = 21;
 	/** element indices */
-	public static final int EX = 0, EY = 1, EZ = 2, EC = 3, EU = 4, EV = 5, EL = 6;
+	public static final int EX = 0, EY = 1, EZ = 2, EC = 3, EU = 4, EV = 5, ELN = 6;
 
 	public static final QuadBuilder INSTANCE = new QuadBuilder();
 
@@ -26,9 +28,11 @@ public class QuadBuilder implements AutoCloseable {
 	public BufferBuilder vb;
 	public TextureAtlasSprite texture;
 	public int i;
+	public boolean calcNormals;
 
-	public QuadBuilder init(BufferBuilder vb) {
-		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+	public QuadBuilder init(BufferBuilder vb, boolean item) {
+		vb.begin(GL11.GL_QUADS, item ? DefaultVertexFormats.ITEM : DefaultVertexFormats.BLOCK);
+		this.calcNormals = item;
 		this.vb = vb;
 		return this;
 	}
@@ -39,9 +43,23 @@ public class QuadBuilder implements AutoCloseable {
 	}
 
 	public QuadBuilder add() {
+		if (calcNormals) calcNormals();
 		vb.addVertexData(vertexData);
 		i = 0;
 		return this;
+	}
+
+	public void calcNormals() {
+		float ux = intBitsToFloat(vertexData[VC+EX]) - intBitsToFloat(vertexData[VA+EX]);
+		float uy = intBitsToFloat(vertexData[VC+EY]) - intBitsToFloat(vertexData[VA+EY]);
+		float uz = intBitsToFloat(vertexData[VC+EZ]) - intBitsToFloat(vertexData[VA+EZ]);
+		float vx = intBitsToFloat(vertexData[VD+EX]) - intBitsToFloat(vertexData[VB+EX]);
+		float vy = intBitsToFloat(vertexData[VD+EY]) - intBitsToFloat(vertexData[VB+EY]);
+		float vz = intBitsToFloat(vertexData[VD+EZ]) - intBitsToFloat(vertexData[VB+EZ]);
+		float nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+		float r = (float)MathHelper.fastInvSqrt(nx * nx + ny * ny + nz * nz) * 127F;
+		vertexData[VD+ELN] = vertexData[VC+ELN] = vertexData[VB+ELN] = vertexData[VA+ELN] =
+		(int)(nx * r) & 0xff | (int)(ny * r) << 8 & 0xff00 | (int)(nz * r) << 16 & 0xff0000;
 	}
 
 	public BakedQuad build(int tintIdx, EnumFacing face, boolean diffuseLight) {
@@ -98,7 +116,7 @@ public class QuadBuilder implements AutoCloseable {
 	}
 
 	public QuadBuilder light(int l) {
-		vertexData[i+EL] = l;
+		vertexData[i+ELN] = l;
 		return this;
 	}
 

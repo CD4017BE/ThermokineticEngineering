@@ -1,13 +1,10 @@
 package cd4017be.kineng.render;
 
-import static cd4017be.kineng.render.QuadBuilder.EL;
 import java.util.ArrayList;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,12 +15,9 @@ public interface IPartModel {
 
 	void render(QuadBuilder qb, int[] args, float ofsZ);
 
-	static int render(QuadBuilder qb, int[] args, float ofsZ, World world, BlockPos pos) {
+	static int render(QuadBuilder qb, float ofsZ, int[] args) {
 		if (args != null && args.length != 0)
-			MODELS.get(args[0]).render(
-				qb.all(EL, world.getCombinedLight(pos, 0)),
-				args, ofsZ
-			);
+			MODELS.get(args[0]).render(qb, args, ofsZ);
 		return qb.vb.getVertexCount() * 7;
 	}
 

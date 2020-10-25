@@ -29,7 +29,7 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> {
 		ShaftRenderInfo info = shaft.renderInfo;
 		if (Util.RenderFrame == info.lastFrame) return;
 		Tessellator tess = Tessellator.getInstance();
-		try (QuadBuilder qb = QuadBuilder.INSTANCE.init(tess.getBuffer())) {
+		try (QuadBuilder qb = QuadBuilder.INSTANCE.init(tess.getBuffer(), false)) {
 			info.draw(shaft, qb);
 		}
 		BlockPos pos = info.origin.subtract(te.pos());

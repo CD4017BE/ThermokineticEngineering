@@ -127,8 +127,7 @@ public class PartModels {
 		shaft.render(qb, args, z0);
 		float r0 = args[2] * 0.0625F, r1 = args[3] * 0.0625F;
 		float d = 0.415F * r0, z1 = z0 + d; z0 -= d;
-		CplxF xy = C_(0.5F);
-		xy.add(xy.clone().mul(ROTATE45));
+		CplxF xy = C_(1F).add(ROTATE45).sca(0.5F);
 		CplxF pl0 = C_(r0, d), pl1 = C_(r1, d);
 		CplxF pr0 = new CplxF().prod(pl0, xy);
 		CplxF pr1 = new CplxF().prod(pl1, xy);
@@ -165,7 +164,6 @@ public class PartModels {
 			pl1.mul(ROTATE45);
 			pr1.mul(ROTATE45);
 		}
-		//TODO add 8 sticks
 	});
 
 }

@@ -73,15 +73,15 @@ public class ClientProxy extends CommonProxy {
 			GRINDSTONE, SAWBLADE,
 			FILL_DIR, FILL_SHARE
 		);
-		registerRender(shaft_wood);
-		registerRender(shaft_iron);
-		registerRender(gear_wood, 1, 5);
-		registerRender(gear_iron, 1, 5);
-		registerRender(shaft_debug);
-		registerRender(shaft_man);
+		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
+		new ShaftItemRenderer(shaft_iron, SHAFT_IRON);
+		new ShaftItemRenderer(gear_wood, GEAR_WOOD);
+		new ShaftItemRenderer(gear_iron, GEAR_IRON);
+		new ShaftItemRenderer(shaft_debug, SHAFT_DEBUG);
+		new ShaftItemRenderer(shaft_man, SHAFT_MAN);
+		new ShaftItemRenderer(grindstone, GRINDSTONE);
+		new ShaftItemRenderer(sawblade, SAWBLADE);
 		registerRender(processing);
-		registerRender(grindstone);
-		registerRender(sawblade);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

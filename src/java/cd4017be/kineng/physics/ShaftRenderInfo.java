@@ -1,6 +1,7 @@
 package cd4017be.kineng.physics;
 
 import static cd4017be.kineng.render.IPartModel.render;
+import static cd4017be.kineng.render.QuadBuilder.ELN;
 import static net.minecraft.util.EnumFacing.getFacingFromAxis;
 import static net.minecraft.util.EnumFacing.AxisDirection.*;
 import cd4017be.kineng.render.QuadBuilder;
@@ -44,13 +45,13 @@ public class ShaftRenderInfo {
 			World world = te.getWorld();
 			BlockPos pos = te.getPos();
 			if (i == 0) partPtrs[0] = render(
-				qb, part.capModel(false), i, world,
-				pos.offset(getFacingFromAxis(NEGATIVE, part.axis()))
+				qb.all(ELN, world.getCombinedLight(pos.offset(getFacingFromAxis(NEGATIVE, part.axis())), 0)),
+				i, part.capModel(false)
 			);
-			partPtrs[i + 1] = render(qb, part.model(), i, world, pos);
+			partPtrs[i + 1] = render(qb.all(ELN, world.getCombinedLight(pos, 0)), i, part.model());
 			if (i == l - 1) partPtrs[l + 1] = render(
-				qb, part.capModel(true), i, world,
-				pos.offset(getFacingFromAxis(POSITIVE, part.axis()))
+				qb.all(ELN, world.getCombinedLight(pos.offset(getFacingFromAxis(POSITIVE, part.axis())), 0)),
+				i, part.capModel(true)
 			);
 		}
 		vertexCache = Util.extractData(qb.vb, 0, qb.vb.getVertexCount());
