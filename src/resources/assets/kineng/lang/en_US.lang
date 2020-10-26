@@ -38,3 +38,6 @@ tile.kineng.shaft_man.name=Hand Wheel
 gui.kineng.pr_mode5=Saw
 tile.kineng.lathe.name=Lathe
 gui.kineng.pr_mode0=Lathe
+info.kineng.shaftstats=§nShaft\:§7 J \= %.3ugm², §cmax M§7 \= %.3uNm, §cmax ω§7 \= %.3ur/s
+info.kineng.gear=§nGear\:§7 r \= %.3um, §cmax F§7 \= %.3uN, §9friction§7 \= %.1f%%
+info.kineng.toolstats=§nTool\:§7 r \= %.3um, §cmax F§7 \= %.3uN

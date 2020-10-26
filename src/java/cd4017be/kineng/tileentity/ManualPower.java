@@ -2,6 +2,7 @@ package cd4017be.kineng.tileentity;
 
 import static net.minecraft.util.EnumFacing.AxisDirection.POSITIVE;
 import java.util.*;
+import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
@@ -86,8 +87,9 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 	@Override
 	public double setShaft(ShaftAxis shaft) {
 		if (con == null) {
-			con = new ForceCon(this, block().r);
-			con.maxF = MAX_FORCE * 5F;
+			BlockRotaryTool block = block();
+			con = new ForceCon(this, block.r);
+			con.maxF = block.maxF;
 			con.link(force);
 			neighborBlockChange(blockType, pos);
 		}

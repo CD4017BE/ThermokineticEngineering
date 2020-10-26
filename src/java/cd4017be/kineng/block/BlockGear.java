@@ -3,13 +3,18 @@ package cd4017be.kineng.block;
 import static cd4017be.kineng.physics.Formula.J_cylinder;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
 import java.util.List;
+import cd4017be.kineng.tileentity.Gear;
+import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /** @author CD4017BE */
@@ -39,7 +44,7 @@ public class BlockGear extends BlockShaft {
 
 	@Override
 	public double maxAv(IBlockState blockState) {
-		if (av_max == null) {
+		if (av_max == null || Double.isNaN(av_max[1])) {
 			av_max = new double[6];
 			for (int i = 0; i < av_max.length; i++)
 				av_max[i] = Math.sqrt(3.0 * shaftMat.strength / shaftMat.density) / (r * i);
@@ -90,6 +95,13 @@ public class BlockGear extends BlockShaft {
 		int d = state.getValue(DIAMETER);
 		items.add(ItemHandlerHelper.copyStackWithSize(shaftMat.scrap, shaftMat.scrap.getCount() * (1 + d * d)));
 		return r * d;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void addInformation(IBlockState state, List<String> tooltip, ITooltipFlag advanced) {
+		super.addInformation(state, tooltip, advanced);
+		tooltip.add(TooltipUtil.format("info.kineng.gear", radius(state), shaftMat.strength * Gear.A_CONTACT, shaftMat.friction * 100.0));
 	}
 
 }

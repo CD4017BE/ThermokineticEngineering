@@ -31,20 +31,20 @@ public class Objects {
 	public static TabMaterials tabKinetic = new TabMaterials(Main.ID);
 
 	// Blocks
-	public static final BlockShaft SHAFT_WOOD = null, SHAFT_IRON = null, SHAFT_DEBUG = null, SHAFT_MAN = null;
+	public static final BlockShaft SHAFT_WOOD = null, SHAFT_IRON = null, SHAFT_DEBUG = null;
 	public static final BlockGear GEAR_WOOD = null, GEAR_IRON = null;
 	public static final BlockFillDirected FILL_DIR = null;
 	public static final BlockFillShared FILL_SHARE = null;
 	public static final BlockProcessing PROCESSING = null;
 	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null;
-	public static final BlockRotaryTool LATHE = null;
+	public static final BlockRotaryTool LATHE = null, SHAFT_MAN = null;
 
 	// ItemBlocks
-	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null, shaft_man = null;
+	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
 	public static final ItemBlockGear gear_wood = null, gear_iron = null;
 	public static final BaseItemBlock processing = null;
 	public static final BaseItemBlock grindstone = null, sawblade = null;
-	public static final BaseItemBlock lathe = null;
+	public static final BaseItemBlock lathe = null, shaft_man = null;
 
 	// Items
 
@@ -63,7 +63,7 @@ public class Objects {
 			new BlockGear("gear_wood", M_WOOD, Gear.class).setShape(0.25, 0.25).setHardness(0.5F),
 			new BlockGear("gear_iron", M_IRON, Gear.class).setShape(0.25, 0.25).setHardness(1.5F),
 			new BlockShaft("shaft_debug", M_BEDROCK, 0.25, MechanicalDebug.class).setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY),
-			new BlockShaft("shaft_man", M_WOOD, 1.0, ManualPower.class).setHardness(0.5F),
+			new BlockRotaryTool("shaft_man", M_WOOD, -1, 1.0, ManualPower.class).setShape(0.25, 0.125).setHardness(0.5F),
 			new BlockFillDirected("fill_dir", null).setHardness(1.0F),
 			new BlockFillShared("fill_share", null).setHardness(1.0F),
 			new BlockProcessing("processing", Material.ROCK, SoundType.STONE, 18, ProcessingBox.class).addRcp(0, T_GRINDER, T_SAWBLADE),

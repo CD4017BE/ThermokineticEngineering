@@ -1,9 +1,13 @@
 package cd4017be.kineng.block;
 
 import java.util.List;
+import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** 
  * @author CD4017BE */
@@ -34,6 +38,13 @@ public class BlockRotaryTool extends BlockShaft {
 		items.add(shaftMat.scrap);
 		items.add(scrap);
 		return r;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected void addInformation(IBlockState state, List<String> tooltip, ITooltipFlag advanced) {
+		super.addInformation(state, tooltip, advanced);
+		tooltip.add(TooltipUtil.format("info.kineng.toolstats", radius(state), maxF));
 	}
 
 }

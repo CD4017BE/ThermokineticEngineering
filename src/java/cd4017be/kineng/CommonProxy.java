@@ -46,7 +46,10 @@ public class CommonProxy {
 		LATHE.maxF = 10000;
 		LATHE.av_max = Math.sqrt(3.0 * M_WOOD.strength / M_WOOD.density) / 0.5;
 		LATHE.scrap = new ItemStack(Items.FLINT, 2);
-		
+		SHAFT_MAN.J_dens *= M_WOOD.density;
+		SHAFT_MAN.maxF = 5000;
+		SHAFT_MAN.av_max = Math.sqrt(M_WOOD.strength / M_WOOD.density) / 2.0;
+		SHAFT_MAN.scrap = new ItemStack(Items.STICK, 4);
 		ManualPower.ENTITY_STRENGTH.put(EntityPig.class, CplxF.C_(400F, 1200F));
 		ManualPower.ENTITY_STRENGTH.put(EntityCow.class, CplxF.C_(400F, 1600F));
 		ManualPower.ENTITY_STRENGTH.put(EntitySheep.class, CplxF.C_(400F, 1400F));

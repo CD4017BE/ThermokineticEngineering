@@ -1,6 +1,7 @@
 package cd4017be.kineng.block;
 
 import cd4017be.lib.block.AdvancedBlock;
+import cd4017be.lib.util.TooltipUtil;
 import static cd4017be.kineng.physics.Formula.J_cylinder;
 import static cd4017be.kineng.physics.Formula.torsionStrength_circle;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
@@ -10,6 +11,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +19,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 
@@ -128,6 +132,20 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 	public double getDebris(IBlockState state, List<ItemStack> items) {
 		items.add(shaftMat.scrap);
 		return radius(state);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+		addInformation(getStateForPlacement(
+			null, null, EnumFacing.NORTH, 0, 0, 0,
+			stack.getItem().getMetadata(stack.getMetadata()), null
+		), tooltip, advanced);
+	}
+
+	@SideOnly(Side.CLIENT)
+	protected void addInformation(IBlockState state, List<String> tooltip, ITooltipFlag advanced) {
+		tooltip.add(TooltipUtil.format("info.kineng.shaftstats", J(state) * 1000.0, maxM(state), maxAv(state)));
 	}
 
 	public static class ShaftMaterial {
