@@ -17,9 +17,9 @@ public class CommonProxy {
 
 	public void preInit() {
 		MinecraftForge.EVENT_BUS.register(this);
-		RecipeAPI.Handlers.put("grinder", ProcessingRecipes.GRINDER);
-		RecipeAPI.Handlers.put("sawmill", ProcessingRecipes.SAWMILL);
-		RecipeAPI.Handlers.put("lathe", ProcessingRecipes.LATHE);
+		for (ProcessingRecipes rcp : ProcessingRecipes.recipeList)
+			if (rcp != null)
+				RecipeAPI.Handlers.put(rcp.name, rcp);
 	}
 
 	public void init(ConfigConstants c) {

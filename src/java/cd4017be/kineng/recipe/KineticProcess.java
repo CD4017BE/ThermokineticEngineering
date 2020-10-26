@@ -29,7 +29,7 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 	public double s;
 	public double v;
 	/** 1: working, 0: idle, -1: no recipe */
-	public byte working;
+	public byte working = -1;
 	/** bit[31]: unloaded, bit[8..30]: recipeListId, bit[0..7]: tier */
 	public int mode = Integer.MAX_VALUE;
 
@@ -224,6 +224,15 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 
 	public Object[] speedInfo() {
 		return new Object[] {Math.abs(v)};
+	}
+
+	public int recipeMode() {
+		return (short)(mode >> 8);
+	}
+
+	public void showRecipes(int mb) {
+		if (ProcessingRecipes.JEI_SHOW_RECIPES != null)
+			ProcessingRecipes.JEI_SHOW_RECIPES.accept(mode);
 	}
 
 	@Override

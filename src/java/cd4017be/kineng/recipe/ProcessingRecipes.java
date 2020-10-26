@@ -1,13 +1,15 @@
 package cd4017be.kineng.recipe;
 
 import static cd4017be.kineng.tileentity.IKineticLink.*;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.*;
 import cd4017be.api.recipes.RecipeAPI.IRecipeHandler;
+import cd4017be.kineng.Main;
 import cd4017be.lib.script.Parameters;
 import cd4017be.lib.util.ItemKey;
 import cd4017be.lib.util.OreDictStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 /** 
@@ -15,8 +17,10 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ProcessingRecipes implements IRecipeHandler {
 
 	public final HashMap<ItemKey, KineticRecipe> recipes = new HashMap<>();
+	public final String name;
 
-	public ProcessingRecipes(int type) {
+	public ProcessingRecipes(int type, String name) {
+		this.name = name;
 		type >>= 8;
 		if (type >= recipeList.length)
 			recipeList = Arrays.copyOf(recipeList, recipeList.length << 1);
@@ -50,10 +54,16 @@ public class ProcessingRecipes implements IRecipeHandler {
 			}
 	}
 
+	public String jeiName() {
+		return Main.ID + ":" + name;
+	}
+
 	public static ProcessingRecipes[] recipeList = new ProcessingRecipes[16];
-	public static final ProcessingRecipes SAWMILL = new ProcessingRecipes(T_SAWBLADE);
-	public static final ProcessingRecipes GRINDER = new ProcessingRecipes(T_GRINDER);
-	public static final ProcessingRecipes LATHE = new ProcessingRecipes(T_ANGULAR);
+	public static final ProcessingRecipes SAWMILL = new ProcessingRecipes(T_SAWBLADE, "sawmill");
+	public static final ProcessingRecipes GRINDER = new ProcessingRecipes(T_GRINDER, "grinder");
+	public static final ProcessingRecipes LATHE = new ProcessingRecipes(T_ANGULAR, "lathe");
+	public static IntConsumer JEI_SHOW_RECIPES;
+	public static final ResourceLocation GUI_TEX = new ResourceLocation(Main.ID, "textures/gui/processing.png");
 
 	public static ProcessingRecipes getRecipeList(int mode) {
 		mode >>>= 8;

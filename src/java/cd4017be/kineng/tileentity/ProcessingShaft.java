@@ -3,17 +3,16 @@ package cd4017be.kineng.tileentity;
 import static cd4017be.kineng.recipe.KineticProcess.A_STOP;
 import static cd4017be.lib.Gui.comp.Progressbar.H_FILL;
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-import cd4017be.kineng.Main;
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.*;
 import cd4017be.kineng.recipe.KineticProcess;
+import cd4017be.kineng.recipe.ProcessingRecipes;
 import cd4017be.lib.Gui.*;
 import cd4017be.lib.Gui.comp.*;
 import cd4017be.lib.network.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -84,12 +83,12 @@ public class ProcessingShaft extends ShaftPart implements IGuiHandlerTile {
 	public ModularGui getGuiScreen(EntityPlayer player, int id) {
 		ModularGui gui = new ModularGui(getContainer(player, id));
 		GuiFrame frame = new GuiFrame(gui, 176, 150, 6)
-		.background(new ResourceLocation(Main.ID, "textures/gui/processing.png"), 0, 0)
+		.background(ProcessingRecipes.GUI_TEX, 0, 0)
 		.title("gui.kineng.processing.name", 0.5F);
 		
 		new Button(frame, 8, 16, 8, 25, 0, machine::status, (a)-> gui.sendPkt(A_STOP))
 		.texture(200, 0).tooltip("gui.kineng.pr_status#");
-		new Button(frame, 16, 16, 53, 25, 0, ()-> (short)(machine.mode >> 8), null)
+		new Button(frame, 16, 16, 53, 25, 0, machine::recipeMode, machine::showRecipes)
 		.texture(208, 0).tooltip("gui.kineng.pr_mode#");
 		new Progressbar(frame, 32, 10, 72, 28, 224, 0, H_FILL, machine::progress);
 		new Tooltip(frame, 32, 10, 72, 28, "\\%.3um / %.3um", machine::progressInfo);
