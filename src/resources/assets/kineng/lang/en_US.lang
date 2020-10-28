@@ -18,7 +18,7 @@ gui.kineng.debug.par3=Friction Torque\n"Zero" Velocity
 gui.kineng.debug.reset=Reset Counters
 gui.kineng.debug.mode1=Constant Power
 gui.kineng.debug.mode2=Target Velocity
-tile.kineng.shaft_debug.name=Debug Force Supply Shaft
+tile.kineng.shaft_debug.name=§dDebug Force Supply Shaft
 tile.kineng.gear_iron\:5.name=Iron Gear 5m ⦰
 tile.kineng.shaft_iron.name=Iron Shaft
 tile.kineng.gear_iron\:2.name=Iron Gear 2m ⦰
@@ -41,3 +41,5 @@ gui.kineng.pr_mode0=Lathe
 info.kineng.shaftstats=§nShaft\:§7 J \= %.3ugm², §cmax M§7 \= %.3uNm, §cmax ω§7 \= %.3ur/s
 info.kineng.gear=§nGear\:§7 r \= %.3um, §cmax F§7 \= %.3uN, §9friction§7 \= %.1f%%
 info.kineng.toolstats=§nTool\:§7 r \= %.3um, §cmax F§7 \= %.3uN
+item.cd4017be.m\:gear_wood.name=Wooden Gear Ring
+item.kineng.flint_knive.name=Flint Knive

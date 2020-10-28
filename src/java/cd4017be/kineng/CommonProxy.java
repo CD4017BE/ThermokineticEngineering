@@ -23,6 +23,7 @@ public class CommonProxy {
 	}
 
 	public void init(ConfigConstants c) {
+		RecipeAPI.Handlers.put("knive_cutting", flint_knive);
 		M_WOOD.density = 750;
 		M_WOOD.strength = 50e6;
 		M_WOOD.friction = 0.05;

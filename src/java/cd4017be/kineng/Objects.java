@@ -4,6 +4,7 @@ import static cd4017be.kineng.tileentity.IKineticLink.*;
 import cd4017be.kineng.block.*;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.item.ItemBlockGear;
+import cd4017be.kineng.item.ItemBreakRecipe;
 import cd4017be.kineng.tileentity.*;
 import cd4017be.lib.item.BaseItemBlock;
 import cd4017be.lib.templates.TabMaterials;
@@ -47,6 +48,7 @@ public class Objects {
 	public static final BaseItemBlock lathe = null, shaft_man = null;
 
 	// Items
+	public static final ItemBreakRecipe flint_knive = null;
 
 	// Sounds
 
@@ -86,7 +88,8 @@ public class Objects {
 			new BaseItemBlock(PROCESSING).setCreativeTab(tabKinetic),
 			new BaseItemBlock(GRINDSTONE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(SAWBLADE).setCreativeTab(tabKinetic),
-			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic)
+			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic),
+			new ItemBreakRecipe("flint_knive").setMaxDamage(32).setCreativeTab(tabKinetic)
 		);
 	}
 
