@@ -48,7 +48,7 @@ public class Objects {
 	public static final BaseItemBlock lathe = null, shaft_man = null;
 
 	// Items
-	public static final ItemBreakRecipe flint_knive = null;
+	public static final ItemBreakRecipe flint_knife = null;
 
 	// Sounds
 
@@ -89,7 +89,7 @@ public class Objects {
 			new BaseItemBlock(GRINDSTONE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(SAWBLADE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic),
-			new ItemBreakRecipe("flint_knive").setMaxDamage(32).setCreativeTab(tabKinetic)
+			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
 		);
 	}
 

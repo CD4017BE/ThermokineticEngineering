@@ -43,3 +43,17 @@ info.kineng.gear=§nGear\:§7 r \= %.3um, §cmax F§7 \= %.3uN, §9friction§7 \
 info.kineng.toolstats=§nTool\:§7 r \= %.3um, §cmax F§7 \= %.3uN
 item.cd4017be.m\:gear_wood.name=Wooden Gear Ring
 item.kineng.flint_knive.name=Flint Knive
+item.cd4017be.m\:flour.name=Flour
+item.cd4017be.m\:gear_iron.name=Iron Gear Ring
+item.kineng.flint_knife.name=Flint Knife
+tile.kineng.gear_wood\:i.tip=Connects to other gears along the two perpendicular axes.\nOdd diameter gears [1,3,5] only connect straight with other odd diameters.\nLikewise, even diameters [2,4] connect with other even diameters but\ndo so also at 90° angles.\n\nAngular velocity and transmitted torque are transformed according to the diameter ratio of the connected gears.
+tile.kineng.shaft_iron.tip=Connects shaft components along a straight axis.
+tile.kineng.gear_iron\:i.tip=Connects to other gears along the two perpendicular axes.\nOdd diameter gears [1,3,5] only connect straight with other odd diameters.\nLikewise, even diameters [2,4] connect with other even diameters but\ndo so also at 90° angles.\n\nAngular velocity and transmitted torque are transformed according to the diameter ratio of the connected gears.
+tile.kineng.shaft_wood.tip=Connects shaft components along a straight axis.
+tile.kineng.shaft_man.tip=Powers a shaft by manual work. Alternatively you can leash animals to a fence above or below the wheel to work for you.
+tile.kineng.shaft_debug.tip=Unlimited shaft power generator for testing in creative mode.
+tile.kineng.sawblade.tip=Used as a Saw with the §6Mechanical Processing Case§7.
+tile.kineng.grindstone.tip=Used as a Grinder with the §6Mechanical Processing Case§7.
+tile.kineng.lathe.tip=Used for item processing [see §9JEI§7].
+tile.kineng.processing.tip=Used for mechanical item processing [see §9JEI§7]. Must be placed next to a shaft powered tool.
+item.kineng.flint_knife.tip=Used to make shafts and gears when you don't have a §6Lathe§7\:\nbreak §6Log§7 -> §6Wooden Shaft\nbreak §6Planks§7 -> §6Wooden Gear Ring

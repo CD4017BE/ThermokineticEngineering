@@ -31,7 +31,7 @@ public class ProcessingShaft extends ShaftPart implements IGuiHandlerTile {
 			BlockRotaryTool block = block();
 			con = new ForceCon(this, block.r);
 			con.maxF = block.maxF;
-			machine.setMode(block.type);
+			if (!world.isRemote) machine.setMode(block.type);
 			con.link(machine);
 		}
 		con.setShaft(shaft);

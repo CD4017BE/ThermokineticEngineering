@@ -24,13 +24,13 @@ import net.minecraft.world.chunk.Chunk;
  * @author CD4017BE */
 public class ManualPower extends ShaftPart implements IInteractiveTile, INeighborAwareTile, ITickableServerOnly {
 
-	public static float EXHAUSTION_TICK = 0.1F, MAX_SPEED = 5F, MAX_FORCE = 1000F, HURT_CHANCE = 0.5F;
-	public static int CLICK_TICKS = 10, CHECK_INTERVAL = 100;
+	public static float EXHAUSTION_TICK = 0.02F, MAX_SPEED = 5F, MAX_FORCE = 1000F, HURT_CHANCE = 0.5F;
+	public static int CLICK_TICKS = 10, CHECK_INTERVAL = 100, MAX_TIME = 12000;
 	public static final HashMap<Class<?>, CplxF> ENTITY_STRENGTH  = new HashMap<>();
 
 	ForceCon con;
 	Worker force = new Worker();
-	int t;
+	int t, remT;
 	boolean hasFence;
 
 	@Override
@@ -41,6 +41,8 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 		
 		if (!hasFence) return;
 		double v = shaft.av() * con.r;
+		int n = 0;
+		remT = 0;
 		CplxF acc = new CplxF();
 		Random rand = world.rand;
 		double px = pos.getX() + 0.5, py = pos.getY() + 0.5, pz = pos.getZ() + 0.5;
@@ -60,11 +62,15 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 			if (e instanceof EntityAgeable) {
 				EntityAgeable ea = (EntityAgeable)e;
 				int age = ea.getGrowingAge();
-				if (age < -2400) {
+				if (age < -MAX_TIME) {
 					F = 0;
 					dv = 0;
-				} else if (age > 0) age = 0;
+				} else {
+					if (age > 0) age = 0;
+					remT += Math.max(age + MAX_TIME, 0);
+				}
 				ea.setGrowingAge(age - (int)(CHECK_INTERVAL * (1.0 + dv)));
+				n++;
 			} else if (rand.nextFloat() < dv)
 				e.setHealth(e.getMaxHealth() * 0.5F);
 			acc.add(str);
@@ -72,6 +78,7 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 		}
 		if (force.F != 0)
 			force.Fdv = -Math.abs(force.F * acc.r / acc.i);
+		if (n > 0) remT /= n;
 	}
 
 	@Override
@@ -109,11 +116,15 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 				.dotProduct(new Vec3d(X - 0.5, Y - 0.5, Z - 0.5)));
 			force.updateF(MAX_FORCE, v1);
 			float t = (CLICK_TICKS - this.t) * EXHAUSTION_TICK;
+			remT = 0;
 			this.t = CLICK_TICKS;
 			double dv = 1.0 - (v / v1) * 2.0;
 			player.addExhaustion(Math.max(0, (float)(1.0 - dv * dv) * t));
 		}
-		player.sendStatusMessage(new TextComponentString(TooltipUtil.format("\\%.3um/s * %.3uN", v, force.F + force.Fdv * v)), true);
+		player.sendStatusMessage(new TextComponentString(TooltipUtil.format(
+			"\\%.3um/s * %.3uN [%.1fs]",
+			v, force.F + force.Fdv * v, remT * 0.05
+		)), true);
 		return true;
 	}
 

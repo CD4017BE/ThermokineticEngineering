@@ -84,7 +84,7 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(sawblade, SAWBLADE);
 		new ShaftItemRenderer(lathe, LATHE);
 		registerRender(processing);
-		registerRender(flint_knive);
+		registerRender(flint_knife);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

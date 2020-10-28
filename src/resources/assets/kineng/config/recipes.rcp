@@ -1,8 +1,12 @@
-VERSION = 13;
+VERSION = 19;
 
 PRE_INIT() {
 	add("item", 500, "gear_wood");
 	add("ore", "gearWood", it("m.gear_wood"));
+	add("item", 501, "gear_iron");
+	add("ore", "gearIron", it("m.gear_iron"));
+	add("item", 516, "flour");
+	add("ore", "flour", it("m.flour"));
 	Loc any = 32767;
 	add("ore", "red_sandstone", it("minecraft:red_sandstone"):any);
 	add("ore", "stonebrick", it("minecraft:stonebrick"):any);
@@ -10,7 +14,7 @@ PRE_INIT() {
 }
 
 INIT() {
-	add("shaped", it("kineng:flint_knive"), "01", it("minecraft:flint"), it("minecraft:stick"));
+	add("shaped", it("kineng:flint_knife"), "01", it("minecraft:flint"), it("minecraft:stick"));
 	add("shaped", it("kineng:gear_wood"):1, "1/0", it("kineng:shaft_wood"), it("m.gear_wood"));
 	add("shaped", it("kineng:gear_wood"):2, " 1 /202/ 1 ", it("kineng:shaft_wood"), "gearWood", "slabWood");
 	add("shaped", it("kineng:gear_wood"):3, "212/202/212", it("kineng:gear_wood"):1, "gearWood", "slabWood");
@@ -18,52 +22,78 @@ INIT() {
 	add("shaped", it("kineng:gear_wood"):5, "303/2 2/313", it("kineng:gear_wood"):2, it("kineng:gear_wood"):3, "slabWood", "plankWood");
 	add("shaped", it("kineng:gear_wood"):5, "202/2 2/212", it("kineng:gear_wood"):1, it("kineng:gear_wood"):4, "slabWood");
 	add("shaped", it("kineng:shaft_man"), "111/101/111", it("kineng:shaft_wood"), it("minecraft:stick"));
-	add("shaped", it("kineng:lathe"), "101/222", it("kineng:shaft_wood"), it("kineng:flint_knive"), "slabWood");
+	add("shaped", it("kineng:lathe"), "101/222", it("kineng:shaft_wood"), it("kineng:flint_knife"), "slabWood");
 	add("shaped", it("kineng:processing"), "1 1/000", it("minecraft:stone_slab"), "slabWood");
 	add("shaped", it("kineng:grindstone"), "212/101/212", it("kineng:shaft_wood"), "stoneGranite", it("minecraft:flint"));
 	add("shaped", it("kineng:sawblade"), "212/101/212", it("kineng:shaft_wood"), "ingotIron", "nuggetIron");
+	
+	add("shaped", it("kineng:gear_iron"):1, "1/0", it("kineng:shaft_iron"), "gearIron");
+	add("shaped", it("kineng:gear_iron"):2, " 1 /20 / 1 ", it("kineng:shaft_iron"), "gearIron", "ingotIron");
+	add("shaped", it("kineng:gear_iron"):3, " 12/20 / 12", it("kineng:gear_iron"):1, "gearIron", "ingotIron");
+	add("shaped", it("kineng:gear_iron"):4, "212/20 /212", it("kineng:gear_iron"):2, "gearIron", "ingotIron");
+	add("shaped", it("kineng:gear_iron"):5, "202/ 2 /212", it("kineng:gear_iron"):2, it("kineng:gear_iron"):3, "ingotIron");
+	add("shaped", it("kineng:gear_iron"):5, " 0 /222/ 1 ", it("kineng:gear_iron"):1, it("kineng:gear_iron"):4, "ingotIron");
+	
+	add("smelt", it("m.flour"), it("minecraft:bread"));
 }
 
 POST_INIT() {
 	!block drops for Flint Knive:
 	!add("knive_cutting", <brokenBlock>, <metaBitMask>, <breakSpeed>, <droppedItem>);
-	add("knive_cutting", "minecraft:log", -1, 0.25, it("kineng:shaft_wood"));
-	add("knive_cutting", "minecraft:log2", -1, 0.25, it("kineng:shaft_wood"));
-	add("knive_cutting", "minecraft:planks", -1, 0.5, it("m.gear_wood"));
+	add("knife_cutting", "minecraft:log", -1, 0.25, it("kineng:shaft_wood"));
+	add("knife_cutting", "minecraft:log2", -1, 0.25, it("kineng:shaft_wood"));
+	add("knife_cutting", "minecraft:planks", -1, 0.5, it("m.gear_wood"));
 	
 	! add(<machine>, <input>, <force[N]>, <distance[m]>, <outputs...>);
-	add("lathe", ore("plankWood", 2), 1000, 10, it("kineng:shaft_wood"));
-	add("lathe", ore("slabWood", 2), 1000, 10, it("m.gear_wood"));
+	add("lathe", ore("plankWood", 2),      1000, 10, it("kineng:shaft_wood"));
+	add("lathe", ore("slabWood", 2),       1000, 10, it("m.gear_wood"));
+	add("lathe", ore("blockIron"),         5000, 20, it("kineng:shaft_iron", 2), it("ore:ingotIron", 5));
+	add("lathe", ore("ingotIron", 2),      5000, 10, it("m.gear_iron"), it("ore:nuggetIron", 3));
+	add("lathe", it("minecraft:string", 8), 100, 25, it("minecraft:lead"));
 	
-	add("grinder", ore("cobblestone"),   10000, 10, it("minecraft:gravel"));
-	add("grinder", ore("gravel", 2),      5000, 20, it("minecraft:sand", 2), it("minecraft:flint"));
-	add("grinder", ore("oreCoal"),       10000, 10, it("minecraft:coal", 2), it("minecraft:gravel"));
-	add("grinder", ore("oreRedstone"),   12500, 10, it("minecraft:redstone", 8), it("minecraft:gravel"));
-	add("grinder", ore("oreLapis"),      12500, 10, it("minecraft:dye", 8, 4), it("minecraft:gravel"));
-	add("grinder", ore("oreDiamond"),    20000, 10, it("minecraft:diamond", 2), it("minecraft:gravel"));
-	add("grinder", ore("oreEmerald"),    20000, 10, it("minecraft:emerald", 2), it("minecraft:gravel"));
-	add("grinder", ore("bone"),           5000,  4, it("minecraft:dye", 6, 15));
-	add("grinder", it("minecraft:bone_block"), 5000, 10, it("minecraft:bone"), it("minecraft:dye", 3, 15));
-	add("grinder", ore("sandstone"),      5000, 10, it("minecraft:sand", 4));
-	add("grinder", ore("red_sandstone"),   5000, 10, it("minecraft:sand", 4, 1));
-	add("grinder", ore("glowstone"),      5000, 10, it("minecraft:glowstone_dust", 4));
-	add("grinder", it("minecraft:clay"),  5000, 10, it("minecraft:clay_ball", 4));
-	add("grinder", it("minecraft:brick_block"),5000, 10, it("minecraft:brick", 4));
-	add("grinder", it("minecraft:snow"),  5000, 10, it("minecraft:snowball", 4));
-	add("grinder", it("minecraft:nether_brick"),5000, 10, it("minecraft:netherbrick", 4));
-	add("grinder", ore("blockQuartz"),    5000, 10, it("minecraft:quartz", 4));
-	add("grinder", ore("wool"),           5000, 10, it("minecraft:string", 4));
-	add("grinder", it("minecraft:blaze_rod"), 5000, 4, it("minecraft:blaze_powder", 4));
+	add("grinder", ore("cobblestone"),          5000, 10, it("minecraft:gravel"));
+	add("grinder", ore("gravel", 2),            5000, 20, it("minecraft:sand", 2), it("minecraft:flint"));
+	add("grinder", ore("oreCoal"),             10000, 10, it("minecraft:coal", 2), it("minecraft:gravel"));
+	add("grinder", ore("oreRedstone"),         12500, 10, it("minecraft:redstone", 8), it("minecraft:gravel"));
+	add("grinder", ore("oreLapis"),            12500, 10, it("minecraft:dye", 8, 4), it("minecraft:gravel"));
+	add("grinder", ore("oreDiamond"),          20000, 10, it("minecraft:diamond", 2), it("minecraft:gravel"));
+	add("grinder", ore("oreEmerald"),          20000, 10, it("minecraft:emerald", 2), it("minecraft:gravel"));
+	add("grinder", ore("bone"),                 2500,  4, it("minecraft:dye", 6, 15));
+	add("grinder", it("minecraft:bone_block"),  5000, 10, it("minecraft:bone"), it("minecraft:dye", 3, 15));
+	add("grinder", ore("sandstone"),            4000, 10, it("minecraft:sand", 4));
+	add("grinder", ore("red_sandstone"),        4000, 10, it("minecraft:sand", 4, 1));
+	add("grinder", ore("glowstone"),            4000, 10, it("minecraft:glowstone_dust", 4));
+	add("grinder", it("minecraft:clay"),        1000, 10, it("minecraft:clay_ball", 4));
+	add("grinder", it("minecraft:brick_block"), 5000, 10, it("minecraft:brick", 4));
+	add("grinder", it("minecraft:snow"),         500, 10, it("minecraft:snowball", 4));
+	add("grinder", it("minecraft:nether_brick"),7500, 10, it("minecraft:netherbrick", 4));
+	add("grinder", ore("blockQuartz"),          7500, 10, it("minecraft:quartz", 4));
+	add("grinder", ore("wool"),                  500, 10, it("minecraft:string", 4));
+	add("grinder", it("minecraft:purpur_block"),5000, 10, it("minecraft:chorus_fruit_popped", 4));
+	add("grinder", it("minecraft:blaze_rod"),   5000,  4, it("minecraft:blaze_powder", 4));
+	add("grinder", it("minecraft:yellow_flower"),250,  4, it("minecraft:dye", 2, 11));
+	add("grinder", it("minecraft:red_flower"):0, 250,  4, it("minecraft:dye", 2, 1));
+	add("grinder", it("minecraft:red_flower"):1, 250,  4, it("minecraft:dye", 2, 12));
+	add("grinder", it("minecraft:red_flower"):2, 250,  4, it("minecraft:dye", 2, 13));
+	add("grinder", it("minecraft:red_flower"):3, 250,  4, it("minecraft:dye", 2, 7));
+	add("grinder", it("minecraft:red_flower"):4, 250,  4, it("minecraft:dye", 2, 1));
+	add("grinder", it("minecraft:red_flower"):5, 250,  4, it("minecraft:dye", 2, 14));
+	add("grinder", it("minecraft:red_flower"):6, 250,  4, it("minecraft:dye", 2, 7));
+	add("grinder", it("minecraft:red_flower"):7, 250,  4, it("minecraft:dye", 2, 9));
+	add("grinder", it("minecraft:red_flower"):8, 250,  4, it("minecraft:dye", 2, 7));
+	add("grinder", it("minecraft:cactus")      , 250,  4, it("minecraft:dye", 2, 2));
+	add("grinder", it("minecraft:wheat")       , 400,  4, it("m.flour"));
 	
-	add("sawmill", ore("stone"), 2000, 5, it("minecraft:stone_slab", 2, 0));
-	add("sawmill", ore("sandstone"), 2000, 5, it("minecraft:stone_slab", 2, 1));
-	add("sawmill", ore("red_sandstone"), 2000, 5, it("minecraft:stone_slab2", 2, 0));
-	add("sawmill", ore("cobblestone"), 2000, 5, it("minecraft:stone_slab", 2, 3));
-	add("sawmill", it("minecraft:brick_block"), 2000, 5, it("minecraft:stone_slab", 2, 4));
-	add("sawmill", ore("stonebrick"), 2000, 5, it("minecraft:stone_slab", 2, 5));
-	add("sawmill", it("minecraft:nether_brick"), 2000, 5, it("minecraft:stone_slab", 2, 6));
-	add("sawmill", ore("blockQuartz"), 2000, 5, it("minecraft:stone_slab", 2, 7));
-	add("sawmill", it("minecraft:snow"), 500, 10, it("minecraft:snow_layer", 4));
+	add("sawmill", ore("stone"),                 2000, 4, it("minecraft:stone_slab", 2, 0));
+	add("sawmill", ore("sandstone"),             1500, 4, it("minecraft:stone_slab", 2, 1));
+	add("sawmill", ore("red_sandstone"),         1500, 4, it("minecraft:stone_slab2", 2, 0));
+	add("sawmill", ore("cobblestone"),           2000, 4, it("minecraft:stone_slab", 2, 3));
+	add("sawmill", it("minecraft:brick_block"),  2000, 4, it("minecraft:stone_slab", 2, 4));
+	add("sawmill", ore("stonebrick"),            2000, 4, it("minecraft:stone_slab", 2, 5));
+	add("sawmill", it("minecraft:nether_brick"), 2500, 4, it("minecraft:stone_slab", 2, 6));
+	add("sawmill", ore("blockQuartz"),           2500, 4, it("minecraft:stone_slab", 2, 7));
+	add("sawmill", it("minecraft:purpur_block"), 2000, 4, it("minecraft:purpur_slab", 2));
+	add("sawmill", it("minecraft:snow"),          200, 12, it("minecraft:snow_layer", 4));
 	!create a sawmill recipe for each log -> plank crafting recipe
 	for(rcp : list("craftRes", ore("plankWood"))) {
 		Loc in = rcp:1;
@@ -80,11 +110,14 @@ POST_INIT() {
 		if (#in == 3) { !recipe has 3 ingredients
 			in = in:0; !get first ingredient
 			if (in >= ore("plankWood")) { !allowed items contains a plankWood
-				add("sawmill", in, 800, 5, (rcp:0) * 2);
+				add("sawmill", in, 1000, 2.5, (rcp:0) * 2);
 			}
 		}
 	}
 	for (dye : ["Colorless", "Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"]) {
-		add("sawmill", ore(["blockGlass", dye]$), 1000, 10, it(["ore:paneGlass", dye]$, 3));
+		add("sawmill", ore(["blockGlass", dye]$), 1500, 8, it(["ore:paneGlass", dye]$, 3));
+	}
+	for (i : 16) {
+		add("sawmill", it("minecraft:wool"):i, 500, 4, it("minecraft:carpet", 2, i));
 	}
 }
