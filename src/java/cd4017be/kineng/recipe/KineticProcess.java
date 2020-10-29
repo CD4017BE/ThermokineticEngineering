@@ -3,6 +3,7 @@ package cd4017be.kineng.recipe;
 import static net.minecraftforge.items.ItemHandlerHelper.canItemStacksStack;
 import static net.minecraftforge.items.ItemHandlerHelper.copyStackWithSize;
 import java.util.Arrays;
+import java.util.List;
 import cd4017be.kineng.physics.DynamicForce;
 import cd4017be.lib.Gui.*;
 import cd4017be.lib.Gui.AdvancedContainer.IStateInteractionHandler;
@@ -258,6 +259,12 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 	public void unload() {
 		mode |= Integer.MIN_VALUE;
 		if (con != null) con.link(null);
+	}
+
+	public void addItems(List<ItemStack> list) {
+		for (ItemStack stack : inv)
+			if (!stack.isEmpty())
+				list.add(stack);
 	}
 
 }

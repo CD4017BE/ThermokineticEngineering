@@ -5,15 +5,20 @@ import static cd4017be.kineng.tileentity.IKineticLink.T_SHAPE;
 import static cd4017be.kineng.tileentity.IKineticLink.T_TIER;
 import static cd4017be.lib.Gui.comp.Progressbar.H_FILL;
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+import java.util.List;
 import cd4017be.kineng.block.BlockProcessing;
 import cd4017be.kineng.physics.DynamicForce;
 import cd4017be.kineng.recipe.KineticProcess;
 import cd4017be.kineng.recipe.ProcessingRecipes;
 import cd4017be.lib.Gui.*;
 import cd4017be.lib.Gui.comp.*;
+import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.network.*;
 import cd4017be.lib.tileentity.BaseTileEntity;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** 
  * @author CD4017BE */
-public class ProcessingBox extends BaseTileEntity implements IForceProvider, IGuiHandlerTile {
+public class ProcessingBox extends BaseTileEntity implements IForceProvider, IGuiHandlerTile, ITilePlaceHarvest {
 
 	KineticProcess machine = new KineticProcess(3);
 
@@ -90,6 +95,16 @@ public class ProcessingBox extends BaseTileEntity implements IForceProvider, IGu
 		new FormatText(frame, 32, 8, 72, 42, "\\%.3um/s", machine::speedInfo).align(0.5F);
 		gui.compGroup = frame;
 		return gui;
+	}
+
+	@Override
+	public void onPlaced(EntityLivingBase entity, ItemStack item) {}
+
+	@Override
+	public List<ItemStack> dropItem(IBlockState state, int fortune) {
+		List<ItemStack> list = makeDefaultDrops(null);
+		machine.addItems(list);
+		return list;
 	}
 
 }
