@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 public class Objects {
 
 	public static ShaftMaterial M_WOOD = new ShaftMaterial(Material.WOOD, SoundType.WOOD);
+	public static ShaftMaterial M_STONE = new ShaftMaterial(Material.ROCK, SoundType.STONE);
 	public static ShaftMaterial M_IRON = new ShaftMaterial(Material.IRON, SoundType.METAL);
 	public static ShaftMaterial M_BEDROCK = new ShaftMaterial(Material.ROCK, SoundType.STONE);
 
@@ -38,14 +39,14 @@ public class Objects {
 	public static final BlockFillShared FILL_SHARE = null;
 	public static final BlockProcessing PROCESSING = null, RF_COIL = null;
 	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null, MAGNETS = null;
-	public static final BlockRotaryTool LATHE = null, SHAFT_MAN = null;
+	public static final BlockRotaryTool LATHE = null, PRESS = null, SHAFT_MAN = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
 	public static final ItemBlockGear gear_wood = null, gear_iron = null;
 	public static final BaseItemBlock processing = null, rf_coil = null;
 	public static final BaseItemBlock grindstone = null, sawblade = null, magnets = null;
-	public static final BaseItemBlock lathe = null, shaft_man = null;
+	public static final BaseItemBlock lathe = null, press = null, shaft_man = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
@@ -73,7 +74,8 @@ public class Objects {
 			new BlockRotaryTool("grindstone", M_WOOD, T_GRINDER, 1.0, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.0F),
 			new BlockRotaryTool("sawblade", M_WOOD, T_SAWBLADE, 1.0, RotaryTool.class).setShape(0.25, 0.125).setHardness(1.0F),
 			new BlockRotaryTool("lathe", M_WOOD, T_ANGULAR, 0.5, ProcessingShaft.class).setShape(0.25, 0.5).setHardness(1.0F),
-			new BlockRotaryTool("magnets", M_IRON, IKineticLink.T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F)
+			new BlockRotaryTool("press", M_STONE, T_BELT, 0.25, ProcessingShaft.class).setHardness(1.0F),
+			new BlockRotaryTool("magnets", M_IRON, T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F)
 		);
 	}
 
@@ -92,6 +94,7 @@ public class Objects {
 			new BaseItemBlock(GRINDSTONE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(SAWBLADE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic),
+			new BaseItemBlock(PRESS).setCreativeTab(tabKinetic),
 			new BaseItemBlock(MAGNETS).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
 		);

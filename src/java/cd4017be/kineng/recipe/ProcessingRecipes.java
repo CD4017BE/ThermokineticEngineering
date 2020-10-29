@@ -62,6 +62,7 @@ public class ProcessingRecipes implements IRecipeHandler {
 	public static final ProcessingRecipes SAWMILL = new ProcessingRecipes(T_SAWBLADE, "sawmill");
 	public static final ProcessingRecipes GRINDER = new ProcessingRecipes(T_GRINDER, "grinder");
 	public static final ProcessingRecipes LATHE = new ProcessingRecipes(T_ANGULAR, "lathe");
+	public static final ProcessingRecipes PRESS = new ProcessingRecipes(T_BELT, "press");
 	public static IntConsumer JEI_SHOW_RECIPES;
 	public static final ResourceLocation GUI_TEX = new ResourceLocation(Main.ID, "textures/gui/processing.png");
 

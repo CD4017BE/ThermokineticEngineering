@@ -1,4 +1,4 @@
-VERSION = 21;
+VERSION = 24;
 
 PRE_INIT() {
 	add("item", 500, "gear_wood");
@@ -11,6 +11,10 @@ PRE_INIT() {
 	add("item", 506, "fluxwinding");
 	add("item", 507, "raw_fluxalloy");
 	add("item", 508, "ingot_fluxalloy");
+	add("item", 509, "plate_iron");
+	add("ore", "plateIron", it("m.plate_iron"));
+	add("item", 510, "hot_iron");
+	add("item", 511, "stone_roller");
 	add("item", 516, "flour");
 	add("ore", "flour", it("m.flour"));
 	Loc any = 32767;
@@ -32,21 +36,23 @@ INIT() {
 	add("shaped", it("kineng:processing"), "1 1/000", it("minecraft:stone_slab"), "slabWood");
 	add("shaped", it("kineng:grindstone"), "212/101/212", it("kineng:shaft_wood"), "stoneGranite", it("minecraft:flint"));
 	add("shaped", it("kineng:sawblade"), "212/101/212", it("kineng:shaft_wood"), "ingotIron", "nuggetIron");
+	add("shaped", it("kineng:press"), "101/101", it("m.stone_roller"), "slabWood");
 	
 	add("shaped", it("kineng:gear_iron"):1, "1/0", it("kineng:shaft_iron"), "gearIron");
-	add("shaped", it("kineng:gear_iron"):2, " 1 /20 / 1 ", it("kineng:shaft_iron"), "gearIron", "ingotIron");
-	add("shaped", it("kineng:gear_iron"):3, " 12/20 / 12", it("kineng:gear_iron"):1, "gearIron", "ingotIron");
-	add("shaped", it("kineng:gear_iron"):4, "212/20 /212", it("kineng:gear_iron"):2, "gearIron", "ingotIron");
-	add("shaped", it("kineng:gear_iron"):5, "202/ 2 /212", it("kineng:gear_iron"):2, it("kineng:gear_iron"):3, "ingotIron");
-	add("shaped", it("kineng:gear_iron"):5, " 0 /222/ 1 ", it("kineng:gear_iron"):1, it("kineng:gear_iron"):4, "ingotIron");
+	add("shaped", it("kineng:gear_iron"):2, " 1 /20 / 1 ", it("kineng:shaft_iron"), "gearIron", "plateIron");
+	add("shaped", it("kineng:gear_iron"):3, " 12/20 / 12", it("kineng:gear_iron"):1, "gearIron", "plateIron");
+	add("shaped", it("kineng:gear_iron"):4, "212/20 /212", it("kineng:gear_iron"):2, "gearIron", "plateIron");
+	add("shaped", it("kineng:gear_iron"):5, "202/ 2 /212", it("kineng:gear_iron"):2, it("kineng:gear_iron"):3, "plateIron");
+	add("shaped", it("kineng:gear_iron"):5, " 0 /222/ 1 ", it("kineng:gear_iron"):1, it("kineng:gear_iron"):4, "plateIron");
 	add("shaped", it("kineng:magnets"), "111/101/111", it("kineng:shaft_iron"), "magnet");
 	add("shaped", it("kineng:rf_coil"), "010/010/1 1", it("m.fluxwinding"), it("m.transformer"));
 	
-	add("shaped", it("m.transformer"), "0/1/0", "ingotIron", it("minecraft:paper"));
-	add("shaped", it("m.magnet"), "  1/ 0 /1  ", "ingotIron", "dustRedstone");
+	add("shaped", it("m.transformer"), "0/1/0", "plateIron", it("minecraft:paper"));
+	add("shaped", it("m.magnet"), "  1/ 0 /1  ", it("m.hot_iron"), "dustRedstone");
 	add("shapeless", it("m.raw_fluxalloy"), "ingotGold", "dustRedstone", "dustRedstone");
 	
 	add("smelt", it("m.raw_fluxalloy"), it("m.ingot_fluxalloy"));
+	add("smelt", it("minecraft:iron_ingot"), it("m.hot_iron"));
 	add("smelt", it("m.flour"), it("minecraft:bread"));
 }
 
@@ -60,10 +66,15 @@ POST_INIT() {
 	! add(<machine>, <input>, <force[N]>, <distance[m]>, <outputs...>);
 	add("lathe", ore("plankWood", 2),      1000, 10, it("kineng:shaft_wood"));
 	add("lathe", ore("slabWood", 2),       1000, 10, it("m.gear_wood"));
-	add("lathe", ore("blockIron"),         5000, 20, it("kineng:shaft_iron", 2), it("ore:ingotIron", 5));
-	add("lathe", ore("ingotIron", 2),      5000, 10, it("m.gear_iron"), it("ore:nuggetIron", 3));
+	add("lathe", ore("ingotIron", 2),      5000, 10, it("kineng:shaft_iron"));
+	add("lathe", ore("plateIron", 2),      5000, 10, it("m.gear_iron"), it("ore:nuggetIron", 3));
+	add("lathe", ore("stoneGranite"),      2000, 10, it("m.stone_roller"));
 	add("lathe", it("minecraft:string", 8), 100, 25, it("minecraft:lead"));
 	add("lathe", it("m.ingot_fluxalloy", 3),2000, 25, it("m.fluxwinding"));
+	
+	add("press", it("minecraft:reeds"), 500, 2.5, it("minecraft:paper"));
+	add("press", ore("ingotIron"),    15000, 2.5, it("m.plate_iron"));
+	add("press", it("m.hot_iron"),     3000, 2.5, it("m.plate_iron"));
 	
 	add("grinder", ore("cobblestone"),          5000, 10, it("minecraft:gravel"));
 	add("grinder", ore("gravel", 2),            5000, 20, it("minecraft:sand", 2), it("minecraft:flint"));

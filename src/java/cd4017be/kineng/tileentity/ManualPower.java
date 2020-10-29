@@ -93,7 +93,7 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 
 	@Override
 	public double setShaft(ShaftAxis shaft) {
-		if (con == null) {
+		if (con == null && shaft != null) {
 			BlockRotaryTool block = block();
 			con = new ForceCon(this, block.r);
 			con.maxF = block.maxF;

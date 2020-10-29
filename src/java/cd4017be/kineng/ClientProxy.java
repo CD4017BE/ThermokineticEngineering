@@ -55,6 +55,7 @@ public class ClientProxy extends CommonProxy {
 		setMod(Main.ID);
 		M_WOOD.texture = registerTexture(new ResourceLocation("blocks/planks_oak"));
 		M_IRON.texture = registerTexture(new ResourceLocation("blocks/iron_block"));
+		M_STONE.texture = registerTexture(new ResourceLocation("blocks/stone_granite"));
 		M_BEDROCK.texture = registerTexture(new ResourceLocation("blocks/bedrock"));
 		int[]
 		m = new int[] {PartModels.SHAFT, 0, 4};
@@ -65,19 +66,20 @@ public class ClientProxy extends CommonProxy {
 		m = new int[] {PartModels.GEAR, 0, 4, 0};
 		GEAR_WOOD.model = m;
 		GEAR_IRON.model = m;
-		int t = registerTexture(new ResourceLocation("blocks/stone_granite"));
+		int t = M_STONE.texture;
 		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, t, 16, 10, t};
 		t = registerTexture(new ResourceLocation("blocks/iron_block"));
 		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, t, 16, 1, t};
 		t = M_WOOD.texture;
 		LATHE.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 8, t};
+		PRESS.model = new int[] {PartModels.SHAFT, 0, 4};
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets"));
 		int t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets1"));
 		MAGNETS.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 10, t1};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
-			GRINDSTONE, SAWBLADE, LATHE, MAGNETS,
+			GRINDSTONE, SAWBLADE, LATHE, PRESS, MAGNETS,
 			FILL_DIR, FILL_SHARE
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
@@ -89,6 +91,7 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(grindstone, GRINDSTONE);
 		new ShaftItemRenderer(sawblade, SAWBLADE);
 		new ShaftItemRenderer(lathe, LATHE);
+		new ShaftItemRenderer(press, PRESS);
 		new ShaftItemRenderer(magnets, MAGNETS);
 		registerRender(processing);
 		registerRender(rf_coil);

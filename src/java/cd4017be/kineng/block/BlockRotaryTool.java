@@ -1,6 +1,7 @@
 package cd4017be.kineng.block;
 
 import java.util.List;
+import cd4017be.kineng.physics.Formula;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -38,6 +39,14 @@ public class BlockRotaryTool extends BlockShaft {
 		items.add(shaftMat.scrap);
 		items.add(scrap);
 		return r;
+	}
+
+	public void setMaterials(ShaftMaterial mat, double r, double h) {
+		J_dens = Formula.J_biCylinder(0.25, shaftMat.density, r, mat.density, h);
+		av_max = Math.min(
+			Formula.rip_vel(shaftMat.strength / shaftMat.density, 0.25),
+			Formula.rip_vel(mat.strength / mat.density, r)
+		);
 	}
 
 	@Override

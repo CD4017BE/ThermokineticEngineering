@@ -84,7 +84,7 @@ public abstract class CircularMultiblockCore extends ShaftPart implements INeigh
 
 	@Override
 	public double setShaft(ShaftAxis shaft) {
-		if (updateRings) updateRings();
+		if (updateRings && shaft != null) updateRings();
 		double av = super.setShaft(shaft);
 		av += (dL - dJ * av) / J();
 		dJ = 0;

@@ -18,10 +18,27 @@ public class Formula {
 		return r * r * h * PI_2;
 	}
 
-	/**@param r [m] 
+	/**@param r0 [m] inner radius
+	 * @param d0 [kg/m³] inner material density
+	 * @param r1 [m] outer radius
+	 * @param d1 [kg/m³] outer material density
+	 * @param h1 [m] outer height
+	 * @return [kgm²] the moment of inertia for two merged cylinders (inner has height 1.0) */
+	public static double J_biCylinder(double r0, double d0, double r1, double d1, double h1) {
+		return J_cylinder(r0, 1.0 - h1) * d0 + J_cylinder(r1, h1) * d1;
+	}
+
+	/**@param r [m] radius
 	 * @return [m³] the maximum torsion torque [Nm] per material strength [N/m²] for a circular cross-section */
 	public static double torsionStrength_circle(double r) {
 		return r * r * r * PI2_3;
+	}
+
+	/**@param str [Nm/kg] material strength [N/m²] relative to density [kg/m³]
+	 * @param r [m] disk radius
+	 * @return [r/s] max angular velocity before material rips apart from centrifugal forces. */
+	public static double rip_vel(double str, double r) {
+		return Math.sqrt(3.0 * str) / r;
 	}
 
 	/**@param a

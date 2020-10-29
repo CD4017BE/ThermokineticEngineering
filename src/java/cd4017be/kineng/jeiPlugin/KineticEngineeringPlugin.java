@@ -28,6 +28,7 @@ public class KineticEngineeringPlugin implements IModPlugin {
 		addTool(registry, GRINDSTONE);
 		addTool(registry, SAWBLADE);
 		addTool(registry, LATHE);
+		addTool(registry, PRESS);
 		addMachine(registry, PROCESSING);
 		for (ProcessingRecipes rcp : ProcessingRecipes.recipeList)
 			if (rcp != null) {
