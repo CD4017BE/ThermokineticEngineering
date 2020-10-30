@@ -28,7 +28,7 @@ plugins {
 
 version = "${mc_version}-${mod_version}"
 group = "com.cd4017be.kineng"
-archivesBaseName = "KineticEngineering"
+archivesBaseName = "kineticengineering"
 
 sourceCompatibility = "${java_version}"
 targetCompatibility = "${java_version}"
@@ -138,6 +138,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
+            artifactId = archivesBaseName
             artifact jar
             artifact deobfJar
             artifact sourceJar
