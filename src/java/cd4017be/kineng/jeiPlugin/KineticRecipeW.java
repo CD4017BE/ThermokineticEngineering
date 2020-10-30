@@ -8,7 +8,6 @@ import cd4017be.lib.util.TooltipUtil;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.gui.TickTimer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -45,9 +44,16 @@ public class KineticRecipeW implements IRecipeWrapper {
 
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-		PROGRESSBAR.draw(minecraft, 38, 13, 0, 0, 0, TickTimer.getValue(t0, System.currentTimeMillis(), 32, t, true));
+		PROGRESSBAR.draw(minecraft, 38, 13, 0, 0, 0, getValue(t0, 32, t));
 		FontRenderer fr = minecraft.fontRenderer;
 		fr.drawString(info, 54 - (fr.getStringWidth(info) >> 1), 0, 0x404040);
+	}
+
+	static int getValue(long startTime, int maxValue, int msPerCycle) {
+		return maxValue - (int)Math.floorDiv(
+			(System.currentTimeMillis() - startTime) % msPerCycle * (maxValue + 1),
+			msPerCycle
+		);
 	}
 
 	public static int compare(Entry<ItemKey, KineticRecipe> a, Entry<ItemKey, KineticRecipe> b) {
