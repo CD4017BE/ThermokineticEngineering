@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"inventory": { "model": "kineng:lake_valve" },
+		"orient=s": { "model": "kineng:lake_valve" },
+		"orient=w": { "model": "kineng:lake_valve" , "y": 90 },
+		"orient=n": { "model": "kineng:lake_valve" , "y": 180 },
+		"orient=e": { "model": "kineng:lake_valve" , "y": 270 },
+		"orient=tn": { "model": "kineng:lake_valve" , "x": 90 },
+		"orient=bn": { "model": "kineng:lake_valve" , "x": 270 }
+	}
+}

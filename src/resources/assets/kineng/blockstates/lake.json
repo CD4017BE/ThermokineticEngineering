@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"inventory": { "model": "kineng:lake" },
+		"normal": { "model": "kineng:lake" }
+	}
+}

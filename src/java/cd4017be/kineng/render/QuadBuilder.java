@@ -30,11 +30,15 @@ public class QuadBuilder implements AutoCloseable {
 	public int i;
 	public boolean calcNormals;
 
+	public QuadBuilder setVB(BufferBuilder vb) {
+		this.vb = vb;
+		return this;
+	}
+
 	public QuadBuilder init(BufferBuilder vb, boolean item) {
 		vb.begin(GL11.GL_QUADS, item ? DefaultVertexFormats.ITEM : DefaultVertexFormats.BLOCK);
 		this.calcNormals = item;
-		this.vb = vb;
-		return this;
+		return setVB(vb);
 	}
 
 	public QuadBuilder sprite(TextureAtlasSprite texture) {
@@ -79,6 +83,14 @@ public class QuadBuilder implements AutoCloseable {
 		vertexData[i+EX] = floatToIntBits(x);
 		vertexData[i+EY] = floatToIntBits(y);
 		vertexData[i+EZ] = floatToIntBits(z);
+		return this;
+	}
+
+	public QuadBuilder rect(int ex, int ey, float x, float y, float w, float h) {
+		vertexData[VD+ex] = vertexData[VA+ex] = floatToIntBits(x);
+		vertexData[VB+ey] = vertexData[VA+ey] = floatToIntBits(y);
+		vertexData[VC+ex] = vertexData[VB+ex] = floatToIntBits(x + w);
+		vertexData[VC+ey] = vertexData[VD+ey] = floatToIntBits(y + h);
 		return this;
 	}
 
@@ -146,6 +158,7 @@ public class QuadBuilder implements AutoCloseable {
 	public void close() {
 		vb = null;
 		texture = null;
+		calcNormals = false;
 		i = 0;
 	}
 

@@ -1,11 +1,14 @@
 package cd4017be.kineng;
 
 import static cd4017be.kineng.tileentity.IKineticLink.*;
+import static cd4017be.lib.property.PropertyOrientation.ALL_AXIS;
 import cd4017be.kineng.block.*;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.item.ItemBlockGear;
 import cd4017be.kineng.item.ItemBreakRecipe;
 import cd4017be.kineng.tileentity.*;
+import cd4017be.lib.block.AdvancedBlock;
+import cd4017be.lib.block.OrientedBlock;
 import cd4017be.lib.item.BaseItemBlock;
 import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
@@ -40,6 +43,8 @@ public class Objects {
 	public static final BlockProcessing PROCESSING = null, RF_COIL = null;
 	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null, MAGNETS = null;
 	public static final BlockRotaryTool LATHE = null, PRESS = null, SHAFT_MAN = null;
+	public static final AdvancedBlock LAKE = null;
+	public static final OrientedBlock LAKE_VALVE = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
@@ -47,6 +52,7 @@ public class Objects {
 	public static final BaseItemBlock processing = null, rf_coil = null;
 	public static final BaseItemBlock grindstone = null, sawblade = null, magnets = null;
 	public static final BaseItemBlock lathe = null, press = null, shaft_man = null;
+	public static final BaseItemBlock lake = null, lake_valve = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
@@ -75,7 +81,9 @@ public class Objects {
 			new BlockRotaryTool("sawblade", M_WOOD, T_SAWBLADE, 1.0, RotaryTool.class).setShape(0.25, 0.125).setHardness(1.0F),
 			new BlockRotaryTool("lathe", M_WOOD, T_ANGULAR, 0.5, ProcessingShaft.class).setShape(0.25, 0.5).setHardness(1.0F),
 			new BlockRotaryTool("press", M_STONE, T_BELT, 0.25, ProcessingShaft.class).setHardness(1.0F),
-			new BlockRotaryTool("magnets", M_IRON, T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F)
+			new BlockRotaryTool("magnets", M_IRON, T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F),
+			new AdvancedBlock("lake", Material.ROCK, SoundType.STONE, 0, StorageLake.class),
+			new OrientedBlock("lake_valve", Material.IRON, SoundType.METAL, 0, LakeValve.class, ALL_AXIS)
 		);
 	}
 
@@ -96,6 +104,8 @@ public class Objects {
 			new BaseItemBlock(LATHE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(PRESS).setCreativeTab(tabKinetic),
 			new BaseItemBlock(MAGNETS).setCreativeTab(tabKinetic),
+			new BaseItemBlock(LAKE).setCreativeTab(tabKinetic),
+			new BaseItemBlock(LAKE_VALVE).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
 		);
 	}

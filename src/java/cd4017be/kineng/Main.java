@@ -3,6 +3,7 @@ package cd4017be.kineng;
 import org.apache.logging.log4j.Logger;
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
+import cd4017be.kineng.capability.StructureLocations;
 import cd4017be.kineng.physics.Ticking;
 import cd4017be.lib.script.ScriptFiles.Version;
 import net.minecraftforge.fml.common.Mod;
@@ -32,6 +33,7 @@ public class Main {
 	public void preInit(FMLPreInitializationEvent event) {
 		LOG = event.getModLog();
 		proxy.preInit();
+		StructureLocations.register();
 		RecipeScriptContext.instance.run("kinetic.PRE_INIT");
 	}
 

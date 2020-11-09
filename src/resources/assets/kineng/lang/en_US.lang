@@ -79,3 +79,7 @@ gui.kineng.pr_mode1=Rolling Press
 item.cd4017be.m\:hot_iron.name=Hot Iron Ingot
 item.cd4017be.m\:plate_iron.name=Iron Plate
 item.cd4017be.m\:stone_roller.name=Stone Roller
+tile.kineng.lake.name=Storage Lake
+tile.kineng.lake.tip=Must be placed at the lowest point of the a valley in terrain to use for liquid storage.\n§oLake should be convex shaped, or it might miss some Blocks!
+tile.kineng.lake_valve.name=Lake Valve
+tile.kineng.lake_valve.tip=Used to pump liquid in and out of a §6Storage Lake§7.
