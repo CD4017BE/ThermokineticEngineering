@@ -2,6 +2,7 @@ package cd4017be.kineng;
 
 import static cd4017be.kineng.tileentity.IKineticLink.*;
 import static cd4017be.lib.property.PropertyOrientation.ALL_AXIS;
+import static cd4017be.lib.property.PropertyOrientation.HOR_AXIS;
 import cd4017be.kineng.block.*;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
 import cd4017be.kineng.item.ItemBlockGear;
@@ -44,7 +45,8 @@ public class Objects {
 	public static final BlockRotaryTool GRINDSTONE = null, SAWBLADE = null, MAGNETS = null;
 	public static final BlockRotaryTool LATHE = null, PRESS = null, SHAFT_MAN = null;
 	public static final AdvancedBlock LAKE = null;
-	public static final OrientedBlock LAKE_VALVE = null;
+	public static final OrientedBlock LAKE_VALVE = null, LAKE_GATE = null;
+	public static final BlockRotaryTool WATER_WHEEL = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
@@ -52,7 +54,8 @@ public class Objects {
 	public static final BaseItemBlock processing = null, rf_coil = null;
 	public static final BaseItemBlock grindstone = null, sawblade = null, magnets = null;
 	public static final BaseItemBlock lathe = null, press = null, shaft_man = null;
-	public static final BaseItemBlock lake = null, lake_valve = null;
+	public static final BaseItemBlock lake = null, lake_valve = null, lake_gate = null;
+	public static final ItemBlockGear water_wheel = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
@@ -83,7 +86,9 @@ public class Objects {
 			new BlockRotaryTool("press", M_STONE, T_BELT, 0.25, ProcessingShaft.class).setHardness(1.0F),
 			new BlockRotaryTool("magnets", M_IRON, T_MAGNETIC, 0.5, RotaryTool.class).setShape(0.25, 0.625).setHardness(1.5F),
 			new AdvancedBlock("lake", Material.ROCK, SoundType.STONE, 0, StorageLake.class),
-			new OrientedBlock("lake_valve", Material.IRON, SoundType.METAL, 0, LakeValve.class, ALL_AXIS)
+			new OrientedBlock("lake_valve", Material.IRON, SoundType.METAL, 0, LakeValve.class, ALL_AXIS),
+			new OrientedBlock("lake_gate", Material.WOOD, SoundType.WOOD, 0, LakeGate.class, HOR_AXIS),
+			new BlockRotaryTool("water_wheel", M_WOOD, T_ANGULAR, 2.5, WaterWheel.class).setShape(0.25, 1.0).setHardness(1.0F)
 		);
 	}
 
@@ -106,6 +111,8 @@ public class Objects {
 			new BaseItemBlock(MAGNETS).setCreativeTab(tabKinetic),
 			new BaseItemBlock(LAKE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(LAKE_VALVE).setCreativeTab(tabKinetic),
+			new BaseItemBlock(LAKE_GATE).setCreativeTab(tabKinetic),
+			new ItemBlockGear(WATER_WHEEL, 5).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
 		);
 	}

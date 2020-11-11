@@ -2,8 +2,7 @@ package cd4017be.kineng.item;
 
 import static cd4017be.kineng.block.BlockGear.*;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
-import cd4017be.kineng.block.BlockFillDirected;
-import cd4017be.kineng.block.BlockGear;
+import cd4017be.kineng.block.*;
 import cd4017be.lib.item.BaseItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -21,9 +20,17 @@ import net.minecraft.world.World;
 /** @author CD4017BE */
 public class ItemBlockGear extends BaseItemBlock {
 
+	final int diameter;
+
 	public ItemBlockGear(BlockGear id) {
 		super(id);
+		this.diameter = 0;
 		setHasSubtypes(true);
+	}
+
+	public ItemBlockGear(BlockShaft id, int d) {
+		super(id);
+		this.diameter = d;
 	}
 
 	@Override
@@ -44,7 +51,7 @@ public class ItemBlockGear extends BaseItemBlock {
 		ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 		float hitX, float hitY, float hitZ, IBlockState newState
 	) {
-		int d = newState.getValue(DIAMETER);
+		int d = block instanceof BlockGear ? newState.getValue(DIAMETER) : diameter;
 		Axis ax = newState.getValue(AXIS);
 		if (!hasEnoughSpace(world, pos, ax, d) || !super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
 			return false;

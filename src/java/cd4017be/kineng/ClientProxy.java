@@ -78,10 +78,12 @@ public class ClientProxy extends CommonProxy {
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets"));
 		int t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets1"));
 		MAGNETS.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 10, t1};
+		WATER_WHEEL.model = new int[] {PartModels.WATER_WHEEL, 0, 4, 40, 56};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
 			GRINDSTONE, SAWBLADE, LATHE, PRESS, MAGNETS,
+			WATER_WHEEL,
 			FILL_DIR, FILL_SHARE
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
@@ -95,11 +97,13 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(lathe, LATHE);
 		new ShaftItemRenderer(press, PRESS);
 		new ShaftItemRenderer(magnets, MAGNETS);
+		new ShaftItemRenderer(water_wheel, WATER_WHEEL);
 		registerRender(processing);
 		registerRender(rf_coil);
 		registerRender(flint_knife);
 		registerRender(lake);
 		registerRender(lake_valve);
+		registerRender(lake_gate);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

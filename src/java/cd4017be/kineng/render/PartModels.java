@@ -168,4 +168,66 @@ public class PartModels {
 		}
 	});
 
+	/** model arguments: [id, shaft_texture, shaft_radius*16, handle_radius*16 */
+	public static final int WATER_WHEEL = registerModel((qb, args, z0) -> {
+		//TODO crossbars
+		float r0 = args[2] * 0.0625F, r1 = args[4] * 0.0625F;
+		float d = 0.415F * r0, z1 = z0 + 0.5F; z0 -= 0.5F;
+		CplxF xy = C_(1F).add(ROTATE45).sca(0.5F);
+		CplxF pl0 = C_(r0, d), pl1 = C_(r1, d);
+		CplxF pr0 = new CplxF().prod(pl0, xy);
+		CplxF pr1 = new CplxF().prod(pl1, xy);
+		pl0.conj().mul(xy);
+		pl1.conj().mul(xy);
+		r0 = (args[3] * 0.0625F - d) / r1;
+		r1 = (args[3] * 0.0625F + d) / r1;
+		for (int i = 0; i < 8; i++) {
+			qb.uv(0, 0, 16, 4);
+			qb.xyz(pl1.r, pl1.i, z1).next();
+			qb.xyz(pl1.r, pl1.i, z0).next();
+			qb.xyz(pr1.r, pr1.i, z0).next();
+			qb.xyz(pr1.r, pr1.i, z1).next();
+			qb.uv(0, 0, 16, 16);
+			qb.xyz(pl1.r, pl1.i, z1).next();
+			qb.xyz(pl0.r, pl0.i, z1).next();
+			qb.xyz(pl0.r, pl0.i, z0).next();
+			qb.xyz(pl1.r, pl1.i, z0).next();
+			qb.xyz(pr0.r, pr0.i, z1).next();
+			qb.xyz(pr1.r, pr1.i, z1).next();
+			qb.xyz(pr1.r, pr1.i, z0).next();
+			qb.xyz(pr0.r, pr0.i, z0).next();
+			qb.uv(0, 0, 16, 4);
+			qb.xyz(pl0.r, pl0.i, z1).next();
+			qb.xyz(pl1.r, pl1.i, z1).next();
+			qb.xyz(pr1.r, pr1.i, z1).next();
+			qb.xyz(pr0.r, pr0.i, z1).next();
+			qb.xyz(pl1.r, pl1.i, z0).next();
+			qb.xyz(pl0.r, pl0.i, z0).next();
+			qb.xyz(pr0.r, pr0.i, z0).next();
+			qb.xyz(pr1.r, pr1.i, z0).next();
+			pl0.mul(ROTATE45);
+			pl1.mul(ROTATE45);
+			qb.uv(0, 0, 16, 16);
+			qb.xyz(pr1.r * r0, pr1.i * r0, z1).next();
+			qb.xyz(pl1.r * r0, pl1.i * r0, z1).next();
+			qb.xyz(pl1.r * r0, pl1.i * r0, z0).next();
+			qb.xyz(pr1.r * r0, pr1.i * r0, z0).next();
+			qb.xyz(pl1.r * r1, pl1.i * r1, z1).next();
+			qb.xyz(pr1.r * r1, pr1.i * r1, z1).next();
+			qb.xyz(pr1.r * r1, pr1.i * r1, z0).next();
+			qb.xyz(pl1.r * r1, pl1.i * r1, z0).next();
+			qb.uv(0, 0, 16, 4);
+			qb.xyz(pl1.r * r1, pl1.i * r1, z0).next();
+			qb.xyz(pr1.r * r1, pr1.i * r1, z0).next();
+			qb.xyz(pr1.r * r0, pr1.i * r0, z0).next();
+			qb.xyz(pl1.r * r0, pl1.i * r0, z0).next();
+			qb.xyz(pr1.r * r1, pr1.i * r1, z1).next();
+			qb.xyz(pl1.r * r1, pl1.i * r1, z1).next();
+			qb.xyz(pl1.r * r0, pl1.i * r0, z1).next();
+			qb.xyz(pr1.r * r0, pr1.i * r0, z1).next();
+			pr0.mul(ROTATE45);
+			pr1.mul(ROTATE45);
+		}
+	});
+
 }

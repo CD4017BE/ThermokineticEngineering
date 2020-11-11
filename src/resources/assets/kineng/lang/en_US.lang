@@ -83,3 +83,5 @@ tile.kineng.lake.name=Storage Lake
 tile.kineng.lake.tip=Must be placed at the lowest point of the a valley in terrain to use for liquid storage.\n§oLake should be convex shaped, or it might miss some Blocks!
 tile.kineng.lake_valve.name=Lake Valve
 tile.kineng.lake_valve.tip=Used to pump liquid in and out of a §6Storage Lake§7.
+tile.kineng.lake_gate.name=Water Gate
+tile.kineng.water_wheel.name=Water Wheel

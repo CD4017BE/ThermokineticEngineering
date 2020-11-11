@@ -57,6 +57,8 @@ public class CommonProxy {
 		SHAFT_MAN.av_max *= 0.5;
 		SHAFT_MAN.maxF = 5000;
 		SHAFT_MAN.scrap = new ItemStack(Items.STICK, 4);
+		WATER_WHEEL.setMaterials(M_WOOD, 2.5, 1.0);
+		WATER_WHEEL.maxF = 100000;
 		ManualPower.ENTITY_STRENGTH.put(EntityPig.class, CplxF.C_(400F, 1200F));
 		ManualPower.ENTITY_STRENGTH.put(EntityCow.class, CplxF.C_(400F, 1600F));
 		ManualPower.ENTITY_STRENGTH.put(EntitySheep.class, CplxF.C_(400F, 1400F));
