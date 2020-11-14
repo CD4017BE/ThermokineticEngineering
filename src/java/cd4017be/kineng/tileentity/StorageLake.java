@@ -4,18 +4,22 @@ import static net.minecraft.init.Blocks.AIR;
 import java.util.Arrays;
 import java.util.List;
 import cd4017be.kineng.capability.StructureLocations;
-import cd4017be.lib.block.AdvancedBlock.ISelfAwareTile;
-import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.block.AdvancedBlock.*;
 import cd4017be.lib.tileentity.BaseTileEntity;
+import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.*;
@@ -24,7 +28,9 @@ import net.minecraftforge.fluids.capability.*;
 /** 
  * @author CD4017BE */
 public class StorageLake extends BaseTileEntity
-implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile {
+implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly, IInteractiveTile {
+
+	public static float RAIN_MULT = 0.5F;
 
 	public FluidStack content;
 	/**{layer[0:15 blockMap pointer, 16:31 capacity [m³]],
@@ -32,7 +38,24 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile {
 	public int[] layers = {0, 0};
 	/** bit-map of blocks being part of the lake */
 	public byte[] blockMap = new byte[16];
-	public int level, lastAm, size;
+	public int level, lastAm, size, avgDrain;
+	float rainfall = Float.NaN;
+	private RainParser rp;
+
+	@Override
+	public void update() {
+		avgDrain -= avgDrain >> 5;
+		if (content == null || content.getFluid() != FluidRegistry.WATER) return;
+		if (Float.isNaN(rainfall)) rp = new RainParser(pos).initialize();
+		if (rp == null) {
+			int n = Math.round(rainfall * (1F + world.rainingStrength));
+			if (n > 0) fill(new FluidStack(FluidRegistry.WATER, n), true);
+		} else {
+			boolean done = !rp.doStep(world);
+			rainfall = rp.rain * RAIN_MULT;
+			if (done) rp = null;
+		}
+	}
 
 	public void grow(int n) {
 		n = content.amount += n;
@@ -226,12 +249,12 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile {
 			content = new FluidStack(resource, 0);
 			markDirty(SYNC);
 		} else if (!content.isFluidEqual(resource)) return 0;
-		int cap = capacity() - content.amount, n = 0;
+		int cap = capacity() - content.amount + avgDrain, n = 0;
 		if (doFill && cap < resource.amount) {
 			content.amount += cap;
 			n = cap;
 			fillLayer();
-			cap = capacity() - content.amount + n;
+			cap = capacity() - content.amount + n + avgDrain;
 		}
 		cap = Math.min(cap, resource.amount);
 		if (doFill) grow(cap - n);
@@ -251,6 +274,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile {
 		if (doDrain && maxDrain > content.amount) drainLayer();
 		maxDrain = Math.min(maxDrain, content.amount);
 		if (doDrain) grow(-maxDrain);
+		avgDrain += maxDrain;
 		return new FluidStack(content, maxDrain);
 	}
 
@@ -396,5 +420,19 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile {
 	public interface BlockOperation {
 		int visit(int mask, int x, int y, int z, World world, MutableBlockPos pos);
 	}
+
+	@Override
+	public boolean onActivated(
+		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
+	) {
+		if (world.isRemote) return true;
+		String msg = String.format("rain water: %.0f mB/t", rainfall);
+		if (rp != null) msg += " (still scanning ...)";
+		player.sendStatusMessage(new TextComponentString(msg), true);
+		return true;
+	}
+
+	@Override
+	public void onClicked(EntityPlayer player) {}
 
 }

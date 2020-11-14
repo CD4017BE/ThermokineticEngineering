@@ -251,7 +251,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 			rs = 0;
 			reset();
 			msg = "§6Path reset!";
-		} else if (state < 8) msg = "Pathing ...";
+		} else if (state >= 0) msg = "Pathing ...";
 		else {
 			int m = 0;
 			for (FlowNode fn = first; fn != null; fn = fn.next) m++;
