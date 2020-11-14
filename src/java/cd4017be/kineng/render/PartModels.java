@@ -170,7 +170,7 @@ public class PartModels {
 
 	/** model arguments: [id, shaft_texture, shaft_radius*16, handle_radius*16 */
 	public static final int WATER_WHEEL = registerModel((qb, args, z0) -> {
-		//TODO crossbars
+		texture(qb, args[1]);
 		float r0 = args[2] * 0.0625F, r1 = args[4] * 0.0625F;
 		float d = 0.415F * r0, z1 = z0 + 0.5F; z0 -= 0.5F;
 		CplxF xy = C_(1F).add(ROTATE45).sca(0.5F);
