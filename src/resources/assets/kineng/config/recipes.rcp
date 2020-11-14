@@ -1,4 +1,4 @@
-VERSION = 24;
+VERSION = 26;
 
 PRE_INIT() {
 	add("item", 500, "gear_wood");
@@ -15,6 +15,8 @@ PRE_INIT() {
 	add("ore", "plateIron", it("m.plate_iron"));
 	add("item", 510, "hot_iron");
 	add("item", 511, "stone_roller");
+	add("item", 512, "wood_rotor");
+	add("item", 513, "fabric");
 	add("item", 516, "flour");
 	add("ore", "flour", it("m.flour"));
 	Loc any = 32767;
@@ -46,7 +48,11 @@ INIT() {
 	add("shaped", it("kineng:gear_iron"):5, " 0 /222/ 1 ", it("kineng:gear_iron"):1, it("kineng:gear_iron"):4, "plateIron");
 	add("shaped", it("kineng:magnets"), "111/101/111", it("kineng:shaft_iron"), "magnet");
 	add("shaped", it("kineng:rf_coil"), "010/010/1 1", it("m.fluxwinding"), it("m.transformer"));
+	add("shaped", it("kineng:wind_mill"):1, "121/202/121", it("kineng:shaft_wood"), it("m.wood_rotor"), "gearWood");
+	add("shaped", it("kineng:wind_mill"):2, "111/101/111", it("kineng:wind_mill"):1, it("m.wood_rotor"));
 	
+	add("shaped", it("kineng:anemometer"), " 2 /212/02 ", it("minecraft:stick"), "gearWood", it("minecraft:feather"));
+	add("shaped", it("m.wood_rotor"), "010/010/010", it("minecraft:stick"), it("m.fabric"));
 	add("shaped", it("m.transformer"), "0/1/0", "plateIron", it("minecraft:paper"));
 	add("shaped", it("m.magnet"), "  1/ 0 /1  ", it("m.hot_iron"), "dustRedstone");
 	add("shapeless", it("m.raw_fluxalloy"), "ingotGold", "dustRedstone", "dustRedstone");
@@ -69,7 +75,7 @@ POST_INIT() {
 	add("lathe", ore("ingotIron", 2),      5000, 10, it("kineng:shaft_iron"));
 	add("lathe", ore("plateIron", 2),      5000, 10, it("m.gear_iron"), it("ore:nuggetIron", 3));
 	add("lathe", ore("stoneGranite"),      2000, 10, it("m.stone_roller"));
-	add("lathe", it("minecraft:string", 8), 100, 25, it("minecraft:lead"));
+	add("lathe", it("minecraft:string", 4), 100, 25, it("m.fabric"));
 	add("lathe", it("m.ingot_fluxalloy", 3),2000, 25, it("m.fluxwinding"));
 	
 	add("press", it("minecraft:reeds"), 500, 2.5, it("minecraft:paper"));
@@ -108,6 +114,7 @@ POST_INIT() {
 	add("grinder", it("minecraft:red_flower"):8, 250,  4, it("minecraft:dye", 2, 7));
 	add("grinder", it("minecraft:cactus")      , 250,  4, it("minecraft:dye", 2, 2));
 	add("grinder", it("minecraft:wheat")       , 400,  4, it("m.flour"));
+	add("grinder", it("minecraft:rotten_flesh", 2), 400, 25, it("minecraft:slime_ball"));
 	
 	add("sawmill", ore("stone"),                 2000, 4, it("minecraft:stone_slab", 2, 0));
 	add("sawmill", ore("sandstone"),             1500, 4, it("minecraft:stone_slab", 2, 1));

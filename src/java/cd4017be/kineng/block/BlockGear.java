@@ -22,11 +22,11 @@ public class BlockGear extends BlockShaft {
 
 	public static final PropertyInteger DIAMETER = PropertyInteger.create("diameter", 1, 5);
 
-	private double[] J_dens = new double[6];
-	private double[] av_max;
+	protected double[] J_dens = new double[6];
+	protected double[] av_max;
 
-	public BlockGear(String id, ShaftMaterial m, Class<? extends TileEntity> tile) {
-		super(id, m, 0.5, tile);
+	public BlockGear(String id, ShaftMaterial m, double r, Class<? extends TileEntity> tile) {
+		super(id, m, r, tile);
 		setDefaultState(getDefaultState().withProperty(DIAMETER, 1));
 	}
 
@@ -54,7 +54,7 @@ public class BlockGear extends BlockShaft {
 
 	@Override
 	public int[] model(IBlockState state) {
-		model[3] = state.getValue(DIAMETER) << 3;
+		model[3] = (int)(radius(state) * 16.0);
 		model[1] = shaftMat.texture;
 		return model;
 	}

@@ -79,12 +79,16 @@ public class ClientProxy extends CommonProxy {
 		int t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets1"));
 		MAGNETS.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 10, t1};
 		WATER_WHEEL.model = new int[] {PartModels.WATER_WHEEL, 0, 4, 40, 56};
+		t = registerTexture(new ResourceLocation("blocks/wool_colored_white"));
+		WIND_MILL.bladeTex = new int[] {0, t, t, M_IRON.texture, M_IRON.texture, M_IRON.texture};
+		WIND_MILL.model = new int[] {PartModels.TURBINE, 0, 4, 0, 0, 16};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
 			GRINDSTONE, SAWBLADE, LATHE, PRESS, MAGNETS,
 			WATER_WHEEL,
-			FILL_DIR, FILL_SHARE
+			FILL_DIR, FILL_SHARE,
+			WIND_MILL
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
 		new ShaftItemRenderer(shaft_iron, SHAFT_IRON);
@@ -98,12 +102,14 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(press, PRESS);
 		new ShaftItemRenderer(magnets, MAGNETS);
 		new ShaftItemRenderer(water_wheel, WATER_WHEEL);
+		new ShaftItemRenderer(wind_mill, WIND_MILL);
 		registerRender(processing);
 		registerRender(rf_coil);
 		registerRender(flint_knife);
 		registerRender(lake);
 		registerRender(lake_valve);
 		registerRender(lake_gate);
+		registerRender(anemometer);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

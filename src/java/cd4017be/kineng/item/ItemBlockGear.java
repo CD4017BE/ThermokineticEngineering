@@ -1,6 +1,5 @@
 package cd4017be.kineng.item;
 
-import static cd4017be.kineng.block.BlockGear.*;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
 import cd4017be.kineng.block.*;
 import cd4017be.lib.item.BaseItemBlock;
@@ -51,7 +50,7 @@ public class ItemBlockGear extends BaseItemBlock {
 		ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
 		float hitX, float hitY, float hitZ, IBlockState newState
 	) {
-		int d = block instanceof BlockGear ? newState.getValue(DIAMETER) : diameter;
+		int d = block instanceof BlockGear ? (int)(((BlockGear)this.block).radius(newState) * 2.0) : diameter;
 		Axis ax = newState.getValue(AXIS);
 		if (!hasEnoughSpace(world, pos, ax, d) || !super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState))
 			return false;

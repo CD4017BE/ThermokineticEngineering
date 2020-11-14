@@ -5,8 +5,7 @@ import static cd4017be.lib.property.PropertyOrientation.ALL_AXIS;
 import static cd4017be.lib.property.PropertyOrientation.HOR_AXIS;
 import cd4017be.kineng.block.*;
 import cd4017be.kineng.block.BlockShaft.ShaftMaterial;
-import cd4017be.kineng.item.ItemBlockGear;
-import cd4017be.kineng.item.ItemBreakRecipe;
+import cd4017be.kineng.item.*;
 import cd4017be.kineng.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
 import cd4017be.lib.block.OrientedBlock;
@@ -47,6 +46,7 @@ public class Objects {
 	public static final AdvancedBlock LAKE = null;
 	public static final OrientedBlock LAKE_VALVE = null, LAKE_GATE = null;
 	public static final BlockRotaryTool WATER_WHEEL = null;
+	public static final BlockTurbine WIND_MILL = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
@@ -56,9 +56,11 @@ public class Objects {
 	public static final BaseItemBlock lathe = null, press = null, shaft_man = null;
 	public static final BaseItemBlock lake = null, lake_valve = null, lake_gate = null;
 	public static final ItemBlockGear water_wheel = null;
+	public static final ItemBlockGear wind_mill = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
+	public static final ItemAerometer anemometer = null;
 
 	// Sounds
 
@@ -72,8 +74,8 @@ public class Objects {
 		ev.getRegistry().registerAll(
 			new BlockShaft("shaft_wood", M_WOOD, 0.25, ShaftPart.class).setHardness(0.5F),
 			new BlockShaft("shaft_iron", M_IRON, 0.25, ShaftPart.class).setHardness(1.5F),
-			new BlockGear("gear_wood", M_WOOD, Gear.class).setShape(0.25, 0.25).setHardness(0.5F),
-			new BlockGear("gear_iron", M_IRON, Gear.class).setShape(0.25, 0.25).setHardness(1.5F),
+			new BlockGear("gear_wood", M_WOOD, 0.5, Gear.class).setShape(0.25, 0.25).setHardness(0.5F),
+			new BlockGear("gear_iron", M_IRON, 0.5, Gear.class).setShape(0.25, 0.25).setHardness(1.5F),
 			new BlockShaft("shaft_debug", M_BEDROCK, 0.25, MechanicalDebug.class).setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY),
 			new BlockRotaryTool("shaft_man", M_WOOD, -1, 1.0, ManualPower.class).setShape(0.25, 0.125).setHardness(0.5F),
 			new BlockFillDirected("fill_dir", null).setHardness(1.0F),
@@ -88,7 +90,8 @@ public class Objects {
 			new AdvancedBlock("lake", Material.ROCK, SoundType.STONE, 0, StorageLake.class),
 			new OrientedBlock("lake_valve", Material.IRON, SoundType.METAL, 0, LakeValve.class, ALL_AXIS),
 			new OrientedBlock("lake_gate", Material.WOOD, SoundType.WOOD, 0, LakeGate.class, HOR_AXIS),
-			new BlockRotaryTool("water_wheel", M_WOOD, T_ANGULAR, 2.5, WaterWheel.class).setShape(0.25, 1.0).setHardness(1.0F)
+			new BlockRotaryTool("water_wheel", M_WOOD, T_ANGULAR, 2.5, WaterWheel.class).setShape(0.25, 1.0).setHardness(1.0F),
+			new BlockTurbine("wind_mill", M_IRON, 2.5, WindTurbine.class).setHardness(1.0F)
 		);
 	}
 
@@ -113,7 +116,9 @@ public class Objects {
 			new BaseItemBlock(LAKE_VALVE).setCreativeTab(tabKinetic),
 			new BaseItemBlock(LAKE_GATE).setCreativeTab(tabKinetic),
 			new ItemBlockGear(WATER_WHEEL, 5).setCreativeTab(tabKinetic),
-			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic)
+			new ItemBlockGear(WIND_MILL).setCreativeTab(tabKinetic),
+			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
+			new ItemAerometer("anemometer").setCreativeTab(tabKinetic)
 		);
 	}
 
