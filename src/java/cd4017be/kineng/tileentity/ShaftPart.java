@@ -152,19 +152,19 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int[] model() {
-		return block().model(getBlockState());
+		return unloaded ? null : block().model(getBlockState());
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int[] capModel(boolean end) {
-		return new int[] {PartModels.SHAFT_CAPS, material().texture, end ? 4 : -4};
+		return unloaded ? null : new int[] {PartModels.SHAFT_CAPS, material().texture, end ? 4 : -4};
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return block().getSize(pos, getBlockState());
+		return unloaded ? super.getRenderBoundingBox() : block().getSize(pos, getBlockState());
 	}
 
 }

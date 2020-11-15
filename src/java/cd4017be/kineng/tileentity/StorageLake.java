@@ -39,7 +39,9 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 	/** bit-map of blocks being part of the lake */
 	public byte[] blockMap = new byte[16];
 	public int level, lastAm, size, avgDrain;
-	float rainfall = Float.NaN;
+	/** relative position of last detected overflow as 0x00ZZYYXX */
+	public int lastOverflow;
+	private float rainfall = Float.NaN;
 	private RainParser rp;
 
 	@Override
@@ -75,6 +77,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 		if (mode <= CLIENT || redraw) {
 			nbt.setIntArray("layers", layers);
 			nbt.setByteArray("map", blockMap);
+			nbt.setInteger("of", lastOverflow);
 		}
 	}
 
@@ -97,18 +100,22 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 					break;
 				}
 			size = computeSize();
+			lastOverflow = nbt.getInteger("of");
 		}
 	}
 
 	/**mark layers above the current liquid line as invalid
 	 * @param h [m] lowest invalid height level */
 	public void updateLayers(int h) {
+		if (lastOverflow != 0) h = lastOverflow >> 8 & 0xff;
 		h <<= 1;
 		int l = Math.min(level, layers.length - 2);
 		if (h < l) return;
 		if (h == l) scan(h);
+		else lastOverflow = 0;
 		for (h+=2; h < layers.length; h+=2)
 			layers[h] = 0;
+		markDirty(REDRAW);
 	}
 
 	private boolean scan(int h) {
@@ -120,13 +127,14 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 		int i1 = h < 2 ? 0 : layers[h-2] & 0xffff;
 		byte[] bm = blockMap;
 		int m = 1;
-		int i = i1, f = 0xff, prev = 0, r, of = 0;
+		int i = i1, f = 0xff, prev = 0, r;
+		lastOverflow = 0;
 		for (r = 1; r < 60; r++) {
 			if (bm.length < i + r)
 				if (i + r < 65536)
 					blockMap = bm = Arrays.copyOf(bm, MathHelper.clamp(bm.length << 1, i + r, 65536));
 				else {
-					of |= 0xff00;
+					setOverflow(f, 0, r, h);
 					break;
 				}
 			int n = 0, acc = 0;
@@ -135,7 +143,8 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 				f |= (i0 < i1 ? bm[i0] & 0xff : 0) << 8;
 				if (f != 0) {
 					f = visitBlocks(f | f >> 8, b, r, x, y, z, w, p, StorageLake::solid);
-					of |= f;
+					if ((f & 0xff00) != 0)
+						setOverflow(f, b, r, h);
 					n += Integer.bitCount(f &= 0xff);
 				}
 				bm[i] = (byte)f;
@@ -151,10 +160,9 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 			m += n;
 		}
 		prev >>= 2;
-		of &= 0xff00;
-		if (of != 0) {
+		if (lastOverflow != 0) {
 			prev |= Integer.MIN_VALUE;
-			if (level > h) level = layers.length;
+			if (level >= h) level = layers.length;
 		}
 		layers[h] = m << 16 | i;
 		int l = layers[h+1];
@@ -174,7 +182,24 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 				layers[h] = 0;
 			markDirty(REDRAW);
 		}
-		return of == 0;
+		return lastOverflow == 0;
+	}
+
+	private int setOverflow(int f, int b, int r, int h) {
+		if (lastOverflow != 0) return lastOverflow;
+		int x, z;
+		switch(Integer.numberOfTrailingZeros(f >> 8)) {
+		case 0: x = -r  ; z = -b  ; break;
+		case 1: x =  r  ; z = -b-1; break;
+		case 2: x =  r  ; z =  b  ; break;
+		case 3: x = -r  ; z =  b+1; break;
+		case 4: x = -b  ; z =  r  ; break;
+		case 5: x = -b-1; z = -r  ; break;
+		case 6: x =  b  ; z = -r  ; break;
+		case 7: x =  b+1; z =  r  ; break;
+		default: return 0;
+		}
+		return lastOverflow = (z & 0xff) << 16 | (h >> 1) << 8 | x & 0xff;
 	}
 
 	private int computeSize() {
@@ -293,9 +318,9 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 				f = visitBlocks(f, b, r, x, y, z, w, p, this::fillBlock);
 				if (f != 0) return;
 			}
-		if (layers[level + 1] < 0) level = layers.length;
-		else if ((level += 2) >= layers.length || layers[level] == 0)
+		if ((level += 2) >= layers.length || layers[level] == 0)
 			scan(level);
+		else if (layers[level + 1] < 0) level = layers.length;
 		markDirty(SYNC);
 	}
 

@@ -62,8 +62,8 @@ public class CommonProxy {
 		WIND_MILL.setMaterial(1, M_WOOD, M_WOOD, 0.5, 0.25, 50000);
 		WIND_MILL.setMaterial(2, M_WOOD, M_WOOD, 0.5, 0.125, 50000);
 		WIND_MILL.setMaterial(3, M_IRON, M_IRON, 0.5, 0.25, 250000);
-		WIND_MILL.setMaterial(4, M_IRON, M_IRON, 0.5, 0.16, 250000);
-		WIND_MILL.setMaterial(5, M_IRON, M_IRON, 0.5, 0.1, 250000);
+		WIND_MILL.setMaterial(4, M_IRON, M_IRON, 0.5, 0.20, 250000);
+		WIND_MILL.setMaterial(5, M_IRON, M_IRON, 0.5, 0.16, 250000);
 		ManualPower.ENTITY_STRENGTH.put(EntityPig.class, CplxF.C_(400F, 1200F));
 		ManualPower.ENTITY_STRENGTH.put(EntityCow.class, CplxF.C_(400F, 1600F));
 		ManualPower.ENTITY_STRENGTH.put(EntitySheep.class, CplxF.C_(400F, 1400F));

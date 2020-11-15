@@ -4,7 +4,9 @@ import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_
 import cd4017be.lib.block.AdvancedBlock.ISelfAwareTile;
 import cd4017be.lib.util.Utils;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.*;
 
@@ -102,6 +104,17 @@ public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwa
 	public void breakBlock() {
 		if (tank != null && lake != null && !lake.invalid())
 			tank.amount -= lake.fill(tank, true);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return capability == FLUID_HANDLER_CAPABILITY;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		return capability == FLUID_HANDLER_CAPABILITY ? (T)this : null;
 	}
 
 }
