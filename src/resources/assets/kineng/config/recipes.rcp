@@ -1,32 +1,86 @@
-VERSION = 31;
+VERSION = 33;
+
+energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
+flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
+
+gear_maxF_area = 0.0625;! m² contact area = gear force limit multiplier
+
+! regenerative power balancing:
+gravity = 9.81; ! m/s² gravity strength used for water gates / wheels
+lake_gate_crsA = 1.0; ! m² crossection area of Lake Gate when fully opened (rs = 15) 
+lake_valve_cap = 1000; ! mB internal tank capacity of Lake Valves
+lake_rain_mult = 0.25; ! mB/t/m² amount of rain water collected by Storage Lakes (multiplied by biome rainfall value)
+air_density = 1.29; ! kg/m³ air density used for wind power
+wind_scale = 1000.0; ! (m/s)² multiplier for wind strength
+! manual power:
+animal_power_tupd = 100; !leashed animal update interval in ticks
+animal_power_tmax = 12000; !max work time in ticks for a full grown animal
+manual_power_tupd = 10; !max interval in ticks between clicks for continuous power
+manual_power_exhaustion = 0.02; !food exhaustion applied per tick at peak power
+
+! technical settings:
+shaft_light_updates = 20; !interval in ticks between light checks for shaft rendering
+shaft_sync_vel = 0.05; !minimum relative velocity change above which to send sync packets
+shaft_fric_v0 = 0.2; !r/s shaft friction attenuation velocity (Better don't mess with this! Never set to exactly zero!)
+machine_fric_v0 = 0.001; !m/s machine friction attenuation velocity (Better don't mess with this! Never set to exactly zero!)
+overload_check_t = 16; !inverval in ticks for checking part overload (must be power of two). This check is computationally expensive, so it shouldn't run too frequently!
+log_debug = false; !whether to log shaft structure activity (may spam).
 
 PRE_INIT() {
 	add("item", 500, "gear_wood");
-	add("ore", "gearWood", it("m.gear_wood"));
 	add("item", 501, "gear_iron");
-	add("ore", "gearIron", it("m.gear_iron"));
 	add("item", 504, "magnet");
-	add("ore", "magnet", it("m.magnet"));
 	add("item", 505, "transformer");
 	add("item", 506, "fluxwinding");
 	add("item", 507, "raw_fluxalloy");
 	add("item", 508, "ingot_fluxalloy");
 	add("item", 509, "plate_iron");
-	add("ore", "plateIron", it("m.plate_iron"));
 	add("item", 510, "hot_iron");
 	add("item", 511, "stone_roller");
 	add("item", 512, "wood_rotor");
 	add("item", 513, "fabric");
 	add("item", 514, "wood_wheel");
 	add("item", 516, "flour");
-	add("ore", "flour", it("m.flour"));
+	
+	!material properties used to derive part properties from: [density(kg/m³), strength(N/m²), friction]#
+	mat_wood = [750, 50e6, 0.05]#;
+	mat_stone = [2500, 20e6, 0.1]#;
+	mat_iron = [7860, 150e6, 0.01]#;
+	!tool force limits (N):
+	maxF_grindstone = 50e3;
+	maxF_sawblade = 10e3;
+	maxF_lathe = 10e3;
+	maxF_press = 10e3;
+	maxF_magnets = 2.5e6;
+	maxF_shaft_man = 5e3;
+	maxF_water_wheel = 50e3;
+	maxF_wind_mill = [50e3, 50e3, 250e3, 250e3, 250e3]#;
+	str_wind_mill = [0.25, 0.125, 0.25, 0.2, 0.16]#; !structural strength (scales max angular velocity)
+	!scrap item dropped if a shaft of given material or a machine is destroyed:
+	scrap_wood = it("minecraft:stick", 2);
+	scrap_stone = it("minecraft:cobblestone");
+	scrap_iron = it("minecraft:iron_nugget", 6);
+	scrap_grindstone = it("minecraft:flint", 4);
+	scrap_sawblade = it("minecraft:iron_nugget", 12);
+	scrap_lathe = it("minecraft:flint", 2);
+	scrap_press = nil;
+	scrap_magnets = it("minecraft:iron_ingot", 6);
+	scrap_shaft_man = it("minecraft:stick", 4);
+	scrap_water_wheel = it("minecraft:stick", 24);
+	scrap_wind_mill = [it("m.fabric", 10), it("m.fabric", 30), nil, nil, nil];
+}
+
+INIT() {
 	Loc any = 32767;
 	add("ore", "red_sandstone", it("minecraft:red_sandstone"):any);
 	add("ore", "stonebrick", it("minecraft:stonebrick"):any);
 	add("ore", "wool", it("minecraft:wool"):any);
-}
-
-INIT() {
+	add("ore", "gearWood", it("m.gear_wood"));
+	add("ore", "gearIron", it("m.gear_iron"));
+	add("ore", "magnet", it("m.magnet"));
+	add("ore", "plateIron", it("m.plate_iron"));
+	add("ore", "flour", it("m.flour"));
+	
 	add("shaped", it("kineng:flint_knife"), "01", it("minecraft:flint"), it("minecraft:stick"));
 	add("shaped", it("kineng:gear_wood"):1, "1/0", it("kineng:shaft_wood"), it("m.gear_wood"));
 	add("shaped", it("kineng:gear_wood"):2, " 1 /202/ 1 ", it("kineng:shaft_wood"), "gearWood", "slabWood");
@@ -71,6 +125,16 @@ INIT() {
 	add("smelt", it("m.raw_fluxalloy"), it("m.ingot_fluxalloy"));
 	add("smelt", it("minecraft:iron_ingot"), it("m.hot_iron"));
 	add("smelt", it("m.flour"), it("minecraft:bread"));
+	
+	!stats of animals leashed to Hand Wheel: [force(N), power(W)]#
+	animal_power:"player" = [1000, 5000]#;
+	animal_power:"pig"    = [400, 1200]#;
+	animal_power:"sheep"  = [400, 1400]#;
+	animal_power:"cow"    = [400, 1600]#;
+	animal_power:"llama"  = [400, 2000]#;
+	animal_power:"horse"  = [400, 3000]#;
+	animal_power:"donkey" = [600, 2400]#;
+	animal_power:"mule"   = [600, 3000]#;
 }
 
 POST_INIT() {

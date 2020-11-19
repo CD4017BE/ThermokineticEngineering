@@ -29,6 +29,8 @@ public class ChainRenderer extends ShaftRenderer<Gear> {
 		}
 		GearLink con = te.getCon(null);
 		if (con.other == null) return;
+		color(1, 1, 1, 1);
+		disableLighting();
 		Tessellator tess = Tessellator.getInstance();
 		try (QuadBuilder qb = QuadBuilder.INSTANCE.init(tess.getBuffer(), false)) {
 			//put/render model

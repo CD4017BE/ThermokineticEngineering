@@ -30,7 +30,7 @@ import net.minecraftforge.fluids.capability.*;
 public class StorageLake extends BaseTileEntity
 implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly, IInteractiveTile {
 
-	public static float RAIN_MULT = 0.25F;
+	public static float RAIN_MULT;
 
 	public FluidStack content;
 	/**{layer[0:15 blockMap pointer, 16:31 capacity [m³]],

@@ -1,6 +1,5 @@
 package cd4017be.kineng.tileentity;
 
-import static cd4017be.kineng.physics.Ticking.dt;
 import static net.minecraft.block.BlockDirectional.FACING;
 import cd4017be.kineng.Objects;
 import cd4017be.kineng.capability.StructureLocations;
@@ -28,7 +27,7 @@ import net.minecraftforge.fluids.FluidStack;
  * @author CD4017BE */
 public class LakeGate extends LakeConnection implements INeighborAwareTile, IInteractiveTile {
 
-	public static final double g2 = 9.81 * 2.0, A = 1000D * dt / 15D;
+	public static double g2, A;
 
 	/** linked list of connected WaterWheels */
 	FlowNode first, last;

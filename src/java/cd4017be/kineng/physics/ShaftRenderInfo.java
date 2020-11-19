@@ -17,7 +17,7 @@ import net.minecraft.world.World;
  */
 public class ShaftRenderInfo {
 
-	public static int LIGHT_UPDATE_INTERVAL = 20;
+	public static int LIGHT_UPDATE_INTERVAL;
 
 	public int lastFrame, t;
 	int[] vertexCache, partPtrs;

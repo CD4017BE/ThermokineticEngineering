@@ -1,5 +1,6 @@
 package cd4017be.kineng.block;
 
+import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.lib.block.AdvancedBlock;
 import cd4017be.lib.util.TooltipUtil;
 import static cd4017be.kineng.physics.Formula.J_cylinder;
@@ -167,6 +168,14 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 		public ShaftMaterial(Material material, SoundType blockSound) {
 			this.material = material;
 			this.blockSound = blockSound;
+		}
+
+		public void setFromConfig(ConfigConstants c, String name, double... fallback) {
+			fallback = c.getVect("mat_" + name, fallback);
+			density = fallback[0];
+			strength = fallback[1];
+			friction = fallback[2];
+			scrap = c.get("scrap_" + name, ItemStack.class, scrap);
 		}
 
 	}

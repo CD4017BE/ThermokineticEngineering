@@ -13,6 +13,7 @@ import static net.minecraftforge.client.model.ModelLoader.setCustomStateMapper;
 import static net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEntitySpecialRenderer;
 import org.apache.commons.lang3.tuple.Pair;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
+import cd4017be.kineng.physics.ShaftRenderInfo;
 import cd4017be.kineng.render.*;
 import cd4017be.kineng.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
@@ -31,6 +32,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init(ConfigConstants cc) {
 		super.init(cc);
+		
+		ShaftRenderInfo.LIGHT_UPDATE_INTERVAL = (int)cc.getNumber("shaft_light_updates", 20);
 		bindTileEntitySpecialRenderer(ShaftPart.class, new ShaftRenderer<>());
 		bindTileEntitySpecialRenderer(StorageLake.class, new LakeRenderer());
 		bindTileEntitySpecialRenderer(Gear.class, new ChainRenderer());

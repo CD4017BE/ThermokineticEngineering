@@ -8,7 +8,8 @@ import cd4017be.lib.util.IndexedSet;
 /** @author CD4017BE */
 public class ShaftStructure extends IndexedSet<ShaftAxis> {
 	public static final byte INV_STRUC = 1, INV_AXES = 2;
-	public static final double FRICTION_V0 = 0.2, SYNC_THRESHOLD = 0.1, LOOP = 720 * Math.PI;
+	public static final double LOOP = 720 * Math.PI;
+	public static double FRICTION_V0, SYNC_THRESHOLD;
 	
 	final ArrayList<DynamicForce> forces;
 	final ArrayList<GearLink> links;

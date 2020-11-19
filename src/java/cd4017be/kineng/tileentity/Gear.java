@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,7 +17,7 @@ import cd4017be.lib.util.ItemFluidUtil;
 /** @author CD4017BE */
 public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 
-	public static double F_FRICTION = 0, A_CONTACT = 0.0625;
+	public static double F_FRICTION = 0, A_CONTACT;
 	private GearLink[] cons = new GearLink[4];
 	private BlockPos chainLink;
 	private ItemStack chainStack;
@@ -105,6 +106,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 						con1 = ((IGear)te).getCon(null);
 				}
 				con.connect(con1);
+				model = null;
 			}
 		}
 	}
@@ -116,5 +118,14 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 
 	@SideOnly(Side.CLIENT)
 	public int[] model;
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getRenderBoundingBox() {
+		AxisAlignedBB box = super.getRenderBoundingBox();
+		if (chainLink != null)
+			box = box.union(new AxisAlignedBB(chainLink));
+		return box;
+	}
 
 }

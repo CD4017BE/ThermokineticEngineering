@@ -23,6 +23,8 @@ import net.minecraftforge.items.*;
 public class KineticProcess extends DynamicForce
 implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NBTTagCompound> {
 
+	public static double FRICTION_V0;
+
 	public final ItemStack[] inv;
 	public ProcessingRecipes recipes;
 	public KineticRecipe rcp;
@@ -157,7 +159,7 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 			for (int i = rcp.io.length - 1; i > 0; i--)
 				output(i, rcp.io[i], n);
 		}
-		Fdv = working > 0 ? -rcp.F / (Math.abs(v) + 0.001) : 0;
+		Fdv = working > 0 ? -rcp.F / (Math.abs(v) + FRICTION_V0) : 0;
 	}
 
 	private static final StateSynchronizer.Builder ssb = StateSynchronizer.builder().addFix(4, 4, 4, 4, 2, 1);

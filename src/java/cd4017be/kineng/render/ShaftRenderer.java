@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import cd4017be.kineng.physics.*;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.render.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -20,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
  */
 public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRenderer<T> {
 
-	public static boolean debug = true, motionBlur = true, global = true;
+	public static boolean motionBlur = false, global = true;
 
 	@Override
 	public void render(T te, double x, double y, double z, float t, int destroyStage, float alpha) {
@@ -44,7 +45,8 @@ public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRendere
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		tess.draw();
 		popMatrix();
-		if (debug) drawDebug(shaft, te.axis(), x, y, z);
+		if (Minecraft.getMinecraft().gameSettings.showDebugInfo)
+			drawDebug(shaft, te.axis(), x, y, z);
 	}
 
 	private void drawDebug(ShaftAxis shaft, Axis axis, double x, double y, double z) {

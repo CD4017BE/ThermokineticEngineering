@@ -1,14 +1,15 @@
 package cd4017be.kineng;
 
 import static cd4017be.kineng.Objects.*;
+import static cd4017be.kineng.physics.Ticking.dt;
 import cd4017be.api.recipes.RecipeAPI;
+import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
-import cd4017be.kineng.recipe.ProcessingRecipes;
-import cd4017be.kineng.tileentity.ManualPower;
-import cd4017be.math.cplx.CplxF;
-import net.minecraft.entity.passive.*;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import cd4017be.kineng.block.BlockRotaryTool;
+import cd4017be.kineng.physics.ShaftStructure;
+import cd4017be.kineng.physics.Ticking;
+import cd4017be.kineng.recipe.*;
+import cd4017be.kineng.tileentity.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -20,55 +21,67 @@ public class CommonProxy {
 		for (ProcessingRecipes rcp : ProcessingRecipes.recipeList)
 			if (rcp != null)
 				RecipeAPI.Handlers.put(rcp.name, rcp);
+		RecipeScriptContext.instance.modules.get("kinetic")
+		.assign("animal_power", new AnimalStrength());
 	}
 
 	public void init(ConfigConstants c) {
 		RecipeAPI.Handlers.put("knife_cutting", flint_knife);
-		M_WOOD.density = 750;
-		M_WOOD.strength = 50e6;
-		M_WOOD.friction = 0.05;
-		M_WOOD.scrap = new ItemStack(Items.STICK, 2);
-		M_STONE.density = 2500;
-		M_STONE.strength = 20e6;
-		M_STONE.friction = 0.1;
-		M_STONE.scrap = new ItemStack(Blocks.COBBLESTONE);
-		M_IRON.density = 7860;
-		M_IRON.strength = 150e6;
-		M_IRON.friction = 0.01;
-		M_IRON.scrap = new ItemStack(Items.IRON_NUGGET, 6);
-		M_BEDROCK.density = 1000;
-		M_BEDROCK.strength = Double.POSITIVE_INFINITY;
+		M_WOOD.setFromConfig(c, "wood", 750, 50e6, 0.05);
+		M_STONE.setFromConfig(c, "stone", 2500, 20e6, 0.1);
+		M_IRON.setFromConfig(c, "iron", 7860, 150e6, 0.01);
+		M_BEDROCK.setFromConfig(c, "bedrock", 1000, Double.POSITIVE_INFINITY, 0);
 		
 		GRINDSTONE.setMaterials(M_STONE, 1.0, 0.625);
-		GRINDSTONE.maxF = 50000;
-		GRINDSTONE.scrap = new ItemStack(Items.FLINT, 4);
+		setFromConfig(GRINDSTONE, c, 50000);
 		SAWBLADE.setMaterials(M_IRON, 1.0, 0.0625);
-		SAWBLADE.maxF = 10000;
-		SAWBLADE.scrap = M_IRON.scrap;
+		setFromConfig(SAWBLADE, c, 10000);
 		LATHE.setMaterials(M_WOOD, 0.5, 0.5);
-		LATHE.maxF = 10000;
-		LATHE.scrap = new ItemStack(Items.FLINT, 2);
+		setFromConfig(LATHE, c, 10000);
 		PRESS.setMaterials(M_STONE, 0.25, 0);
-		PRESS.maxF = 50000;
+		setFromConfig(PRESS, c, 50000);
 		MAGNETS.setMaterials(M_IRON, 0.5, 0.625);
-		MAGNETS.maxF = 2500000;
-		MAGNETS.scrap = new ItemStack(Items.IRON_INGOT, 6);
+		setFromConfig(MAGNETS, c, 2500000);
 		SHAFT_MAN.setMaterials(M_WOOD, 2.0, 0.125);
 		SHAFT_MAN.av_max *= 0.5;
-		SHAFT_MAN.maxF = 5000;
-		SHAFT_MAN.scrap = new ItemStack(Items.STICK, 4);
+		setFromConfig(SHAFT_MAN, c, 5000);
 		WATER_WHEEL.setMaterials(M_WOOD, 2.5, 1.0);
-		WATER_WHEEL.maxF = 50000;
-		WIND_MILL.setMaterial(1, M_WOOD, M_WOOD, 0.5, 0.25, 50000);
-		WIND_MILL.setMaterial(2, M_WOOD, M_WOOD, 0.5, 0.125, 50000);
-		WIND_MILL.setMaterial(3, M_IRON, M_IRON, 0.5, 0.25, 250000);
-		WIND_MILL.setMaterial(4, M_IRON, M_IRON, 0.5, 0.20, 250000);
-		WIND_MILL.setMaterial(5, M_IRON, M_IRON, 0.5, 0.16, 250000);
-		ManualPower.ENTITY_STRENGTH.put(EntityPig.class, CplxF.C_(400F, 1200F));
-		ManualPower.ENTITY_STRENGTH.put(EntityCow.class, CplxF.C_(400F, 1600F));
-		ManualPower.ENTITY_STRENGTH.put(EntitySheep.class, CplxF.C_(400F, 1400F));
-		ManualPower.ENTITY_STRENGTH.put(EntityHorse.class, CplxF.C_(400F, 3000F)); //P_max ~= 1hp
-		ManualPower.ENTITY_STRENGTH.put(EntityDonkey.class, CplxF.C_(600F, 2400F));
+		setFromConfig(WATER_WHEEL, c, 50000);
+		double[] F = c.getVect("maxF_wind_mill", new double[] {50000, 50000, 250000, 250000, 250000});
+		double[] str = c.getVect("str_wind_mill", new double[] {0.25, 0.125, 0.25, 0.20, 0.16});
+		WIND_MILL.setMaterial(1, M_WOOD, M_WOOD, 0.5, str[0], F[0]);
+		WIND_MILL.setMaterial(2, M_WOOD, M_WOOD, 0.5, str[1], F[1]);
+		WIND_MILL.setMaterial(3, M_IRON, M_IRON, 0.5, str[2], F[2]);
+		WIND_MILL.setMaterial(4, M_IRON, M_IRON, 0.5, str[3], F[3]);
+		WIND_MILL.setMaterial(5, M_IRON, M_IRON, 0.5, str[4], F[4]);
+		Object[] scr = c.getArray("scrap_wind_mill", 5);
+		for (int i = 0; i < 5; i++)
+			WIND_MILL.scrap[i+1] = scr[i] instanceof ItemStack ? (ItemStack)scr[i] : ItemStack.EMPTY;
+		
+		KineticProcess.FRICTION_V0 = c.getNumber("machine_fric_v0", 0.001);
+		ShaftStructure.FRICTION_V0 = c.getNumber("shaft_fric_v0", 0.2);
+		ShaftStructure.SYNC_THRESHOLD = c.getNumber("shaft_sync_vel", 0.1);
+		Ticking.OVERLOAD_CHECKS = Integer.highestOneBit((int)c.getNumber("overload_check_t", 16));
+		Ticking.DEBUG = c.getNumber("log_debug", 0) >= 1.0;
+		ManualPower.CHECK_INTERVAL = (int)c.getNumber("animal_power_tupd", 100);
+		ManualPower.MAX_TIME = (int)c.getNumber("animal_power_tmax", 12000);
+		ManualPower.CLICK_TICKS = (int)c.getNumber("manual_power_tupd", 10);
+		ManualPower.EXHAUSTION_TICK = (float)c.getNumber("manual_power_exhaustion", 0.02);
+		FluxCoil.J_RF = c.getNumber("energy_conv_RF", 10);
+		FluxCoil.E_MAX = c.getNumber("flux_coil_cap", 10000) * FluxCoil.J_RF;
+		Gear.A_CONTACT = c.getNumber("gear_maxF_area", 0.0625);
+		LakeGate.g2 = c.getNumber("gravity", 9.81) * 2.0;
+		LakeGate.A = c.getNumber("lake_gate_crsA", 1) * dt * 1000D/15D;
+		LakeValve.CAP = (int)c.getNumber("lake_valve_cap", 1000);
+		StorageLake.RAIN_MULT = (float)c.getNumber("lake_rain_mult", 0.25);
+		WindTurbine.AIR_DENSITY = c.getNumber("air_density", 1.29);
+		WindTurbine.WIND_SCALE = (float)c.getNumber("wind_scale", 1000);
+	}
+
+	private static void setFromConfig(BlockRotaryTool block, ConfigConstants c, double maxF) {
+		String name = block.getRegistryName().getResourcePath();
+		block.maxF = c.getNumber("maxF_" + name, maxF);
+		block.scrap = c.get("scrap_" + name, ItemStack.class, ItemStack.EMPTY);
 	}
 
 }

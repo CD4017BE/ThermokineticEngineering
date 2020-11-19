@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author CD4017BE */
 public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHandlerTile, IStateInteractionHandler, ITickableServerOnly {
 
-	public static double J_RF = 10, E_MAX = 10000 * J_RF;
+	public static double J_RF, E_MAX;
 
 	private final Coil coil = new Coil();
 

@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.capability.*;
  * @author CD4017BE */
 public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwareTile {
 
-	static final int CAP = 1000;
+	public static int CAP;
 
 	private FluidStack tank;
 

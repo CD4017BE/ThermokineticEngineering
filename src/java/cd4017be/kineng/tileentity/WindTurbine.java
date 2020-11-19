@@ -34,9 +34,9 @@ import net.minecraft.world.chunk.Chunk;
 public class WindTurbine extends ShaftPart implements ITickableServerOnly, IInteractiveTile, ITilePlaceHarvest {
 
 	/** [kg/m³] */
-	public static double AIR_DENSITY = 1.29;
+	public static double AIR_DENSITY;
 	public static int DT0 = 20, DT_RAND = 40;
-	public static float WIND_SCALE = 1000F;
+	public static float WIND_SCALE;
 
 	ForceCon con;
 	double a, v0;

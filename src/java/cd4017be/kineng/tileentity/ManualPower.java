@@ -24,8 +24,8 @@ import net.minecraft.world.chunk.Chunk;
  * @author CD4017BE */
 public class ManualPower extends ShaftPart implements IInteractiveTile, INeighborAwareTile, ITickableServerOnly {
 
-	public static float EXHAUSTION_TICK = 0.02F, MAX_SPEED = 5F, MAX_FORCE = 1000F, HURT_CHANCE = 0.5F;
-	public static int CLICK_TICKS = 10, CHECK_INTERVAL = 100, MAX_TIME = 12000;
+	public static float EXHAUSTION_TICK, HURT_CHANCE = 0.5F;
+	public static int CLICK_TICKS, CHECK_INTERVAL, MAX_TIME;
 	public static final HashMap<Class<?>, CplxF> ENTITY_STRENGTH  = new HashMap<>();
 
 	ForceCon con;
@@ -111,10 +111,11 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 		if(world.isRemote) return true;
 		double v = shaft.av() * con.r;
 		if (!hasFence) {
-			double v1 = Math.copySign(MAX_SPEED, player.getPositionEyes(0).subtract(pos.getX() + X, pos.getY() + Y, pos.getZ() + Z)
+			CplxF e = ENTITY_STRENGTH.getOrDefault(EntityPlayer.class, new CplxF());
+			double v1 = Math.copySign(e.i / e.r, player.getPositionEyes(0).subtract(pos.getX() + X, pos.getY() + Y, pos.getZ() + Z)
 				.crossProduct(new Vec3d(EnumFacing.getFacingFromAxis(POSITIVE, axis()).getDirectionVec()))
 				.dotProduct(new Vec3d(X - 0.5, Y - 0.5, Z - 0.5)));
-			force.updateF(MAX_FORCE, v1);
+			force.updateF(e.r, v1);
 			float t = (CLICK_TICKS - this.t) * EXHAUSTION_TICK;
 			remT = 0;
 			this.t = CLICK_TICKS;

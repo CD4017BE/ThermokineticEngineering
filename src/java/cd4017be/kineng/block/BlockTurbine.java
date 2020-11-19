@@ -85,4 +85,12 @@ public class BlockTurbine extends BlockGear {
 		return mat[state.getValue(DIAMETER)].strength * strength;
 	}
 
+	@Override
+	public double getDebris(IBlockState state, List<ItemStack> items) {
+		int d = state.getValue(DIAMETER);
+		items.add(mat[d].scrap);
+		items.add(scrap[d]);
+		return r * d;
+	}
+
 }

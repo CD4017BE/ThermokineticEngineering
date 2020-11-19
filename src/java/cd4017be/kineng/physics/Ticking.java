@@ -19,7 +19,8 @@ public class Ticking {
 	public static final double dt = 0.05;
 	public static final Ticking SERVER = new Ticking(false);
 	private static Ticking CLIENT;
-	static boolean DEBUG = true;
+	public static int OVERLOAD_CHECKS = 16;
+	public static boolean DEBUG = true;
 
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(SERVER);
@@ -98,9 +99,10 @@ public class Ticking {
 	}
 
 	private void tickServer() {
-		int shift = RAND.nextInt(16);
+		int shift = RAND.nextInt(OVERLOAD_CHECKS);
+		int m = OVERLOAD_CHECKS - 1;
 		for (int i = 0, l = structs.size(); i < l; i++)
-			structs.get(i).tickServer((i + shift & 15) == 0);
+			structs.get(i).tickServer((i + shift & m) == 0);
 		if (!overloads.isEmpty()) {
 			for (OverloadHandler part : overloads)
 				part.handleOverload();
