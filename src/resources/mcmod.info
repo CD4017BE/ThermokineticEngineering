@@ -3,7 +3,7 @@
   "modid": "kineng",
   "name": "Kinetic Engineering",
   "description": "Introduces realistic rotational mechanics into Minecraft. In other words: Rotary Craft ported to 1.12.2 but very different!",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "acceptableRemoteVersions": "[0.0.0,0.1.0)",
   "acceptableSaveVersions": "[0.0.0,0.1.0)",
   "acceptedMinecraftVersions": "[1.12,1.13)",
