@@ -14,8 +14,7 @@ import static net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEnti
 import org.apache.commons.lang3.tuple.Pair;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.kineng.render.*;
-import cd4017be.kineng.tileentity.ShaftPart;
-import cd4017be.kineng.tileentity.StorageLake;
+import cd4017be.kineng.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -32,8 +31,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init(ConfigConstants cc) {
 		super.init(cc);
-		bindTileEntitySpecialRenderer(ShaftPart.class, new ShaftRenderer());
+		bindTileEntitySpecialRenderer(ShaftPart.class, new ShaftRenderer<>());
 		bindTileEntitySpecialRenderer(StorageLake.class, new LakeRenderer());
+		bindTileEntitySpecialRenderer(Gear.class, new ChainRenderer());
 	}
 
 	@SubscribeEvent
@@ -110,6 +110,7 @@ public class ClientProxy extends CommonProxy {
 		registerRender(lake_valve);
 		registerRender(lake_gate);
 		registerRender(anemometer);
+		registerRender(chain);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

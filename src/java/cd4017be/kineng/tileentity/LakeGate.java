@@ -144,7 +144,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 			if (liq instanceof BlockLiquid || liq instanceof BlockFluidClassic) {
 				IBlockState bs = world.getBlockState(pos1);
 				bs.getBlock().dropBlockAsItem(world, pos1, bs, 0);
-				world.setBlockState(pos1, liq.getStateFromMeta(state == 0 ? 8 : state >> 4), 2);
+				world.setBlockState(pos1, liq.getStateFromMeta(state >> 4 == 0 ? 8 : state >> 4), 2);
 			}
 			scan = pos1;
 		} else
@@ -158,6 +158,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 	}
 
 	private void checkWaterWheel(BlockPos pos, EnumFacing dir) {
+		BlockPos pos0 = pos;
 		TileEntity te;
 		check: {
 			while((te = world.getTileEntity(pos = pos.down())) == null) {
@@ -166,6 +167,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 			}
 			if (te instanceof IWaterWheel) break check;
 			dir = dir.getOpposite();
+			pos = pos0;
 			while((te = world.getTileEntity(pos = pos.up())) == null) {
 				IBlockState state = world.getBlockState(pos);
 				if (state.getBlock() != Objects.FILL_DIR || state.getValue(FACING) != EnumFacing.UP) break;
@@ -257,7 +259,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 			for (FlowNode fn = first; fn != null; fn = fn.next) m++;
 			msg = String.format(
 				"%d mB/t @ %.1f m/s -> §9%d Wheels§f -> %s",
-				n, v, m + 1, state == 9 ? "§aLake" : "§cVoid"
+				n, v, m, state == 9 ? "§aLake" : "§cVoid"
 			);
 		}
 		player.sendStatusMessage(new TextComponentString(msg), true);

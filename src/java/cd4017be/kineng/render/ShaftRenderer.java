@@ -18,12 +18,12 @@ import net.minecraft.util.math.Vec3d;
  * @author CD4017BE
  *
  */
-public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> {
+public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRenderer<T> {
 
 	public static boolean debug = true, motionBlur = true, global = true;
 
 	@Override
-	public void render(ShaftPart te, double x, double y, double z, float t, int destroyStage, float alpha) {
+	public void render(T te, double x, double y, double z, float t, int destroyStage, float alpha) {
 		ShaftAxis shaft = te.getShaft();
 		if (shaft == null) return;
 		ShaftRenderInfo info = shaft.renderInfo;
@@ -101,7 +101,7 @@ public class ShaftRenderer extends TileEntitySpecialRenderer<ShaftPart> {
 	}
 
 	@Override
-	public boolean isGlobalRenderer(ShaftPart te) {
+	public boolean isGlobalRenderer(T te) {
 		return global && te.block().radius(te.getBlockState()) > 0.5;
 	}
 

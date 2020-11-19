@@ -61,6 +61,7 @@ public class Objects {
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
 	public static final ItemAerometer anemometer = null;
+	public static final ItemChain chain = null;
 
 	// Sounds
 
@@ -118,7 +119,8 @@ public class Objects {
 			new ItemBlockGear(WATER_WHEEL, 5).setCreativeTab(tabKinetic),
 			new ItemBlockGear(WIND_MILL).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
-			new ItemAerometer("anemometer").setCreativeTab(tabKinetic)
+			new ItemAerometer("anemometer").setCreativeTab(tabKinetic),
+			new ItemChain("chain").setCreativeTab(tabKinetic)
 		);
 	}
 

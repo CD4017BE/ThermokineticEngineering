@@ -8,6 +8,14 @@ tile.kineng.gear_wood\:2.name=Wooden Gear 2m ⦰
 tile.kineng.gear_wood\:3.name=Wooden Gear 3m ⦰
 tile.kineng.gear_wood\:4.name=Wooden Gear 4m ⦰
 tile.kineng.gear_wood\:5.name=Wooden Gear 5m ⦰
+
+# Messages
+msg.kineng.chain_link0=Linking ...
+msg.kineng.chain_link1=§cGear axes must be aligned!
+msg.kineng.chain_link2=§cToo far away / not enough chain!
+msg.kineng.chain_link3=§cLink failed!
+msg.kineng.chain_link4=§aLink successfull!
+
 #added by ingame editor:
 gui.kineng.debug.mode3=Friction Force
 gui.kineng.debug.name=Debug Shaft Force
@@ -96,3 +104,6 @@ item.cd4017be.m\:wood_rotor.name=Wind Sail
 item.cd4017be.m\:fabric.name=Fabric
 tile.kineng.water_wheel.tip=Driven by water flowing downhill and passing over or under it, which\nwill be slowed down in the process.\nThe water must be supplied from a §6Water Gate§7!
 tile.kineng.lake_gate.tip=Lets liquid flow out of a §6Storage Lake§7 to drive §6Water Wheels§7.\nUnless the liquid path ends in another lake (at lower height), the liquid is voided.\nLiquid will pickup speed as it flows downhill, providing more power to Water Wheels.\n§oPath length and shape don't affect efficiency (no friction).
+item.kineng.chain.name=Chain Link
+item.kineng.chain.tip=Mechanically connects §6gears§7 that are further apart. The gears must have parallel oriented shafts and not be touching any other gears.\n§oEach item of chain covers a distance of 1m.
+item.cd4017be.m\:wood_wheel.name=Wooden Wheel Bucket
