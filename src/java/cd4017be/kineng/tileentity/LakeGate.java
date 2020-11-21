@@ -111,7 +111,10 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 		}
 		EnumFacing dir = EnumFacing.HORIZONTALS[state & 3];
 		checkWaterWheel(scan, dir);
-		if (!isSolidOrSource(world, pos1 = scan.down())) state &= 3;
+		if (!isSolidOrSource(world, pos1 = scan.down()))
+			if (pos1.getY() >= world.getSeaLevel())
+				state &= 3;
+			else state = -128;
 		else if (!isSolidOrSource(world, pos1 = scan.offset(dir))) state += 16;
 		else { //can't go forward or down
 			BlockPos pos2 = scan.offset(EnumFacing.HORIZONTALS[state+1 & 3]);

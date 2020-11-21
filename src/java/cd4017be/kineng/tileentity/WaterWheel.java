@@ -8,7 +8,6 @@ import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
@@ -25,9 +24,10 @@ public class WaterWheel extends ShaftPart implements IWaterWheel, IInteractiveTi
 	public double passLiquid(double vsq, FluidStack liquid, EnumFacing dir) {
 		if (con == null || dir.getAxis() == axis()) return vsq;
 		Wheel wheel = ((Wheel)con.force);
+		int d = dir.ordinal();
 		wheel.add(
 			liquid.amount * liquid.getFluid().getDensity(liquid) * 0.001,
-			copySign(vsq, -dir.getAxisDirection().getOffset())
+			copySign(vsq, ((d ^ d << 1) & 2) - 1)
 		);
 		return min(wheel.vsq, vsq);
 	}
@@ -46,23 +46,13 @@ public class WaterWheel extends ShaftPart implements IWaterWheel, IInteractiveTi
 	}
 
 	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-	}
-
-	@Override
 	public boolean onActivated(
 		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
 	) {
 		if (con == null || world.isRemote) return true;
 		Wheel w = (Wheel)con.force;
 		player.sendStatusMessage(new TextComponentString(
-			String.format("%.0f mB/t @ %.1f m/s", w.p_m, sqrt(w.p_Ekin / w.p_m))
+			String.format("%.0f mB/t @ %.1f m/s", w.p_m, sqrt(abs(w.p_Ekin / w.p_m)))
 		), true);
 		return true;
 	}

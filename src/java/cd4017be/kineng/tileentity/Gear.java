@@ -31,15 +31,14 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 
 	@Override
 	public GearLink getCon(EnumFacing side) {
-		int i = 0, d = 1;
-		if (side != null) {
-			Axis a = axis();
-			d = (1 - (side.getAxis().ordinal() - a.ordinal() + 4) % 3)
-				* side.getAxisDirection().getOffset();
-			if (d == 0) return null;
-			i = side.ordinal();
-			if (i >= 2 && a != Axis.X) i -= 2;
-		}
+		Axis a = axis();
+		if (side == null)
+			side = a == Axis.Y ? EnumFacing.NORTH : EnumFacing.DOWN;
+		int d = (1 - (side.getAxis().ordinal() - a.ordinal() + 4) % 3)
+			* side.getAxisDirection().getOffset();
+		if (d == 0) return null;
+		int i = side.ordinal();
+		if (i >= 2 && a != Axis.X) i -= 2;
 		GearLink con = cons[i];
 		if (con != null) return con;
 		con = new GearLink(this, diameter() * d * 0.5);

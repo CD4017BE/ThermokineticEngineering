@@ -33,15 +33,16 @@ public class ChainRenderer extends ShaftRenderer<Gear> {
 		disableLighting();
 		Tessellator tess = Tessellator.getInstance();
 		try (QuadBuilder qb = QuadBuilder.INSTANCE.init(tess.getBuffer(), false)) {
+			double r = Math.abs(con.r);
 			//put/render model
 			if (te.model != null) qb.vb.addVertexData(te.model);
 			else {
 				Vec3d d = te.getOrientation().invRotate(new Vec3d(te.chainLink().subtract(te.getPos())));
-				drawChainLink(qb, (float)con.r, (float)con.other.r, C_((float)d.x, (float)d.y));
+				drawChainLink(qb, (float)r, (float)Math.abs(con.other.r), C_((float)d.x, (float)d.y));
 				te.model = Util.extractData(qb.vb, 0, qb.vb.getVertexCount());
 			}
 			//set light and slide texture
-			float ofs = (float)((con.axis.ang() + con.axis.av() * (double)t * dt) * con.r * 8.0 / Math.PI);
+			float ofs = (float)((con.axis.ang() + con.axis.av() * (double)t * dt) * r * 8.0 / Math.PI);
 			ByteBuffer b = qb.vb.getByteBuffer();
 			int l = te.getWorld().getCombinedLight(te.getPos(), 0);
 			for (int i = 0, n = qb.vb.getVertexCount() * 7; i < n; i+=7) {

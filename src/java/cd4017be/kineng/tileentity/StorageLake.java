@@ -151,7 +151,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 				acc = acc(acc, f, prev, b);
 				prev = prev & -256 | f;
 			}
-			if (n == 0) {
+			if (n == 0 || lastOverflow != 0) {
 				i -= r;
 				r--;
 				break;
@@ -160,10 +160,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 			m += n;
 		}
 		prev >>= 2;
-		if (lastOverflow != 0) {
-			prev |= Integer.MIN_VALUE;
-			if (level >= h) level = layers.length;
-		}
+		if (lastOverflow != 0) prev |= Integer.MIN_VALUE;
 		layers[h] = m << 16 | i;
 		int l = layers[h+1];
 		layers[h+1] = r | prev;
@@ -261,8 +258,8 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 	}
 
 	private int capacity() {
-		return level >= layers.length ? 0
-			: (layers[level] >> 16) * 1000;
+		return level >= layers.length || layers[level+1] < 0
+			? 0 : (layers[level] >> 16) * 1000;
 	}
 
 	@Override
@@ -304,7 +301,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 	}
 
 	private void fillLayer() {
-		if (level >= layers.length || content.amount < 1000) return;
+		if (level >= layers.length || content.amount < 1000 || layers[level+1] < 0) return;
 		MutableBlockPos p = new MutableBlockPos();
 		World w = world;
 		int x = pos.getX(), y = pos.getY() + (level >> 1), z = pos.getZ();
@@ -320,7 +317,6 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 			}
 		if ((level += 2) >= layers.length || layers[level] == 0)
 			scan(level);
-		else if (layers[level + 1] < 0) level = layers.length;
 		markDirty(SYNC);
 	}
 
@@ -402,8 +398,9 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 	}
 
 	public float partLevel() {
-		return content == null || level >= layers.length ? 0
-			: (float)content.amount / (float)((layers[level] >> 16) * 1000);
+		int c = capacity();
+		return content == null || c == 0 ? 0
+			: (float)content.amount / (float)c;
 	}
 
 	@Override
