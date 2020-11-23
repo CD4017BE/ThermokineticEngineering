@@ -22,13 +22,12 @@ import net.minecraft.world.chunk.Chunk;
 
 /** 
  * @author CD4017BE */
-public class ManualPower extends ShaftPart implements IInteractiveTile, INeighborAwareTile, ITickableServerOnly {
+public class ManualPower extends KineticMachine implements IInteractiveTile, INeighborAwareTile, ITickableServerOnly {
 
 	public static float EXHAUSTION_TICK, HURT_CHANCE = 0.5F;
 	public static int CLICK_TICKS, CHECK_INTERVAL, MAX_TIME;
 	public static final HashMap<Class<?>, CplxF> ENTITY_STRENGTH  = new HashMap<>();
 
-	ForceCon con;
 	Worker force = new Worker();
 	int t, remT;
 	boolean hasFence;
@@ -82,6 +81,12 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 	}
 
 	@Override
+	protected DynamicForce createForce(BlockRotaryTool block) {
+		neighborBlockChange(block, pos);
+		return force;
+	}
+
+	@Override
 	public void neighborBlockChange(Block b, BlockPos src) {
 		Chunk c = getChunk();
 		hasFence = c.getBlockState(pos.down()).getBlock() instanceof BlockFence
@@ -90,19 +95,6 @@ public class ManualPower extends ShaftPart implements IInteractiveTile, INeighbo
 
 	@Override
 	public void neighborTileChange(TileEntity te, EnumFacing side) {}
-
-	@Override
-	public double setShaft(ShaftAxis shaft) {
-		if (con == null && shaft != null) {
-			BlockRotaryTool block = block();
-			con = new ForceCon(this, block.r);
-			con.maxF = block.maxF;
-			con.link(force);
-			neighborBlockChange(blockType, pos);
-		}
-		con.setShaft(shaft);
-		return super.setShaft(shaft);
-	}
 
 	@Override
 	public boolean onActivated(

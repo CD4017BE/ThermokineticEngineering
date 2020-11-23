@@ -47,6 +47,8 @@ public class CommonProxy {
 		setFromConfig(SHAFT_MAN, c, 5000);
 		WATER_WHEEL.setMaterials(M_WOOD, 2.5, 1.0);
 		setFromConfig(WATER_WHEEL, c, 50000);
+		MOB_GRINDER.setMaterials(M_IRON, 1.5, 0.125);
+		setFromConfig(MOB_GRINDER, c, 50000);
 		double[] F = c.getVect("maxF_wind_mill", new double[] {50000, 50000, 250000, 250000, 250000});
 		double[] str = c.getVect("str_wind_mill", new double[] {0.25, 0.125, 0.25, 0.20, 0.16});
 		WIND_MILL.setMaterial(1, M_WOOD, M_WOOD, 0.5, str[0], F[0]);
@@ -76,6 +78,10 @@ public class CommonProxy {
 		StorageLake.RAIN_MULT = (float)c.getNumber("lake_rain_mult", 0.25);
 		WindTurbine.AIR_DENSITY = c.getNumber("air_density", 1.29);
 		WindTurbine.WIND_SCALE = (float)c.getNumber("wind_scale", 1000);
+		MobGrinder.T_CHECK = (int)c.getNumber("mob_grinder_tidle", 50);
+		MobGrinder.MIN_HP = (float)c.getNumber("mob_grinder_HP0", 1.0);
+		MobGrinder.F_BASE = c.getNumber("mob_grinder_F0", 1000);
+		MobGrinder.DMG_J = (float)c.getNumber("mob_grinder_DPJ", 0.001);
 	}
 
 	private static void setFromConfig(BlockRotaryTool block, ConfigConstants c, double maxF) {

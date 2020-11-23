@@ -91,13 +91,16 @@ public class ClientProxy extends CommonProxy {
 		TACHOMETER.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 1, t1};
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/transducer"));
 		TRANSDUCER.setModel(PartModels.SHAFT, t, 4);
+		//TODO mobgrinder model
+		MOB_GRINDER.model = new int[] {PartModels.MANUAL, 0, 4, 32};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
 			GRINDSTONE, SAWBLADE, LATHE, PRESS, MAGNETS,
 			WATER_WHEEL, WIND_MILL,
 			FILL_DIR, FILL_SHARE,
-			TACHOMETER, TRANSDUCER
+			TACHOMETER, TRANSDUCER,
+			WIND_MILL, MOB_GRINDER
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
 		new ShaftItemRenderer(shaft_iron, SHAFT_IRON);
@@ -114,6 +117,7 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(wind_mill, WIND_MILL);
 		new ShaftItemRenderer(tachometer, TACHOMETER);
 		new ShaftItemRenderer(transducer, TRANSDUCER);
+		new ShaftItemRenderer(mob_grinder, MOB_GRINDER);
 		registerRender(processing);
 		registerRender(rf_coil);
 		registerRender(flint_knife);

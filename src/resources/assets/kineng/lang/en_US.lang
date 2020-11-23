@@ -1,5 +1,6 @@
 #PARSE_ESCAPES
 itemGroup.kineng=Mechanical Engineering
+death.attack.kineng.grinder=%s got sliced in %s's Mob Blender
 
 #Blocks
 tile.kineng.shaft_wood.name=Wooden Shaft
@@ -118,3 +119,4 @@ tile.kineng.transducer.tip=Emits a Redstone Signal proportional to the torque tr
 gui.kineng.transducer.name=Transducer
 gui.kineng.ref_trq=Reference Torque\nfor signal \= 1
 gui.kineng.torque.tip=Current Torque [kNm]
+tile.kineng.mob_grinder.name=Mob Blender

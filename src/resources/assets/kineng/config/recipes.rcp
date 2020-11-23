@@ -1,4 +1,4 @@
-VERSION = 39;
+VERSION = 40;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
@@ -17,6 +17,13 @@ animal_power_tupd = 100; !leashed animal update interval in ticks
 animal_power_tmax = 12000; !max work time in ticks for a full grown animal
 manual_power_tupd = 10; !max interval in ticks between clicks for continuous power
 manual_power_exhaustion = 0.02; !food exhaustion applied per tick at peak power
+
+! mob grinder:
+mob_grinder_tidle = 50; ! update interval in ticks while idle
+mob_grinder_DPJ = /5e3; ! DP/J damage applied per joule of kinetic energy used
+mob_grinder_HP0 = 1.0; ! HP base mob maximum health for force calculation
+mob_grinder_F0 = 1000; ! N base force applied per mob for force calculation
+! force per mob F = mob_grinder_F0 * (1 + log_2(mob.maxHP / mob_grinder_HP0))
 
 ! technical settings:
 shaft_light_updates = 20; !interval in ticks between light checks for shaft rendering
@@ -56,6 +63,7 @@ PRE_INIT() {
 	maxF_water_wheel = 50e3;
 	maxF_wind_mill = [50e3, 50e3, 250e3, 250e3, 250e3]#;
 	str_wind_mill = [0.25, 0.125, 0.25, 0.2, 0.16]#; !structural strength (scales max angular velocity)
+	maxF_mob_grinder = 50e3;
 	!scrap item dropped if a shaft of given material or a machine is destroyed:
 	scrap_wood = it("minecraft:stick", 2);
 	scrap_stone = it("minecraft:cobblestone");
@@ -68,6 +76,7 @@ PRE_INIT() {
 	scrap_shaft_man = it("minecraft:stick", 4);
 	scrap_water_wheel = it("minecraft:stick", 24);
 	scrap_wind_mill = [it("m.fabric", 10), it("m.fabric", 30), nil, nil, nil];
+	scrap_mob_grinder = it("minecraft:iron_ingot", 12);
 }
 
 INIT() {
@@ -108,6 +117,7 @@ INIT() {
 	add("shaped", it("kineng:water_wheel"), "111/101/111", it("kineng:shaft_wood"), it("m.wood_wheel"));
 	add("shaped", it("kineng:tachometer"), "213/404/555", it("kineng:shaft_wood"), "gearWood", "dustGlowstone", "gemQuartz", it("minecraft:redstone_torch"), it("minecraft:stone_slab"));
 	add("shaped", it("kineng:transducer") * 2, "010/232/444", it("kineng:shaft_iron"), it("minecraft:light_weighted_pressure_plate"), it("minecraft:redstone_torch"), "dustRedstone", it("minecraft:stone_slab"));
+	add("shaped", it("kineng:mob_grinder"), "111/101/111", it("kineng:gear_iron"):1, it("minecraft:iron_sword"));
 	
 	add("shaped", it("kineng:lake"), "121/202/121", it("minecraft:cauldron"), it("minecraft:stonebrick"), it("minecraft:dye"):4);
 	add("shaped", it("kineng:lake_valve"), "111/2 0/111", it("minecraft:iron_bars"), it("minecraft:stone_slab"):5, it("minecraft:bucket"));

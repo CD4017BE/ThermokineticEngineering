@@ -120,6 +120,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@Override
 	protected void onUnload() {
+		if (!unloaded) getBlockState();
 		super.onUnload();
 		vSave = setShaft(null);
 	}

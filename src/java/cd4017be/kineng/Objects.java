@@ -48,6 +48,7 @@ public class Objects {
 	public static final BlockRotaryTool WATER_WHEEL = null;
 	public static final BlockTurbine WIND_MILL = null;
 	public static final BlockShaft TACHOMETER = null, TRANSDUCER = null;
+	public static final BlockRotaryTool MOB_GRINDER = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
@@ -59,6 +60,7 @@ public class Objects {
 	public static final ItemBlockGear water_wheel = null;
 	public static final ItemBlockGear wind_mill = null;
 	public static final BaseItemBlock tachometer = null, transducer = null;
+	public static final BaseItemBlock mob_grinder = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
@@ -96,7 +98,8 @@ public class Objects {
 			new BlockRotaryTool("water_wheel", M_WOOD, T_ANGULAR, 2.5, WaterWheel.class).setShape(0.25, 1.0).setHardness(1.0F),
 			new BlockTurbine("wind_mill", M_IRON, 2.5, WindTurbine.class).setHardness(1.0F),
 			new BlockShaft("tachometer", M_WOOD, 0.25, Tachometer.class).setHardness(1.0F),
-			new BlockShaft("transducer", M_IRON, 0.25, TorqueTransducer.class).setHardness(1.0F)
+			new BlockShaft("transducer", M_IRON, 0.25, TorqueTransducer.class).setHardness(1.0F),
+			new BlockRotaryTool("mob_grinder", M_IRON, T_ANGULAR, 2.0, MobGrinder.class).setHardness(2.0F)
 		);
 	}
 
@@ -124,6 +127,7 @@ public class Objects {
 			new ItemBlockGear(WIND_MILL).setCreativeTab(tabKinetic),
 			new BaseItemBlock(TACHOMETER).setCreativeTab(tabKinetic),
 			new BaseItemBlock(TRANSDUCER).setCreativeTab(tabKinetic),
+			new BaseItemBlock(MOB_GRINDER).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
 			new ItemAerometer("anemometer").setCreativeTab(tabKinetic),
 			new ItemChain("chain").setCreativeTab(tabKinetic)

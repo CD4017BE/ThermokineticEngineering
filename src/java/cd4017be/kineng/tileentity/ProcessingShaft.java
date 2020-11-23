@@ -19,24 +19,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** 
  * @author CD4017BE */
-public class ProcessingShaft extends ShaftPart implements IGuiHandlerTile, ITilePlaceHarvest {
+public class ProcessingShaft extends KineticMachine implements IGuiHandlerTile, ITilePlaceHarvest {
 
 	@Sync(tag = "dev")
 	public KineticProcess machine = new KineticProcess(3);
-	ForceCon con;
 
 	@Override
-	public double setShaft(ShaftAxis shaft, double v0) {
-		v0 = super.setShaft(shaft, vSave);
-		if (con == null) {
-			BlockRotaryTool block = block();
-			con = new ForceCon(this, block.r);
-			con.maxF = block.maxF;
-			if (!world.isRemote) machine.setMode(block.type);
-			con.link(machine);
-		}
-		con.setShaft(shaft);
-		return v0;
+	protected DynamicForce createForce(BlockRotaryTool block) {
+		if (!world.isRemote) machine.setMode(block.type);
+		return machine;
 	}
 
 	@Override

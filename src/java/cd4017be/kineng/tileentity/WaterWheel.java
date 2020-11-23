@@ -5,7 +5,6 @@ import static java.lang.Math.*;
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -15,15 +14,14 @@ import net.minecraftforge.fluids.FluidStack;
 
 /** 
  * @author CD4017BE */
-public class WaterWheel extends ShaftPart implements IWaterWheel, IInteractiveTile {
+public class WaterWheel extends KineticMachine implements IWaterWheel, IInteractiveTile {
 
-	ForceCon con;
 	double vsq;
 
 	@Override
 	public double passLiquid(double vsq, FluidStack liquid, EnumFacing dir) {
 		if (con == null || dir.getAxis() == axis()) return vsq;
-		Wheel wheel = ((Wheel)con.force);
+		Wheel wheel = getForce();
 		int d = dir.ordinal();
 		wheel.add(
 			liquid.amount * liquid.getFluid().getDensity(liquid) * 0.001,
@@ -33,16 +31,8 @@ public class WaterWheel extends ShaftPart implements IWaterWheel, IInteractiveTi
 	}
 
 	@Override
-	public double setShaft(ShaftAxis shaft) {
-		if (con == null && shaft != null) {
-			BlockRotaryTool block = block();
-			IBlockState state = getBlockState();
-			con = new ForceCon(this, block.radius(state));
-			con.link(new Wheel());
-			con.maxF = block.maxF;
-		}
-		con.setShaft(shaft);
-		return super.setShaft(shaft);
+	protected DynamicForce createForce(BlockRotaryTool block) {
+		return new Wheel();
 	}
 
 	@Override
@@ -50,7 +40,7 @@ public class WaterWheel extends ShaftPart implements IWaterWheel, IInteractiveTi
 		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
 	) {
 		if (con == null || world.isRemote) return true;
-		Wheel w = (Wheel)con.force;
+		Wheel w = getForce();
 		player.sendStatusMessage(new TextComponentString(
 			String.format("%.0f mB/t @ %.1f m/s", w.p_m, sqrt(abs(w.p_Ekin / w.p_m)))
 		), true);
