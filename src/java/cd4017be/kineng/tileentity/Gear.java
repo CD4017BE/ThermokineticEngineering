@@ -2,25 +2,38 @@ package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.block.BlockGear.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import cd4017be.kineng.physics.*;
+import cd4017be.lib.network.Sync;
 import cd4017be.lib.util.ItemFluidUtil;
 
 /** @author CD4017BE */
 public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 
 	public static double F_FRICTION = 0, A_CONTACT;
-	private GearLink[] cons = new GearLink[4];
-	private BlockPos chainLink;
-	private ItemStack chainStack;
+	private final GearLink[] cons = new GearLink[4];
+
+	@Sync(to = 0x23, tag = "cs") public ItemStack chainStack;
+	@Sync(to = 0x23, tag = "cl") public BlockPos chainLink;
+	@Sync public void chainLink(BlockPos pos) {
+		if (shaft != null && world.isRemote && (chainLink != null || pos != null)) {
+			GearLink con = getCon(null), con1 = null;
+			if (pos != null) {
+				TileEntity te = world.getTileEntity(pos);
+				if (te instanceof IGear)
+					con1 = ((IGear)te).getCon(null);
+			}
+			con.connect(con1);
+			model = null;
+		}
+		chainLink = pos;
+	}
 
 	@Override
 	public double setShaft(ShaftAxis shaft, double v0) {
@@ -66,7 +79,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 			ItemFluidUtil.dropStack(chainStack, world, pos);
 		chainStack = stack;
 		chainLink = pos1;
-		markDirty(REDRAW);
+		markDirty(0x20);
 		if (ocl == null) return;
 		getCon(null).connect(null);
 		TileEntity te = world.getTileEntity(ocl);
@@ -74,39 +87,6 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 			IGear g = (IGear)te;
 			if (pos.equals(g.chainLink()))
 				g.linkChain(null, null);
-		}
-	}
-
-	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		if (mode <= CLIENT || redraw) {
-			if (chainLink != null)
-				nbt.setLong("cl", chainLink.toLong());
-			if (chainStack != null)
-				nbt.setTag("cs", chainStack.writeToNBT(new NBTTagCompound()));
-		}
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-		if (mode <= CLIENT || redraw) {
-			boolean hadChain = chainLink != null;
-			chainLink = nbt.hasKey("cl", NBT.TAG_LONG) ?
-				BlockPos.fromLong(nbt.getLong("cl")) : null;
-			chainStack = nbt.hasKey("cs", NBT.TAG_COMPOUND) ?
-				new ItemStack(nbt.getCompoundTag("cs")) : null;
-			if (shaft != null && world.isRemote && (hadChain || chainLink != null)) {
-				GearLink con = getCon(null), con1 = null;
-				if (chainLink != null) {
-					TileEntity te = world.getTileEntity(chainLink);
-					if (te instanceof IGear)
-						con1 = ((IGear)te).getCon(null);
-				}
-				con.connect(con1);
-				model = null;
-			}
 		}
 	}
 

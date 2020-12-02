@@ -6,6 +6,7 @@ import cd4017be.kineng.capability.StructureLocations;
 import cd4017be.kineng.capability.StructureLocations.Entry;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
+import cd4017be.lib.network.Sync;
 import cd4017be.lib.util.Utils;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -19,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -29,13 +29,14 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 
 	public static double g2, A;
 
+	@Sync public BlockPos scan;
+	StorageLake lake1;
 	/** linked list of connected WaterWheels */
 	FlowNode first, last;
-	BlockPos scan = Utils.NOWHERE;
-	StorageLake lake1;
 	/** bits[0..2] = dir, bits[4..7] = [0-7:scanning, 8:dead end, 15:lake] */
-	byte state;
-	int rs, n;
+	@Sync public byte state;
+	@Sync public byte rs;
+	int n;
 	double v;
 
 	@Override
@@ -66,7 +67,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 	private boolean areChunksLoaded() {
 		TileEntity te;
 		if (state == -16) {
-			if (!world.isBlockLoaded(scan)) return false;
+			if (scan == null || !world.isBlockLoaded(scan)) return false;
 			if (lake1 == null || lake1.isInvalid()) {
 				te = world.getTileEntity(scan);
 				if (te instanceof StorageLake)
@@ -88,7 +89,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 
 	private void reset() {
 		lake1 = null;
-		scan = Utils.NOWHERE;
+		scan = null;
 		state = 0;
 		first = last = null;
 	}
@@ -96,7 +97,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 	@SuppressWarnings("deprecation")
 	private void scanStep() {
 		BlockPos pos1;
-		if (scan.getY() < 0) {
+		if (scan == null) {
 			EnumFacing dir = getOrientation().front;
 			pos1 = pos.offset(dir);
 			if (!isSolidOrSource(world, pos1)) {
@@ -152,7 +153,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 		} else
 			for (Entry e : StructureLocations.find(world, scan, 0)) {
 			pos1 = e.core();
-			if (state == -128 || pos1.getY() >= scan.getY()) {
+			if (state < -112 || pos1.getY() >= scan.getY()) {
 				scan = pos1;
 				state = -16;
 			}
@@ -193,47 +194,8 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 	}
 
 	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		nbt.setByte("state", state);
-		nbt.setLong("scan", scan.toLong());
-		nbt.setByte("rs", (byte)rs);
-		NBTTagList list = new NBTTagList();
-		for (FlowNode fn = first; fn != null; fn = fn.next) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setLong("p", fn.pos.toLong());
-			tag.setByte("d", (byte)fn.dir.ordinal());
-			tag.setShort("y", (short)fn.dy);
-			list.appendTag(tag);
-		}
-		nbt.setTag("wheels", list);
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-		state = nbt.getByte("state");
-		scan = BlockPos.fromLong(nbt.getLong("scan"));
-		rs = nbt.getByte("rs");
-		NBTTagList list = nbt.getTagList("wheels", NBT.TAG_COMPOUND);
-		first = last = null;
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = list.getCompoundTagAt(i);
-			FlowNode fn = new FlowNode(
-				tag.getShort("y"),
-				EnumFacing.getFront(tag.getByte("d")),
-				BlockPos.fromLong(tag.getLong("p")),
-				null
-			);
-			if (last == null) first = fn;
-			else last.next = fn;
-			last = fn;
-		}
-	}
-
-	@Override
 	public void neighborBlockChange(Block b, BlockPos src) {
-		rs = MathHelper.clamp(world.isBlockIndirectlyGettingPowered(pos), 0, 15);
+		rs = (byte)MathHelper.clamp(world.isBlockIndirectlyGettingPowered(pos), 0, 15);
 	}
 
 	@Override
@@ -261,7 +223,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 			for (FlowNode fn = first; fn != null; fn = fn.next) m++;
 			msg = String.format(
 				"%d mB/t @ %.1f m/s -> §9%d Wheels§f -> %s",
-				n, v, m, state == 9 ? "§aLake" : "§cVoid"
+				n, v, m, lake1 != null ? "§aLake" : "§cVoid"
 			);
 		}
 		player.sendStatusMessage(new TextComponentString(msg), true);
@@ -270,6 +232,35 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 
 	@Override
 	public void onClicked(EntityPlayer player) {}
+
+	@Sync public NBTTagList wheels() {
+		NBTTagList list = new NBTTagList();
+		for (FlowNode fn = first; fn != null; fn = fn.next) {
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setLong("p", fn.pos.toLong());
+			tag.setByte("d", (byte)fn.dir.ordinal());
+			tag.setShort("y", (short)fn.dy);
+			list.appendTag(tag);
+		}
+		return list;
+	}
+
+	@Sync public void wheels(NBTTagList list) {
+		first = last = null;
+		for (int i = 0; i < list.tagCount(); i++) {
+			NBTTagCompound tag = list.getCompoundTagAt(i);
+			FlowNode fn = new FlowNode(
+				tag.getShort("y"),
+				EnumFacing.getFront(tag.getByte("d")),
+				BlockPos.fromLong(tag.getLong("p")),
+				null
+			);
+			if (last == null) first = fn;
+			else last.next = fn;
+			last = fn;
+		}
+	}
+
 
 	static class FlowNode {
 		final int dy;

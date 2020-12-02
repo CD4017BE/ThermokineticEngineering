@@ -1,6 +1,8 @@
 package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.physics.Ticking.dt;
+import static cd4017be.lib.network.Sync.GUI;
+import static cd4017be.lib.network.Sync.Type.F32;
 import static net.minecraftforge.energy.CapabilityEnergy.ENERGY;
 import cd4017be.kineng.Main;
 import cd4017be.kineng.physics.DynamicForce;
@@ -14,7 +16,6 @@ import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +32,8 @@ public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHand
 
 	public static double J_RF, E_MAX;
 
-	private final Coil coil = new Coil();
+	@Sync(to = SAVE)
+	public final Coil coil = new Coil();
 
 	@Override
 	public void update() {
@@ -60,26 +62,8 @@ public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHand
 	}
 
 	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		nbt.setBoolean("on", coil.engaged);
-		nbt.setFloat("v0", (float)coil.v0);
-		nbt.setDouble("E", coil.E);
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-		coil.engaged = nbt.getBoolean("on");
-		coil.v0 = nbt.getFloat("v0");
-		coil.E = nbt.getDouble("E");
-	}
-
-	StateSynchronizer.Builder ssb = StateSynchronizer.builder().addMulFix(4, 7).addFix(1);
-
-	@Override
 	public AdvancedContainer getContainer(EntityPlayer player, int id) {
-		return new AdvancedContainer(this, ssb.build(world.isRemote), player);
+		return new AdvancedContainer(this, StateSyncAdv.of(false, coil), player);
 	}
 
 	private static final ResourceLocation GUI_TEX = new ResourceLocation(Main.ID, "textures/gui/debug.png");
@@ -110,34 +94,6 @@ public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHand
 		return gui;
 	}
 
-	public double Jrf;
-
-	@Override
-	public void writeState(StateSyncServer state, AdvancedContainer cont) {
-		PacketBuffer buf = state.buffer;
-		buf.writeFloat((float)coil.E);
-		buf.writeFloat((float)E_MAX);
-		buf.writeFloat((float)coil.dE0);
-		buf.writeFloat((float)coil.dE1);
-		buf.writeFloat((float)coil.v0);
-		buf.writeFloat((float)coil.v);
-		buf.writeFloat((float)J_RF);
-		buf.writeBoolean(coil.engaged);
-		state.endFixed();
-	}
-
-	@Override
-	public void readState(StateSyncClient state, AdvancedContainer cont) throws Exception {
-		coil.E = state.get((float)coil.E);
-		coil.Emax = state.get((float)coil.Emax);
-		coil.dE0 = state.get((float)coil.dE0);
-		coil.dE1 = state.get((float)coil.dE1);
-		coil.v0 = state.get((float)coil.v0);
-		coil.v = state.get((float)coil.v);
-		Jrf = state.get((float)Jrf);
-		coil.engaged = state.get(coil.engaged ? 1 : 0) != 0;
-	}
-
 	@Override
 	public boolean canInteract(EntityPlayer player, AdvancedContainer cont) {
 		return canPlayerAccessUI(player);
@@ -158,18 +114,23 @@ public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHand
 		}
 	}
 
-	static class Coil extends DynamicForce implements IEnergyStorage {
+	public static class Coil extends DynamicForce implements IEnergyStorage {
 
-		double v0 = 5.0, v, E;
-		double dE0, dE1, Emax;
-		boolean engaged;
+		@Sync(to=GUI|SAVE, type=F32)
+		public double v0 = 5.0;
+		@Sync(to=GUI|SAVE)
+		public double E;
+		@Sync(to=GUI, type=F32)
+		public double v, dE0, dE1, Emax = E_MAX, Jrf = J_RF;
+		@Sync(to=GUI|SAVE, tag="on")
+		public boolean engaged;
 
 		@Override
 		public void work(double dE, double ds, double v1) {
 			v = v1;
 			if (engaged) {
-				double E = MathHelper.clamp(this.E, v1 / v0 > 1.0 ? 1 : 0, E_MAX);
-				Fdv = -E * (E_MAX - E) / (E_MAX * dt * (v0 * v0 + 5.0));
+				double E = MathHelper.clamp(this.E, v1 / v0 > 1.0 ? 1 : 0, Emax);
+				Fdv = -E * (Emax - E) / (Emax * dt * (v0 * v0 + 5.0));
 				F = -v0 * Fdv;
 			} else {
 				Fdv = 0;
@@ -183,25 +144,25 @@ public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHand
 		@Override
 		public int receiveEnergy(int maxReceive, boolean simulate) {
 			maxReceive = Math.max(0, Math.min(maxReceive, -getEnergyStored()));
-			if (!simulate) E += maxReceive * J_RF;
+			if (!simulate) E += maxReceive * Jrf;
 			return maxReceive;
 		}
 
 		@Override
 		public int extractEnergy(int maxExtract, boolean simulate) {
 			maxExtract = Math.max(0, Math.min(maxExtract, getEnergyStored()));
-			if (!simulate) E -= maxExtract * J_RF;
+			if (!simulate) E -= maxExtract * Jrf;
 			return maxExtract;
 		}
 
 		@Override
 		public int getEnergyStored() {
-			return (int)((E - E_MAX * 0.5) / J_RF);
+			return (int)((E - Emax * 0.5) / Jrf);
 		}
 
 		@Override
 		public int getMaxEnergyStored() {
-			return MathHelper.floor(E_MAX * 0.5 / J_RF);
+			return MathHelper.floor(Emax * 0.5 / Jrf);
 		}
 
 		@Override

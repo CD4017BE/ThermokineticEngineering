@@ -1,5 +1,6 @@
 package cd4017be.kineng.recipe;
 
+import static cd4017be.lib.Gui.comp.Progressbar.H_FILL;
 import static net.minecraftforge.items.ItemHandlerHelper.canItemStacksStack;
 import static net.minecraftforge.items.ItemHandlerHelper.copyStackWithSize;
 import java.util.Arrays;
@@ -7,6 +8,7 @@ import java.util.List;
 import cd4017be.kineng.physics.DynamicForce;
 import cd4017be.lib.Gui.*;
 import cd4017be.lib.Gui.AdvancedContainer.IStateInteractionHandler;
+import cd4017be.lib.Gui.comp.*;
 import cd4017be.lib.network.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.*;
 
@@ -164,14 +168,33 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 
 	private static final StateSynchronizer.Builder ssb = StateSynchronizer.builder().addFix(4, 4, 4, 4, 2, 1);
 
-	public AdvancedContainer getContainer(EntityPlayer player, boolean client) {
-		AdvancedContainer cont = new AdvancedContainer(this, ssb.build(client), player);
+	public AdvancedContainer getContainer(EntityPlayer player) {
+		AdvancedContainer cont = new AdvancedContainer(this, ssb.build(player.world.isRemote), player);
 		cont.addItemSlot(new GlitchSaveSlot(this, 0, 35, 25), false);
 		cont.addItemSlot(new GlitchSaveSlot(this, 1, 107, 25), false);
 		cont.addItemSlot(new GlitchSaveSlot(this, 2, 125, 25), false);
 		cont.addPlayerInventory(8, 68);
 		cont.transferHandlers.add((stack, inv)-> inv.mergeItemStack(stack, 0, 1, false));
 		return cont;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public ModularGui getGuiScreen(EntityPlayer player) {
+		ModularGui gui = new ModularGui(getContainer(player));
+		GuiFrame frame = new GuiFrame(gui, 176, 150, 6)
+		.background(ProcessingRecipes.GUI_TEX, 0, 0)
+		.title("gui.kineng.processing.name", 0.5F);
+		
+		new Button(frame, 8, 16, 8, 25, 0, this::status, (a)-> gui.sendPkt(A_STOP))
+		.texture(200, 0).tooltip("gui.kineng.pr_status#");
+		new Button(frame, 16, 16, 53, 25, 0, this::recipeMode, this::showRecipes)
+		.texture(208, 0).tooltip("gui.kineng.pr_mode#");
+		new Progressbar(frame, 32, 10, 72, 28, 224, 0, H_FILL, this::progress);
+		new Tooltip(frame, 32, 10, 72, 28, "\\%.3um / %.3um", this::progressInfo);
+		new FormatText(frame, 32, 8, 72, 16, "\\%.3uN", this::forceInfo).align(0.5F);
+		new FormatText(frame, 32, 8, 72, 42, "\\%.3um/s", this::speedInfo).align(0.5F);
+		gui.compGroup = frame;
+		return gui;
 	}
 
 	@Override

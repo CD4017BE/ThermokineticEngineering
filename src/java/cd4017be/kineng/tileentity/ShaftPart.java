@@ -28,6 +28,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	protected ShaftAxis shaft;
 	protected double vSave;
+	
 
 	@SuppressWarnings("unchecked")
 	public <T extends BlockShaft> T block() {
@@ -135,6 +136,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@Override
 	protected void storeState(NBTTagCompound nbt, int mode) {
+		super.storeState(nbt, mode);
 		if(shaft != null) {
 			nbt.setDouble("v", shaft.av());
 			if(mode == SYNC) nbt.setDouble("s", shaft.ang());
@@ -143,6 +145,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@Override
 	protected void loadState(NBTTagCompound nbt, int mode) {
+		super.loadState(nbt, mode);
 		if(mode < SYNC)
 			vSave = nbt.getDouble("v");
 		else if(shaft != null)

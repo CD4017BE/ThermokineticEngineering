@@ -1,6 +1,7 @@
 package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.physics.Ticking.dt;
+import static cd4017be.lib.network.Sync.GUI;
 import cd4017be.kineng.Main;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.Gui.AdvancedContainer;
@@ -10,7 +11,6 @@ import cd4017be.lib.Gui.comp.*;
 import cd4017be.lib.network.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,10 +24,30 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	{
 		con.maxF = Double.POSITIVE_INFINITY;
 	}
-	
-	byte type;
-	float c0, c1, v, P, F;
-	double Eacc;
+
+	@Sync(to = SAVE|GUI) public float c0, c1;
+	@Sync(to = SAVE|GUI) public double Eacc;
+	@Sync(to = GUI) float v, P, F;
+	@Sync(to = SAVE|GUI) byte mode;
+
+	@Sync public void mode(byte mode) {
+		if (mode == this.mode) return;
+		this.mode = mode;
+		if (world.isRemote) return;
+		switch(mode) {
+		case A_CONST_PWR:
+			con.link(new ConstPower());
+			break;
+		case A_CONST_VEL:
+			con.link(new ConstSpeed());
+			break;
+		case A_FRICTION:
+			con.link(new Friction());
+			break;
+		default:
+			con.link(null);
+		}
+	}
 
 	@Override
 	public double setShaft(ShaftAxis shaft) {
@@ -36,39 +56,8 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	}
 
 	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		nbt.setFloat("c0", c0);
-		nbt.setFloat("c1", c1);
-		nbt.setByte("mode", getType());
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-		type = nbt.getByte("mode");
-		if (type != getType()) {
-			switch(type) {
-			case A_CONST_PWR:
-				con.link(new ConstPower());
-				break;
-			case A_CONST_VEL:
-				con.link(new ConstSpeed());
-				break;
-			case A_FRICTION:
-				con.link(new Friction());
-				break;
-			default:
-				con.link(null);
-			}
-		}
-		c0 = nbt.getFloat("c0");
-		c1 = nbt.getFloat("c1");
-	}
-
-	@Override
 	public AdvancedContainer getContainer(EntityPlayer player, int id) {
-		return new AdvancedContainer(this, ssb.build(world.isRemote), player);
+		return new AdvancedContainer(this, StateSyncAdv.of(false, this), player);
 	}
 
 	private static final ResourceLocation GUI_TEX = new ResourceLocation(Main.ID, "textures/gui/debug.png");
@@ -79,11 +68,11 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		ModularGui gui = new ModularGui(getContainer(player, id));
 		GuiFrame frame = new GuiFrame(gui, 144, 86, 5)
 		.background(GUI_TEX, 0, 0).title("gui.kineng.debug.name", 0.5F);
-		new Button(frame, 16, 16, 8, 16, 0, ()-> type == A_CONST_PWR ? 1 : 0, (a)-> gui.sendPkt(A_CONST_PWR))
+		new Button(frame, 16, 16, 8, 16, 0, ()-> mode == A_CONST_PWR ? 1 : 0, (a)-> gui.sendPkt(A_CONST_PWR))
 		.texture(240, 0).tooltip("gui.kineng.debug.mode1");
-		new Button(frame, 16, 16, 8, 34, 0, ()-> type == A_CONST_VEL ? 1 : 0, (a)-> gui.sendPkt(A_CONST_VEL))
+		new Button(frame, 16, 16, 8, 34, 0, ()-> mode == A_CONST_VEL ? 1 : 0, (a)-> gui.sendPkt(A_CONST_VEL))
 		.texture(240, 0).tooltip("gui.kineng.debug.mode2");
-		new Button(frame, 16, 16, 8, 52, 0, ()-> type == A_FRICTION ? 1 : 0, (a)-> gui.sendPkt(A_FRICTION))
+		new Button(frame, 16, 16, 8, 52, 0, ()-> mode == A_FRICTION ? 1 : 0, (a)-> gui.sendPkt(A_FRICTION))
 		.texture(240, 0).tooltip("gui.kineng.debug.mode3");
 		new Button(frame, 18, 9, 7, 70, 0, null, (a)-> gui.sendPkt(A_RESET)).tooltip("gui.kineng.debug.reset");
 		new TextField(frame, 70, 7, 66, 16, 12, ()-> Float.toString(c0), (t)-> {
@@ -96,41 +85,11 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 				gui.sendPkt(A_C1, Float.parseFloat(t));
 			} catch (NumberFormatException e) {}
 		});
-		new Button(frame, 32, 20, 27, 15, 0, ()-> type, null).texture(208, 0).tooltip("gui.kineng.debug.par#");
+		new Button(frame, 32, 20, 27, 15, 0, ()-> mode, null).texture(208, 0).tooltip("gui.kineng.debug.par#");
 		new FormatText(frame, 70, 7, 66, 44, "\\%0$.6u\n%1$.6u\n%2$.6u\n%3$.6u", ()-> new Object[] {v, F, P, Eacc})
 		.align(0F).color(0xff202020);
 		gui.compGroup = frame;
 		return gui;
-	}
-
-	private static final StateSynchronizer.Builder ssb = StateSynchronizer.builder().addFix(1, 4, 4, 4, 4, 4, 8);
-
-	private byte getType() {
-		DynamicForce f = con.force;
-		return f instanceof ConstPower ? A_CONST_PWR
-		     : f instanceof ConstSpeed ? A_CONST_VEL
-		     : f instanceof Friction   ? A_FRICTION
-		     : A_NONE;
-	}
-
-	@Override
-	public void writeState(StateSyncServer state, AdvancedContainer cont) {
-		state.putAll(
-			getType(),
-			c0, c1,
-			v, F, P, Eacc
-		).endFixed();
-	}
-
-	@Override
-	public void readState(StateSyncClient state, AdvancedContainer cont) throws Exception {
-		type = (byte)state.get(type);
-		c0 = state.get(c0);
-		c1 = state.get(c1);
-		v = state.get(v);
-		F = state.get(F);
-		P = state.get(P);
-		Eacc = state.get(Eacc);
 	}
 
 	@Override
@@ -142,17 +101,21 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 
 	@Override
 	public void handleAction(PacketBuffer pkt, EntityPlayerMP sender) throws Exception {
-		switch(pkt.readByte()) {
+		byte a = pkt.readByte();
+		switch(a) {
 		case A_CONST_PWR:
 			if (con.force instanceof ConstPower) break;
+			mode = a;
 			con.link(new ConstPower());
 			break;
 		case A_CONST_VEL:
 			if (con.force instanceof ConstSpeed) break;
+			mode = a;
 			con.link(new ConstSpeed());
 			break;
 		case A_FRICTION:
 			if (con.force instanceof Friction) break;
+			mode = a;
 			con.link(new Friction());
 			break;
 		case A_C0:

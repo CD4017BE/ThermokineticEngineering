@@ -1,10 +1,12 @@
 package cd4017be.kineng.tileentity;
 
+import static cd4017be.lib.network.Sync.Type.I8;
 import static net.minecraft.init.Blocks.AIR;
 import java.util.Arrays;
 import java.util.List;
 import cd4017be.kineng.capability.StructureLocations;
 import cd4017be.lib.block.AdvancedBlock.*;
+import cd4017be.lib.network.Sync;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.Utils;
@@ -32,30 +34,34 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 
 	public static float RAIN_MULT;
 
-	public FluidStack content;
+	@Sync(to = 7, tag = "fluid") public FluidStack content;
 	/**{layer[0:15 blockMap pointer, 16:31 capacity [m³]],
 	 *  size[0:5 r, 6:11 N, 12:17 S, 18:23 W, 24:29 E, 31 OF]} */
-	public int[] layers = {0, 0};
+	@Sync(to = 0x23) public int[] layers = {0, 0};
 	/** bit-map of blocks being part of the lake */
-	public byte[] blockMap = new byte[16];
-	public int level, lastAm, size, avgDrain;
+	@Sync(to = 0x23, tag = "map") public byte[] blockMap = new byte[16];
+	@Sync(to = 7, tag = "lvl", type = I8) public int level;
 	/** relative position of last detected overflow as 0x00ZZYYXX */
-	public int lastOverflow;
-	private float rainfall = Float.NaN;
+	@Sync(to = 0x23, tag = "of") public int lastOverflow;
+	@Sync(tag = "rain") public float rainfall = Float.NaN;
+	@Sync(tag = "drain") public int avgDrain;
 	private RainParser rp;
+	public int lastAm, size;
 
 	@Override
 	public void update() {
 		avgDrain -= avgDrain >> 5;
 		if (content == null || content.getFluid() != FluidRegistry.WATER) return;
-		if (Float.isNaN(rainfall)) rp = new RainParser(pos).initialize();
+		if (Float.isNaN(rainfall) && rp == null)
+			rp = new RainParser(pos).initialize();
 		if (rp == null) {
-			int n = Math.round(rainfall * (1F + world.rainingStrength));
+			int n = Math.round(rainfall * (1F + world.rainingStrength) * RAIN_MULT);
 			if (n > 0) fill(new FluidStack(FluidRegistry.WATER, n), true);
 		} else {
-			boolean done = !rp.doStep(world);
-			rainfall = rp.rain * RAIN_MULT;
-			if (done) rp = null;
+			if (!rp.doStep(world)) {
+				rainfall = rp.rain;
+				rp = null;
+			}
 		}
 	}
 
@@ -69,39 +75,19 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 	}
 
 	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		if (content != null)
-			nbt.setTag("fluid", content.writeToNBT(new NBTTagCompound()));
-		nbt.setByte("lvl", (byte)level);
-		if (mode <= CLIENT || redraw) {
-			nbt.setIntArray("layers", layers);
-			nbt.setByteArray("map", blockMap);
-			nbt.setInteger("of", lastOverflow);
-		}
-	}
-
-	@Override
 	protected void loadState(NBTTagCompound nbt, int mode) {
 		super.loadState(nbt, mode);
-		content = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid"));
 		if (content != null && !validFluid(content.getFluid())) content = null;
 		lastAm = content == null ? 0 : content.amount;
-		level = nbt.getByte("lvl") & 0xff;
-		if (mode <= CLIENT || redraw) {
-			layers = nbt.getIntArray("layers");
-			if (layers.length == 0) layers = new int[]{0};
-			blockMap = nbt.getByteArray("map");
-			for (int i = layers.length - 1; i >= 0; i--)
-				if (layers[i] != 0) {
-					int l = layers[i] & 0xffff;
-					if (blockMap.length != l)
-						blockMap = Arrays.copyOf(blockMap, l);
-					break;
-				}
-			size = computeSize();
-			lastOverflow = nbt.getInteger("of");
-		}
+		if (layers.length == 0) layers = new int[]{0, 0};
+		for (int i = layers.length - 1; i >= 0; i--)
+			if (layers[i] != 0) {
+				int l = layers[i] & 0xffff;
+				if (blockMap.length != l)
+					blockMap = Arrays.copyOf(blockMap, l);
+				break;
+			}
+		size = computeSize();
 	}
 
 	/**mark layers above the current liquid line as invalid
@@ -115,7 +101,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 		else lastOverflow = 0;
 		for (h+=2; h < layers.length; h+=2)
 			layers[h] = 0;
-		markDirty(REDRAW);
+		markDirty(0x20);
 	}
 
 	private boolean scan(int h) {
@@ -177,7 +163,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 		if (((l ^ r) & 0x3f) != 0) {
 			for (h+=2; h < layers.length; h+=2)
 				layers[h] = 0;
-			markDirty(REDRAW);
+			markDirty(0x20);
 		}
 		return lastOverflow == 0;
 	}
@@ -448,8 +434,9 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 		EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z
 	) {
 		if (world.isRemote) return true;
-		String msg = String.format("rain water: %.0f mB/t", rainfall);
-		if (rp != null) msg += " (still scanning ...)";
+		float rain = rp == null ? rainfall : rp.rain;
+		String msg = String.format("rain water: %.0f mB/t", rain * RAIN_MULT);
+		if (rp != null) msg += " (still scanning " + rp.pending.size() + " chunks)";
 		player.sendStatusMessage(new TextComponentString(msg), true);
 		return true;
 	}

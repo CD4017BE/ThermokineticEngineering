@@ -1,6 +1,7 @@
 package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.block.BlockGear.DIAMETER;
+import static cd4017be.lib.network.Sync.Type.F32;
 import static java.lang.Double.*;
 import static net.minecraft.util.EnumFacing.getFacingFromAxis;
 import static net.minecraft.util.EnumFacing.AxisDirection.NEGATIVE;
@@ -11,13 +12,13 @@ import cd4017be.kineng.block.BlockTurbine;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.network.Sync;
 import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
@@ -39,8 +40,9 @@ public class WindTurbine extends ShaftPart implements ITickableServerOnly, IInte
 	public static float WIND_SCALE;
 
 	ForceCon con;
-	double a, v0;
-	float obstr = 1F;
+	double a;
+	@Sync(type = F32) public double v0;
+	@Sync(tag = "cl") public float obstr = 1F;
 	int t;
 
 	@Override
@@ -96,20 +98,6 @@ public class WindTurbine extends ShaftPart implements ITickableServerOnly, IInte
 		}
 		con.setShaft(shaft);
 		return super.setShaft(shaft);
-	}
-
-	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		nbt.setFloat("v0", (float)v0);
-		nbt.setFloat("cl", obstr);
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-		v0 = nbt.getFloat("v0");
-		obstr = nbt.getFloat("cl");
 	}
 
 	@Override

@@ -2,8 +2,8 @@ package cd4017be.kineng.tileentity;
 
 import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 import cd4017be.lib.block.AdvancedBlock.ISelfAwareTile;
+import cd4017be.lib.network.Sync;
 import cd4017be.lib.util.Utils;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,7 +17,7 @@ public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwa
 
 	public static int CAP;
 
-	private FluidStack tank;
+	@Sync public FluidStack tank;
 
 	@Override
 	protected void tickLakeInteract() {
@@ -86,18 +86,6 @@ public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwa
 		int n = Math.min(maxDrain, tank.amount);
 		if (doDrain) tank.amount -= n;
 		return new FluidStack(tank, n);
-	}
-
-	@Override
-	protected void storeState(NBTTagCompound nbt, int mode) {
-		super.storeState(nbt, mode);
-		if (tank != null) tank.writeToNBT(nbt);
-	}
-
-	@Override
-	protected void loadState(NBTTagCompound nbt, int mode) {
-		super.loadState(nbt, mode);
-		tank = FluidStack.loadFluidStackFromNBT(nbt);
 	}
 
 	@Override
