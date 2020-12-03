@@ -9,7 +9,7 @@ public abstract class Connection {
 	public final double r;
 	public double maxF;
 	/** [Nm] last torque on axis (scaled by translation) */
-	double M;
+	public double M;
 
 	protected Connection(IShaftPart host, double r) {
 		this.host = host;

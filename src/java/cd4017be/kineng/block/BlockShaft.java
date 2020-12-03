@@ -37,6 +37,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 	public double strength = DEFAULT_strength;
 	public double av_max = Double.NaN; 
 	public int[] model;
+	public boolean keepTex;
 
 	public BlockShaft(String id, ShaftMaterial m, double r, Class<? extends TileEntity> tile) {
 		super(id, m.material, m.blockSound, 3, tile);
@@ -64,6 +65,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 
 	public void setModel(int... modelArgs) {
 		this.model = modelArgs;
+		this.keepTex = true;
 	}
 
 	public double J(IBlockState state) {
@@ -80,7 +82,7 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 	}
 
 	public int[] model(IBlockState state) {
-		model[1] = shaftMat.texture;
+		if (!keepTex) model[1] = shaftMat.texture;
 		return model;
 	}
 

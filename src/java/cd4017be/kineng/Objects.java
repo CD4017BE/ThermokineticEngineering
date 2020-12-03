@@ -47,6 +47,7 @@ public class Objects {
 	public static final OrientedBlock LAKE_VALVE = null, LAKE_GATE = null;
 	public static final BlockRotaryTool WATER_WHEEL = null;
 	public static final BlockTurbine WIND_MILL = null;
+	public static final BlockShaft TACHOMETER = null, TRANSDUCER = null;
 
 	// ItemBlocks
 	public static final BaseItemBlock shaft_wood = null, shaft_iron = null, shaft_debug = null;
@@ -57,6 +58,7 @@ public class Objects {
 	public static final BaseItemBlock lake = null, lake_valve = null, lake_gate = null;
 	public static final ItemBlockGear water_wheel = null;
 	public static final ItemBlockGear wind_mill = null;
+	public static final BaseItemBlock tachometer = null, transducer = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
@@ -92,7 +94,9 @@ public class Objects {
 			new OrientedBlock("lake_valve", Material.IRON, SoundType.METAL, 0, LakeValve.class, ALL_AXIS),
 			new OrientedBlock("lake_gate", Material.WOOD, SoundType.WOOD, 0, LakeGate.class, HOR_AXIS),
 			new BlockRotaryTool("water_wheel", M_WOOD, T_ANGULAR, 2.5, WaterWheel.class).setShape(0.25, 1.0).setHardness(1.0F),
-			new BlockTurbine("wind_mill", M_IRON, 2.5, WindTurbine.class).setHardness(1.0F)
+			new BlockTurbine("wind_mill", M_IRON, 2.5, WindTurbine.class).setHardness(1.0F),
+			new BlockShaft("tachometer", M_WOOD, 0.25, Tachometer.class).setHardness(1.0F),
+			new BlockShaft("transducer", M_IRON, 0.25, TorqueTransducer.class).setHardness(1.0F)
 		);
 	}
 
@@ -118,6 +122,8 @@ public class Objects {
 			new BaseItemBlock(LAKE_GATE).setCreativeTab(tabKinetic),
 			new ItemBlockGear(WATER_WHEEL, 5).setCreativeTab(tabKinetic),
 			new ItemBlockGear(WIND_MILL).setCreativeTab(tabKinetic),
+			new BaseItemBlock(TACHOMETER).setCreativeTab(tabKinetic),
+			new BaseItemBlock(TRANSDUCER).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
 			new ItemAerometer("anemometer").setCreativeTab(tabKinetic),
 			new ItemChain("chain").setCreativeTab(tabKinetic)
