@@ -1,0 +1,50 @@
+v0.0.5
+Changes:
+- make chains break on connect additional gears & fix creative placement
+- add Mob Grinder
+- add Tachometer and Torque Transducer
+- change to using new @Sync feature from cd4017be_lib
+- fix lake overflow and water wheels operating below sea level
+
+v0.0.4
+Changes:
+- put constants in config, add missing recipes & models and fix bugs
+- add Chain gear links (& add some missing recipes)
+- stop filling overflowing layer and add draw indicator at OF location
+
+v0.0.3:
+Changes:
+- add rain water collection
+- add Water Wheel
+- add Storage Lake, Lake Valve and Water Gate
+- add Wind Turbines
+
+v0.0.2:
+Changes:
+- fix machines not dropping their inventory when broken
+- add Rolling press and replace ingots with plates
+- add coils for energy conversion to/from RF
+- recipe balancing
+- add flint knife processing for early game
+- add JEI integration for processing recipes
+- add device property info to items
+- add in-shaft processing machines (Lathe) and fix connection issues
+
+v0.0.1:
+Changes:
+- render shaft items with TEIR
+- and manual kinetic power
+- NPE bug fixes
+- fix chunk occlusion render glitches
+- implement proper part damage
+- implement circular multi-block shaft parts
+- add sawblade and grindstone
+- implement machine shaft interface
+- fix preservation of angular inertia during split / merge
+
+v0.0.0:
+Changes:
+- add Iron Shafts and fix textures
+- change strategy for torque flow computation to using linear algebra
+- implement torque limits
+- create shaft system prototype: Wood Shaft, Wood Gears, Debug Force Supply Shaft
