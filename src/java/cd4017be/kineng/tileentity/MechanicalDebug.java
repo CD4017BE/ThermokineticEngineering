@@ -25,10 +25,10 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		con.maxF = Double.POSITIVE_INFINITY;
 	}
 
-	@Sync(to = SAVE|GUI) public float c0, c1;
-	@Sync(to = SAVE|GUI) public double Eacc;
-	@Sync(to = GUI) float v, P, F;
-	@Sync(to = SAVE|GUI) byte mode;
+	public @Sync(to = SAVE|GUI) float c0, c1;
+	public @Sync(to = SAVE|GUI) double Eacc;
+	public @Sync(to = GUI) float v, P, F;
+	public @Sync(to = SAVE|GUI) byte mode;
 
 	@Sync public void mode(byte mode) {
 		if (mode == this.mode) return;

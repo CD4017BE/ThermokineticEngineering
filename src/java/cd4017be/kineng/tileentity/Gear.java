@@ -19,7 +19,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 	public static double F_FRICTION = 0, A_CONTACT;
 	private final GearLink[] cons = new GearLink[4];
 
-	@Sync(to = 0x23, tag = "cs") public ItemStack chainStack;
+	@Sync(to = 0x23, tag = "cs") public ItemStack chainStack = ItemStack.EMPTY;
 	@Sync(to = 0x23, tag = "cl") public BlockPos chainLink;
 	@Sync public void chainLink(BlockPos pos) {
 		if (shaft != null && world.isRemote && (chainLink != null || pos != null)) {
@@ -75,8 +75,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 	@Override
 	public void linkChain(BlockPos pos1, ItemStack stack) {
 		BlockPos ocl = chainLink;
-		if (chainStack != null)
-			ItemFluidUtil.dropStack(chainStack, world, pos);
+		ItemFluidUtil.dropStack(chainStack, world, pos);
 		chainStack = stack;
 		chainLink = pos1;
 		markDirty(0x20);
@@ -86,13 +85,13 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 		if (te instanceof IGear) {
 			IGear g = (IGear)te;
 			if (pos.equals(g.chainLink()))
-				g.linkChain(null, null);
+				g.linkChain(null, ItemStack.EMPTY);
 		}
 	}
 
 	@Override
 	public void breakBlock() {
-		linkChain(null, null);
+		linkChain(null, ItemStack.EMPTY);
 	}
 
 	@SideOnly(Side.CLIENT)

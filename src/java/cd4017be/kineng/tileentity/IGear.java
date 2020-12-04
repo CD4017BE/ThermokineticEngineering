@@ -76,8 +76,8 @@ public interface IGear extends IShaftPart {
 	}
 
 	static boolean link(IGear a, IGear b, ItemStack stack) {
-		a.linkChain(null, null);
-		b.linkChain(null, null);
+		a.linkChain(null, ItemStack.EMPTY);
+		b.linkChain(null, ItemStack.EMPTY);
 		for (EnumFacing side : VALUES) {
 			GearLink con = a.getCon(side);
 			if(con != null && con.other != null)

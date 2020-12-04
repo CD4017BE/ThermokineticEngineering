@@ -2,6 +2,7 @@ package cd4017be.kineng.physics;
 
 import java.util.ArrayList;
 import java.util.Random;
+import cd4017be.lib.Lib;
 import static cd4017be.kineng.Main.LOG;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,7 +21,7 @@ public class Ticking {
 	public static final Ticking SERVER = new Ticking(false);
 	private static Ticking CLIENT;
 	public static int OVERLOAD_CHECKS = 16;
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = Lib.DEV_DEBUG;
 
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(SERVER);
