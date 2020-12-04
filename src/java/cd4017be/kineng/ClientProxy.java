@@ -67,6 +67,7 @@ public class ClientProxy extends CommonProxy {
 		SHAFT_WOOD.model = m;
 		SHAFT_IRON.model = m;
 		SHAFT_DEBUG.model = m;
+		TRANSDUCER.model = m;
 		SHAFT_MAN.model = new int[] {PartModels.MANUAL, 0, 4, 24};
 		m = new int[] {PartModels.GEAR, 0, 4, 0};
 		GEAR_WOOD.model = m;
@@ -85,13 +86,18 @@ public class ClientProxy extends CommonProxy {
 		t = registerTexture(new ResourceLocation("blocks/wool_colored_white"));
 		WIND_MILL.bladeTex = new int[] {0, t, t, M_IRON.texture, M_IRON.texture, M_IRON.texture};
 		WIND_MILL.model = new int[] {PartModels.TURBINE, 0, 4, 0, 0, 16};
+		t = registerTexture(new ResourceLocation(Main.ID, "blocks/tachometer"));
+		t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/tachometer1"));
+		TACHOMETER.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 1, t1};
+		t = registerTexture(new ResourceLocation(Main.ID, "blocks/transducer"));
+		TRANSDUCER.setModel(PartModels.SHAFT, t, 4);
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
 			GRINDSTONE, SAWBLADE, LATHE, PRESS, MAGNETS,
-			WATER_WHEEL,
+			WATER_WHEEL, WIND_MILL,
 			FILL_DIR, FILL_SHARE,
-			WIND_MILL
+			TACHOMETER, TRANSDUCER
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);
 		new ShaftItemRenderer(shaft_iron, SHAFT_IRON);
@@ -106,6 +112,8 @@ public class ClientProxy extends CommonProxy {
 		new ShaftItemRenderer(magnets, MAGNETS);
 		new ShaftItemRenderer(water_wheel, WATER_WHEEL);
 		new ShaftItemRenderer(wind_mill, WIND_MILL);
+		new ShaftItemRenderer(tachometer, TACHOMETER);
+		new ShaftItemRenderer(transducer, TRANSDUCER);
 		registerRender(processing);
 		registerRender(rf_coil);
 		registerRender(flint_knife);
