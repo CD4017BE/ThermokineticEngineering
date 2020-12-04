@@ -74,6 +74,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 
 	@Override
 	public void linkChain(BlockPos pos1, ItemStack stack) {
+		if (world.isRemote) return;
 		BlockPos ocl = chainLink;
 		ItemFluidUtil.dropStack(chainStack, world, pos);
 		chainStack = stack;

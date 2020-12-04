@@ -99,6 +99,8 @@ public interface IGear extends IShaftPart {
 			if(!(te instanceof IGear)) continue;
 			IGear g = (IGear)te;
 			if(g.axis() != axis || g.diameter() != d) break;
+			if (g.chainLink() != null)
+				g.linkChain(null, ItemStack.EMPTY);
 			return g.getCon(dir.getOpposite());
 		}
 		return null;

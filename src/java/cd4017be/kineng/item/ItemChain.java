@@ -38,14 +38,14 @@ public class ItemChain extends BaseItem {
 			state = world.getBlockState(pos = pos.offset(state.getValue(FACING)));
 		if (state.getBlock() instanceof BlockGear) {
 			if (world.isRemote) return EnumActionResult.SUCCESS;
-			int r = interact(player.getHeldItem(hand), world, pos, state);
+			int r = interact(player.getHeldItem(hand), world, pos, state, player.isCreative());
 			player.sendStatusMessage(new TextComponentTranslation("msg.kineng.chain_link" + r), true);
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.PASS;
 	}
 
-	private int interact(ItemStack stack, World world, BlockPos pos, IBlockState state) {
+	private int interact(ItemStack stack, World world, BlockPos pos, IBlockState state, boolean creative) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		int d = (int)(((BlockGear)state.getBlock()).radius(state) * 2.0);
 		Axis ax = state.getValue(AXIS);
@@ -62,6 +62,7 @@ public class ItemChain extends BaseItem {
 			BlockPos pos0 = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
 			if (ax.ordinal() != nbt.getByte("a") || Utils.coord(pos0.subtract(pos), ax) != 0) return 1;
 			d = chainLength(pos0, pos, d, nbt.getInteger("d"));
+			if (creative && d < stack.getMaxStackSize()) d = 0;
 			if (d > stack.getCount()) return 2;
 			TileEntity te0 = world.getTileEntity(pos0);
 			TileEntity te1 = world.getTileEntity(pos);
