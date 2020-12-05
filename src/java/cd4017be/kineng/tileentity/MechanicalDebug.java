@@ -33,7 +33,7 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	@Sync public void mode(byte mode) {
 		if (mode == this.mode) return;
 		this.mode = mode;
-		if (world.isRemote) return;
+		if (world != null && world.isRemote) return;
 		switch(mode) {
 		case A_CONST_PWR:
 			con.link(new ConstPower());

@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"normal": {"model": "bedrock"}
+		"normal": {"model": "bedrock"},
+		"inventory0": {"model": "bedrock"}
 	}
 }

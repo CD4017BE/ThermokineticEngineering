@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"normal": {"model": "oak_planks"}
+		"normal": {"model": "oak_planks"},
+		"inventory0": {"model": "oak_planks"}
 	}
 }

@@ -72,15 +72,16 @@ public class ClientProxy extends CommonProxy {
 		m = new int[] {PartModels.GEAR, 0, 4, 0};
 		GEAR_WOOD.model = m;
 		GEAR_IRON.model = m;
-		int t = M_STONE.texture;
-		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, t, 16, 10, t};
-		t = registerTexture(new ResourceLocation("blocks/iron_block"));
-		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, t, 16, 1, t};
+		int t = M_STONE.texture, t1;
+		GRINDSTONE.model = new int[] {PartModels.WHEEL, 0, 4, t, 19, 10, t};
+		t = registerTexture(new ResourceLocation(Main.ID, "blocks/saw"));
+		t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/saw1"));
+		SAWBLADE.model = new int[] {PartModels.WHEEL, 0, 4, t, 19, 1, t1};
 		t = M_WOOD.texture;
-		LATHE.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 8, t};
+		LATHE.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 6, t};
 		PRESS.model = new int[] {PartModels.SHAFT, 0, 4};
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets"));
-		int t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets1"));
+		t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/magnets1"));
 		MAGNETS.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 10, t1};
 		WATER_WHEEL.model = new int[] {PartModels.WATER_WHEEL, 0, 4, 40, 56};
 		t = registerTexture(new ResourceLocation("blocks/wool_colored_white"));
@@ -91,15 +92,14 @@ public class ClientProxy extends CommonProxy {
 		TACHOMETER.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 1, t1};
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/transducer"));
 		TRANSDUCER.setModel(PartModels.SHAFT, t, 4);
-		//TODO mobgrinder model
-		MOB_GRINDER.model = new int[] {PartModels.MANUAL, 0, 4, 32};
+		t = registerTexture(new ResourceLocation(Main.ID, "blocks/blade"));
+		MOB_GRINDER.model = new int[] {PartModels.BLADES, 0, 4, 32, t, 4};
 		setShaftRender(
 			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
-			GRINDSTONE, SAWBLADE, LATHE, PRESS, MAGNETS,
+			GRINDSTONE, SAWBLADE, MAGNETS,
 			WATER_WHEEL, WIND_MILL,
 			FILL_DIR, FILL_SHARE,
-			TACHOMETER, TRANSDUCER,
 			WIND_MILL, MOB_GRINDER
 		);
 		new ShaftItemRenderer(shaft_wood, SHAFT_WOOD);

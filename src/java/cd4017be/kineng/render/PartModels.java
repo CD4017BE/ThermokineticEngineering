@@ -17,6 +17,7 @@ public class PartModels {
 	/** complex number describing a 45° rotation
 	 * (much faster than using sin + cos) */
 	private static final CplxF ROTATE45 = C_pol(1.0, Math.PI / 4.0);
+	private static final CplxF ROTATE_32 = C_pol(1.0, Math.PI / 16.0);
 
 	/** model arguments: [id, texture, radius*16]
 	 * <br> radius < 0: -z cap, radius > 0: +z cap */
@@ -235,7 +236,7 @@ public class PartModels {
 		shaft.render(qb, args, z0);
 		texture(qb, args[4]);
 		float z1 = z0 + args[5] * 0.03125F; z0 -= args[5] * 0.03125F;
-		CplxF xy0 = C_pol(1.0, Math.PI / 16.0);
+		CplxF xy0 = ROTATE_32.clone();
 		CplxF xy1 = xy0.clone().conj().mul(ROTATE45);
 		float r0 = args[2] * 0.0625F, r1 = args[3] * 0.0625F;
 		for (int i = 0; i < 8; i++) {
@@ -255,6 +256,49 @@ public class PartModels {
 			}
 			xy0.mul(ROTATE45);
 			xy1.mul(ROTATE45);
+		}
+	});
+
+	/** model arguments: [id, shaft_texture, shaft_radius*16, blade_radius*16, blade_texture, blade_width*16] */
+	public static final int BLADES = registerModel((qb, args, z) -> {
+		shaft.render(qb, args, z);
+		texture(qb, args[4]);
+		float r0 = args[2] * 0.0625F, r1 = args[3] * 0.0625F;
+		float d = args[5] * 0.03125F, z0 = z - d, z1 = z + d;
+		CplxF pc0 = C_(1F).add(ROTATE45).sca(0.5F), pc1 = new CplxF();
+		CplxF pl0 = C_(r0, r0), pl1 = C_(r1, r0);
+		CplxF pr0 = new CplxF().prod(pl0, pc0);
+		CplxF pr1 = new CplxF().prod(pl1, pc0);
+		pl0.conj().mul(pc0);
+		pl1.conj().mul(pc0);
+		pc1.sca(pc0, r1 * 1.125F); pc0.sca(r0);
+		for (int i = 0; i < 8; i++) {
+			qb.xyz(pc0.r, pc0.i, z0).uv( 0, 4).next();
+			qb.xyz(pc1.r, pc1.i, z ).uv(16, 4).next();
+			qb.xyz(pl1.r, pl1.i, z ).uv(16, 0).next();
+			qb.xyz(pl0.r, pl0.i, z ).uv( 0, 0).next();
+			
+			qb.xyz(pc0.r, pc0.i, z1).uv( 0, 4).next();
+			qb.xyz(pl0.r, pl0.i, z ).uv( 0, 8).next();
+			qb.xyz(pl1.r, pl1.i, z ).uv(16, 8).next();
+			qb.xyz(pc1.r, pc1.i, z ).uv(16, 4).next();
+			
+			qb.xyz(pc0.r, pc0.i, z1).uv( 0,12).next();
+			qb.xyz(pc1.r, pc1.i, z ).uv(16,12).next();
+			qb.xyz(pr1.r, pr1.i, z ).uv(16, 8).next();
+			qb.xyz(pr0.r, pr0.i, z ).uv( 0, 8).next();
+			
+			qb.xyz(pc0.r, pc0.i, z0).uv( 0,12).next();
+			qb.xyz(pr0.r, pr0.i, z ).uv( 0,16).next();
+			qb.xyz(pr1.r, pr1.i, z ).uv(16,16).next();
+			qb.xyz(pc1.r, pc1.i, z ).uv(16,12).next();
+			
+			pl0.mul(ROTATE45);
+			pc0.mul(ROTATE45);
+			pr0.mul(ROTATE45);
+			pl1.mul(ROTATE45);
+			pc1.mul(ROTATE45);
+			pr1.mul(ROTATE45);
 		}
 	});
 

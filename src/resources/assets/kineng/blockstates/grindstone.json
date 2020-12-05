@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"normal": {"model": "granite"}
+		"normal": {"model": "granite"},
+		"inventory0": {"model": "granite"}
 	}
 }

@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"normal": {"model": "granite"}
+		"axis=z": {"model": "kineng:_machines.press"},
+		"axis=x": {"model": "kineng:_machines.press#w"},
+		"axis=y": {"model": "kineng:_machines.press#bn"},
+		"inventory0": {"model": "kineng:_machines.press"}
 	}
 }

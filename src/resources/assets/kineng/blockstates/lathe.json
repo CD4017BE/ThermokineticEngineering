@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"normal": {"model": "oak_planks"}
+		"axis=z": {"model": "kineng:_machines.lathe"},
+		"axis=x": {"model": "kineng:_machines.lathe#w"},
+		"axis=y": {"model": "kineng:_machines.lathe#bn"},
+		"inventory0": {"model": "kineng:_machines.lathe"}
 	}
 }

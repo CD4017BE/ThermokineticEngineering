@@ -1,0 +1,90 @@
+{textures = [
+	"blocks/stone_slab_top",
+	"blocks/planks_oak",
+	"blocks/stone_granite"
+];}
+
+tan16 = 0.4142135624;
+
+case() {
+	base(4);
+	Loc Q = [0,4,0, 2,16,16]#;
+	for(F:["-VuW", "+Vu"]) {add(rect(Q, [0,4, 16,16]#, F, 1));}
+	for(F:["uV-", "uV+"]) {add(rect(Q, [0,4, 4,16]#, F, 1));}
+	add(rect(Q, [0,0, 16,4]#, "v+uT", 1));
+	Q = [14,4,0, 16,16,16]#;
+	for(F:["-Vu", "+VuE"]) {add(rect(Q, [0,4, 16,16]#, F, 1));}
+	for(F:["uV-", "uV+"]) {add(rect(Q, [0,4, 4,16]#, F, 1));}
+	add(rect(Q, [0,0, 16,4]#, "v+uT", 1));
+}
+
+press() {
+	base(2);
+	frame("uV-N", "uV+");
+	translate(0,0,14);
+	frame("uV-", "uV+S");
+	translate(8, 2, -14);
+	roll();
+	translate(0, 12, 0);
+	roll();
+}
+
+lathe() {
+	push();
+	slide_rail();
+	scale(-1, 1, -1);
+	translate(-16, 0, -16);
+	slide_rail();
+	pop();
+	translate(0, -2, 0);
+	frame("uV-N", "uV+");
+	translate(0, 0, 14);
+	frame("uV-", "uV+S");
+	translate(8, 2, -14);
+}
+
+!sub models:
+
+slide_rail() {
+	Loc Q = [0,0,0, 3,3,16]#, T = [0,0, 4,4]#;
+	for(F:["uV-N", "uV+S"]) {add(rect(Q, T, F, 1));}
+	T = [0,0, 16,4]#;
+	for(F:["-Vu", "+Vu", "V-uB", "V+u"]) {add(rect(Q, T, F, 1));}
+	push();
+	translate(0, 8, 5);
+	Q = [0,-6,0, 3,0,0]#; T = [0,0, 3,6]#;
+	Loc A = [-5,-2, 2,5]#, B = [-5,0, 0,5]#, C = [0,0, 0,0]#;
+	add(quad(A, B, C, C, "yzuv", 0));
+	translate(3, 0, 0);
+	add(quad(B, A, C, C, "yzuv", 0));
+	translate(-3, 0, 0);
+	add(rect(Q, T, "uv+", 0));
+	rotate(1, 0, 0, 21);
+	add(rect(Q, T, "uv-", 0));
+	pop();
+}
+
+base(h) {
+	Loc Q = [0,0,0, 16,h,16]#, T = [0,0, 16,h]#;
+	for(F:["uV-N", "uV+S", "-VuW", "+VuE"]) {add(rect(Q, T, F, 0));}
+	T = [0,0, 16,16]#;
+	for(F:["u-vB", "u+v"]) {add(rect(Q, T, F, 0));}
+}
+
+frame(N, S) {
+	Loc Q = [2,2,0, 14,16,2]#;
+	for(F:[N, S]) {add(rect(Q, [2,2, 14,16]#, F, 1));}
+	for(F:["-Vu", "+Vu"]) {add(rect(Q, [0,2, 4,16]#, F, 1));}
+	add(rect(Q, [2,0, 14,4]#, "u+vT", 1));
+}
+
+roll() {
+	push();
+	Loc R = rect([-2*tan16,2,2, 2*tan16,2,14]#, [0,2, 2,14]#, "u+v", 2);
+	for(i:8) {
+		add(R);
+		offsetUV(2, 0);
+		rotate(0, 0, 1, 45);
+	}
+	pop();
+}

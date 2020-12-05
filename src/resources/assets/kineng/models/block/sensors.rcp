@@ -1,0 +1,40 @@
+{textures = [
+	"blocks/stone_slab_top",
+	"kineng:blocks/sensor",
+	"kineng:blocks/sensor1"
+];}
+
+base() { !base plate
+	Loc Q = [0,0,0, 16,2,16]#, T = [0,0, 16,16]#;
+	add(rect(Q, T, "U-vB", 0));
+	add(rect(Q, T, "U+v", 1));
+	T = [0,0, 16,2]#;
+	for(F:["-VUW", "+VuE", "UV-N", "uV+S"])
+		{add(rect(Q, T, F, 1));}
+}
+
+tachometer() {
+	base();
+	Loc Q = [6,2,5, 10,4,7]#;
+	for(F:["-UV", "+uV"]) {add(rect(Q, [8,0, 12,4]#, F, 2));}
+	for(F:["UV-", "uV+", "u+v"]) {add(rect(Q, [0,0, 8,4]#, F, 2));}
+	Q = [6,2,9, 10,4,11]#;
+	for(F:["-UV", "+uV"]) {add(rect(Q, [8,0, 12,4]#, F, 2));}
+	add(rect(Q, [0,4, 8,8]#, "UV-", 2));
+	add(rect(Q, [0,8, 8,12]#, "UV+", 2));
+	add(rect(Q, [0,12, 8,16]#, "U+V", 2));
+}
+
+torch() {
+	Loc Q = [3,2,7, 5,8,9]#, T = [9,10, 11,16]#;
+	for(F:["uV-", "uV+", "-Vu", "+Vu"])
+		{add(rect(Q, T, F, 2));}
+	add(rect(Q, [9,10, 11,12]#, "u+v", 2));
+}
+
+transducer() {
+	base();
+	torch();
+	translate(8, 0, 0);
+	torch();
+}

@@ -1,4 +1,4 @@
-VERSION = 40;
+VERSION = 41;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
@@ -115,7 +115,7 @@ INIT() {
 	add("shaped", it("kineng:wind_mill"):1, "121/202/121", it("kineng:shaft_wood"), it("m.wood_rotor"), "gearWood");
 	add("shaped", it("kineng:wind_mill"):2, "111/101/111", it("kineng:wind_mill"):1, it("m.wood_rotor"));
 	add("shaped", it("kineng:water_wheel"), "111/101/111", it("kineng:shaft_wood"), it("m.wood_wheel"));
-	add("shaped", it("kineng:tachometer"), "213/404/555", it("kineng:shaft_wood"), "gearWood", "dustGlowstone", "gemQuartz", it("minecraft:redstone_torch"), it("minecraft:stone_slab"));
+	add("shaped", it("kineng:tachometer"), " 0 /213/445", it("kineng:shaft_wood"), "gearWood", "dustGlowstone", "gemQuartz", it("minecraft:stone_slab"), "dustRedstone");
 	add("shaped", it("kineng:transducer") * 2, "010/232/444", it("kineng:shaft_iron"), it("minecraft:light_weighted_pressure_plate"), it("minecraft:redstone_torch"), "dustRedstone", it("minecraft:stone_slab"));
 	add("shaped", it("kineng:mob_grinder"), "111/101/111", it("kineng:gear_iron"):1, it("minecraft:iron_sword"));
 	

@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"normal": {"model": "oak_planks"}
+		"axis=z": {"model": "kineng:_sensors.tachometer"},
+		"axis=x": {"model": "kineng:_sensors.tachometer#w"},
+		"axis=y": {"model": "kineng:_sensors.tachometer#bn"},
+		"inventory0": {"model": "kineng:_sensors.tachometer"}
 	}
 }

@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"normal": {"model": "iron_block"}
+		"normal": {"model": "iron_block"},
+		"inventory0": {"model": "iron_block"}
 	}
 }

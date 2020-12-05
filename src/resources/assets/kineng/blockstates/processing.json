@@ -1,6 +1,6 @@
 {
 	"forge_marker": 1,
-	"defaults": { "model": "kineng:processing" },
+	"defaults": { "model": "kineng:_machines.case" },
     "variants": {
 		"orient": {
 			"n": {},

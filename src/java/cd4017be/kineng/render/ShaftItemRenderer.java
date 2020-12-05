@@ -37,7 +37,7 @@ public class ShaftItemRenderer extends TileEntityItemStackRenderer implements IH
 	public ShaftItemRenderer(Item item, BlockShaft block) {
 		this.shaft = block;
 		ResourceLocation loc = item.getRegistryName();
-		this.parentName = new ResourceLocation(loc.getResourceDomain(), "item/" + loc.getResourcePath() + "_0");
+		this.parentName = new ModelResourceLocation(loc, "inventory0");
 		SpecialModelLoader.registerItemModel(item, this);
 		ModelLoader.setCustomMeshDefinition(item, new SingleTextureDefinition(loc.toString()));
 		ModelBakery.registerItemVariants(item, loc);
