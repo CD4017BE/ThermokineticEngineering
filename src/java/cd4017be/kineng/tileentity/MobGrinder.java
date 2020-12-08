@@ -1,23 +1,27 @@
 package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.recipe.KineticProcess.FRICTION_V0;
+import static cd4017be.lib.network.Sync.Type.I16;
 import static java.lang.Float.floatToIntBits;
-import java.util.List;
-import java.util.UUID;
+import static net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel;
+import static net.minecraft.init.Enchantments.*;
+import java.util.*;
 import com.mojang.authlib.GameProfile;
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.DynamicForce;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.network.Sync;
 import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.SaferFakePlayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 /** 
  * @author CD4017BE */
@@ -28,12 +32,14 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 	public static int T_CHECK = 50;
 
 	Work work = new Work();
-	int t;
+	@Sync ItemStack item = ItemStack.EMPTY;
+	@Sync(type = I16) int t;
 	EntityDamageSource damageSource;
 	GameProfile owner = new GameProfile(new UUID(0, 0), "???");
 
 	@Override
 	protected DynamicForce createForce(BlockRotaryTool block) {
+		con.maxF *= 1 + getEnchantmentLevel(UNBREAKING, item);
 		return work;
 	}
 
@@ -54,12 +60,16 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 		double v = work.Eacc / work.F1;
 		work.Eacc = 0;
 		if (v <= 0) return;
+		float dmg_J = (getEnchantmentLevel(SHARPNESS, item) * 0.25F + 1F) * DMG_J;
+		int fire = getEnchantmentLevel(FIRE_ASPECT, item) << 2;
 		for (EntityLivingBase e : list) {
 			double F = torque(e), E = F * v;
-			if (!e.attackEntityFrom(damageSource, (float)E * DMG_J)) {
+			float dmg = (float)E * dmg_J;
+			if (dmg < 1F) work.Eacc += E;
+			else if (!e.attackEntityFrom(damageSource, dmg)) {
 				work.F1 -= F;
 				work.Eacc += E;
-			}
+			} else if (fire > 0) e.setFire(fire);
 			t = Math.max(t, e.hurtResistantTime);
 		}
 	}
@@ -74,6 +84,7 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 		if (damageSource == null) {
 			SaferFakePlayer p = new SaferFakePlayer((WorldServer)world, owner);
 			p.setPosition(pos.getX()+ 0.5, pos.getY() + 10.5, pos.getZ() + 0.5);
+			p.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, item);
 			damageSource = new EntityDamageSource("kineng.grinder", p);
 		}
 		return damageSource;
@@ -83,7 +94,6 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 	protected void storeState(NBTTagCompound nbt, int mode) {
 		super.storeState(nbt, mode);
 		if (mode == SAVE) {
-			nbt.setShort("t", (short)t);
 			nbt.setDouble("E", work.Eacc);
 			nbt.setDouble("F", work.F1);
 			nbt.setUniqueId("FPuuid", owner.getId());
@@ -95,7 +105,6 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 	protected void loadState(NBTTagCompound nbt, int mode) {
 		super.loadState(nbt, mode);
 		if (mode == SAVE) {
-			t = nbt.getShort("t");
 			work.Eacc = nbt.getDouble("E");
 			work.F1 = nbt.getDouble("F");
 			owner = new GameProfile(nbt.getUniqueId("FPuuid"), nbt.getString("FPname"));
@@ -108,11 +117,15 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 			EntityPlayer player = (EntityPlayer)entity;
 			owner = player.getGameProfile();
 		}
+		this.item = ItemHandlerHelper.copyStackWithSize(item, 1);
 	}
 
 	@Override
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
-		return makeDefaultDrops(null);
+		List<ItemStack> list = new ArrayList<>();
+		list.add(item);
+		this.item = ItemStack.EMPTY;
+		return list;
 	}
 
 	static class Work extends DynamicForce {

@@ -60,7 +60,7 @@ public class Objects {
 	public static final ItemBlockGear water_wheel = null;
 	public static final ItemBlockGear wind_mill = null;
 	public static final BaseItemBlock tachometer = null, transducer = null;
-	public static final BaseItemBlock mob_grinder = null;
+	public static final ItemMobGrinder mob_grinder = null;
 
 	// Items
 	public static final ItemBreakRecipe flint_knife = null;
@@ -127,7 +127,7 @@ public class Objects {
 			new ItemBlockGear(WIND_MILL).setCreativeTab(tabKinetic),
 			new BaseItemBlock(TACHOMETER).setCreativeTab(tabKinetic),
 			new BaseItemBlock(TRANSDUCER).setCreativeTab(tabKinetic),
-			new BaseItemBlock(MOB_GRINDER).setCreativeTab(tabKinetic),
+			new ItemMobGrinder(MOB_GRINDER).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
 			new ItemAerometer("anemometer").setCreativeTab(tabKinetic),
 			new ItemChain("chain").setCreativeTab(tabKinetic)

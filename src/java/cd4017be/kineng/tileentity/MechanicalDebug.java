@@ -106,16 +106,22 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		case A_CONST_PWR:
 			if (con.force instanceof ConstPower) break;
 			mode = a;
+			c0 = 0F; //Power [W]
+			c1 = 1F; //base velocity [m/s]
 			con.link(new ConstPower());
 			break;
 		case A_CONST_VEL:
 			if (con.force instanceof ConstSpeed) break;
 			mode = a;
+			c0 = 0F; //target speed [m/s]
+			c1 = 0F; //strength [N*s/m]
 			con.link(new ConstSpeed());
 			break;
 		case A_FRICTION:
 			if (con.force instanceof Friction) break;
 			mode = a;
+			c0 = 0F;    //friction force [N]
+			c1 = 0.01F; //null velocity [m/s]
 			con.link(new Friction());
 			break;
 		case A_C0:
@@ -135,11 +141,6 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		/** [J] */
 		public double E;
 
-		ConstPower() {
-			c0 = 0F; //Power [W]
-			c1 = 1F; //base velocity [m/s]
-		}
-
 		@Override
 		public void work(double dE, double ds, double v1) {
 			E += c0 * dt - dE;
@@ -155,11 +156,6 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	}
 
 	private class Friction extends DynamicForce {
-
-		Friction() {
-			c0 = 0F;    //friction force [N]
-			c1 = 0.01F; //null velocity [m/s]
-		}
 
 		@Override
 		public void work(double dE, double ds, double v1) {
@@ -179,11 +175,6 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 	}
 
 	private class ConstSpeed extends DynamicForce {
-
-		ConstSpeed() {
-			c0 = 0F; //target speed [m/s]
-			c1 = 0F; //strength [N*s/m]
-		}
 
 		@Override
 		public void work(double dE, double ds, double v1) {

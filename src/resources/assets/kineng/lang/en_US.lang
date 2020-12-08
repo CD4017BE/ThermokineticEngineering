@@ -120,3 +120,4 @@ gui.kineng.transducer.name=Transducer
 gui.kineng.ref_trq=Reference Torque\nfor signal \= 1
 gui.kineng.torque.tip=Current Torque [kNm]
 tile.kineng.mob_grinder.name=Mob Blender
+tile.kineng.mob_grinder.tip=Deals damage proportional to it's velocity to all living beings within range. Higher max health increases damage and friction force slightly §8O(log2(N))§7.\nMobs are killed as if attacked by a player.\n\nCan be enchanted\:\n§a+25% damage§7 per lvl of §aSharpness§7,\n§a+100% max F§7 per lvl of §aUnbreaking§7,\n§aFire Aspect§7 and §aLooting§7 act as usual.
