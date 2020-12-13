@@ -1,21 +1,17 @@
 {
-	"forge_marker": 1,
-	"defaults": { "model": "kineng:_machines.case" },
     "variants": {
-		"orient": {
-			"n": {},
-			"e": { "y": 90 },
-			"s": { "y": 180 },
-			"w": { "y": 270 },
-			"bn": { "x": 90 },
-			"be": { "x": 90 , "y": 90 },
-			"rn": { "x": 180 },
-			"re": { "x": 180 , "y": 90 },
-			"rs": { "x": 180 , "y": 180 },
-			"rw": { "x": 180 , "y": 270 },
-			"tn": { "x": 270 },
-			"te": { "x": 270 , "y": 90 }
-		},
-		"inventory": { "y": 180 }
+		"orient=n": { "model": "kineng:_machines.case" },
+		"orient=e": { "model": "kineng:_machines.case#e" },
+		"orient=s": { "model": "kineng:_machines.case#s" },
+		"orient=w": { "model": "kineng:_machines.case#w" },
+		"orient=bn": { "model": "kineng:_machines.case#bn" },
+		"orient=be": { "model": "kineng:_machines.case#be" },
+		"orient=rn": { "model": "kineng:_machines.case90#rn" },
+		"orient=re": { "model": "kineng:_machines.case90#re" },
+		"orient=rs": { "model": "kineng:_machines.case90#rs" },
+		"orient=rw": { "model": "kineng:_machines.case90#rw" },
+		"orient=tn": { "model": "kineng:_machines.case#tn" },
+		"orient=te": { "model": "kineng:_machines.case#te" },
+		"inventory": { "model": "kineng:_machines.case#be" }
     }
 }

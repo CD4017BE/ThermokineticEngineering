@@ -7,15 +7,22 @@
 tan16 = 0.4142135624;
 
 case() {
-	base(4);
-	Loc Q = [0,4,0, 2,16,16]#;
-	for(F:["-VuW", "+Vu"]) {add(rect(Q, [0,4, 16,16]#, F, 1));}
-	for(F:["uV-", "uV+"]) {add(rect(Q, [0,4, 4,16]#, F, 1));}
-	add(rect(Q, [0,0, 16,4]#, "v+uT", 1));
-	Q = [14,4,0, 16,16,16]#;
-	for(F:["-Vu", "+VuE"]) {add(rect(Q, [0,4, 16,16]#, F, 1));}
-	for(F:["uV-", "uV+"]) {add(rect(Q, [0,4, 4,16]#, F, 1));}
-	add(rect(Q, [0,0, 16,4]#, "v+uT", 1));
+	Loc Q = [0,0,0, 16,16,4]#, T = [0,0, 16,4]#;
+	for(F:["u-VB", "u+VT", "-uVW", "+uVE"]) {add(rect(Q, T, F, 0));}
+	for(F:["uv-N", "uv+"]) {add(rect(Q, [0,0, 16,16]#, F, 0));}
+	Q = [0,0,4, 2,16,16]#;
+	for(F:["-uVW", "+uV"]) {add(rect(Q, [0,4, 16,16]#, F, 1));}
+	for(F:["u-VB", "u+VT"]) {add(rect(Q, [0,4, 4,16]#, F, 1));}
+	add(rect(Q, [0,0, 16,4]#, "vu+S", 1));
+	Q = [14,0,4, 16,16,16]#;
+	for(F:["-uV", "+uVE"]) {add(rect(Q, [0,4, 16,16]#, F, 1));}
+	for(F:["u-VB", "u+VT"]) {add(rect(Q, [0,4, 4,16]#, F, 1));}
+	add(rect(Q, [0,0, 16,4]#, "vu+S", 1));
+}
+
+case90() {
+	orient("yXz", 8, 8, 8);
+	case();
 }
 
 press() {

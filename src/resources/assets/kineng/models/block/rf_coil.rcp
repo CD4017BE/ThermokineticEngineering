@@ -1,0 +1,44 @@
+{textures = [
+	"kineng:blocks/coil_s",
+	"kineng:blocks/coil_f",
+	"kineng:blocks/coil_b"
+];}
+
+r90() {
+	orient("yXz", 8, 8, 8);
+	main();
+}
+
+main() {
+	Loc Q = [1,3,3, 15,13,13]#, T = [1,3, 15,13]#;
+	for(F:["uV+", "uV-"]) {add(rect(Q, T, F, 1));}
+	for(F:["u+V", "u-V"]) {add(rect(Q, T, F, 2));}
+	sides(Q, [3,3, 13,13]#);
+	
+	Q = [3,0,0, 13,16,3]#; T = [3,0, 13,16]#;
+	add(rect(Q, T, "uV-N", 2));
+	sides(Q, [13,0, 16,16]#);
+	
+	Q = [3,0,0, 13,3,17.5]#;
+	for(F:["u-VB", "u+V"]) {add(rect(Q, T, F, 2));}
+	front(Q, [3,13, 13,16]#);
+	sides(Q, [0,13, 16,16]#);
+	
+	Q = [3,13,0, 13,16,17.5]#;
+	for(F:["u-V", "u+VT"]) {add(rect(Q, T, F, 2));}
+	front(Q, [3,0, 13,3]#);
+	sides(Q, [0,0, 16,3]#);
+	
+	Q = [3,5,13, 13,11,15.5]#; T = [3,0, 13,3]#;
+	for(F:["u-V", "u+V"]) {add(rect(Q, T, F, 2));}
+	front(Q, [3,5, 13,11]#);
+	sides(Q, [0,5, 3,11]#);
+}
+
+sides(Q, T) {
+	for(F:["+VU", "-VU"]) {add(rect(Q, T, F, 0));}
+}
+
+front(Q, T) {
+	add(rect(Q, T, "uV+S", 1));
+}
