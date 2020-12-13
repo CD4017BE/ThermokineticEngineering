@@ -29,6 +29,9 @@ public class KineticRecipeW implements IRecipeWrapper {
 	public KineticRecipeW(Entry<ItemKey, KineticRecipe> entry) {
 		this.ingred = Arrays.asList(entry.getKey().items);
 		KineticRecipe rcp = entry.getValue();
+		//make sure JEI shows correct stacksize in case recipes were overridden:
+		for (int n = rcp.io[0].getCount(), i = 0; i < ingred.size(); i++)
+			ingred.get(i).setCount(n);
 		this.output = new ArrayList<>(rcp.io.length - 1);
 		for (int i = 1; i < rcp.io.length; i++)
 			output.add(rcp.io[i]);

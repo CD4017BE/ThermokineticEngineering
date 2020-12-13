@@ -1,4 +1,4 @@
-VERSION = 41;
+VERSION = 44;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
@@ -48,6 +48,8 @@ PRE_INIT() {
 	add("item", 513, "fabric");
 	add("item", 514, "wood_wheel");
 	add("item", 516, "flour");
+	add("item", 517, "oredust_iron");
+	add("item", 518, "oredust_gold");
 	
 	!material properties used to derive part properties from: [density(kg/m³), strength(N/m²), friction]#
 	mat_wood = [750, 50e6, 0.05]#;
@@ -84,17 +86,19 @@ INIT() {
 	add("ore", "red_sandstone", it("minecraft:red_sandstone"):any);
 	add("ore", "stonebrick", it("minecraft:stonebrick"):any);
 	add("ore", "wool", it("minecraft:wool"):any);
-	add("ore", "gearWood", it("m.gear_wood"));
-	add("ore", "gearIron", it("m.gear_iron"));
+	add("ore", "gearWood", it("kineng:gear_wood"):1);
+	add("ore", "gearIron", it("kineng:gear_iron"):1);
 	add("ore", "magnet", it("m.magnet"));
 	add("ore", "plateIron", it("m.plate_iron"));
-	add("ore", "flour", it("m.flour"));
+	add("ore", "dustWheat", it("m.flour"));
+	add("ore", "crushedIron", it("m.oredust_iron"));
+	add("ore", "crushedGold", it("m.oredust_gold"));
 	
 	add("shaped", it("kineng:flint_knife"), "01", it("minecraft:flint"), it("minecraft:stick"));
 	add("shaped", it("kineng:gear_wood"):1, "1/0", it("kineng:shaft_wood"), it("m.gear_wood"));
-	add("shaped", it("kineng:gear_wood"):2, " 1 /202/ 1 ", it("kineng:shaft_wood"), "gearWood", "slabWood");
-	add("shaped", it("kineng:gear_wood"):3, "212/202/212", it("kineng:gear_wood"):1, "gearWood", "slabWood");
-	add("shaped", it("kineng:gear_wood"):4, "313/202/313", it("kineng:gear_wood"):2, "gearWood", "slabWood", "plankWood");
+	add("shaped", it("kineng:gear_wood"):2, " 1 /202/ 1 ", it("kineng:shaft_wood"), it("m.gear_wood"), "slabWood");
+	add("shaped", it("kineng:gear_wood"):3, "212/202/212", it("kineng:gear_wood"):1, it("m.gear_wood"), "slabWood");
+	add("shaped", it("kineng:gear_wood"):4, "313/202/313", it("kineng:gear_wood"):2, it("m.gear_wood"), "slabWood", "plankWood");
 	add("shaped", it("kineng:gear_wood"):5, "303/2 2/313", it("kineng:gear_wood"):2, it("kineng:gear_wood"):3, "slabWood", "plankWood");
 	add("shaped", it("kineng:gear_wood"):5, "202/2 2/212", it("kineng:gear_wood"):1, it("kineng:gear_wood"):4, "slabWood");
 	add("shaped", it("kineng:shaft_man"), "111/101/111", it("kineng:shaft_wood"), it("minecraft:stick"));
@@ -104,18 +108,18 @@ INIT() {
 	add("shaped", it("kineng:sawblade"), "212/101/212", it("kineng:shaft_wood"), "plateIron", "nuggetIron");
 	add("shaped", it("kineng:press"), "101/101", it("m.stone_roller"), "slabWood");
 	
-	add("shaped", it("kineng:gear_iron"):1, "1/0", it("kineng:shaft_iron"), "gearIron");
-	add("shaped", it("kineng:gear_iron"):2, " 1 /20 / 1 ", it("kineng:shaft_iron"), "gearIron", "plateIron");
-	add("shaped", it("kineng:gear_iron"):3, " 12/20 / 12", it("kineng:gear_iron"):1, "gearIron", "plateIron");
-	add("shaped", it("kineng:gear_iron"):4, "212/20 /212", it("kineng:gear_iron"):2, "gearIron", "plateIron");
+	add("shaped", it("kineng:gear_iron"):1, "1/0", it("kineng:shaft_iron"), it("m.gear_iron"));
+	add("shaped", it("kineng:gear_iron"):2, " 1 /20 / 1 ", it("kineng:shaft_iron"), it("m.gear_iron"), "plateIron");
+	add("shaped", it("kineng:gear_iron"):3, " 12/20 / 12", it("kineng:gear_iron"):1, it("m.gear_iron"), "plateIron");
+	add("shaped", it("kineng:gear_iron"):4, "212/20 /212", it("kineng:gear_iron"):2, it("m.gear_iron"), "plateIron");
 	add("shaped", it("kineng:gear_iron"):5, "202/ 2 /212", it("kineng:gear_iron"):2, it("kineng:gear_iron"):3, "plateIron");
 	add("shaped", it("kineng:gear_iron"):5, " 0 /222/ 1 ", it("kineng:gear_iron"):1, it("kineng:gear_iron"):4, "plateIron");
 	add("shaped", it("kineng:magnets"), "111/101/111", it("kineng:shaft_iron"), "magnet");
 	add("shaped", it("kineng:rf_coil"), "010/010/1 1", it("m.fluxwinding"), it("m.transformer"));
-	add("shaped", it("kineng:wind_mill"):1, "121/202/121", it("kineng:shaft_wood"), it("m.wood_rotor"), "gearWood");
+	add("shaped", it("kineng:wind_mill"):1, "121/202/121", it("kineng:shaft_wood"), it("m.wood_rotor"), it("m.gear_wood"));
 	add("shaped", it("kineng:wind_mill"):2, "111/101/111", it("kineng:wind_mill"):1, it("m.wood_rotor"));
 	add("shaped", it("kineng:water_wheel"), "111/101/111", it("kineng:shaft_wood"), it("m.wood_wheel"));
-	add("shaped", it("kineng:tachometer"), " 0 /213/445", it("kineng:shaft_wood"), "gearWood", "dustGlowstone", "gemQuartz", it("minecraft:stone_slab"), "dustRedstone");
+	add("shaped", it("kineng:tachometer"), " 0 /213/445", it("kineng:shaft_wood"), it("m.gear_wood"), "dustGlowstone", "gemQuartz", it("minecraft:stone_slab"), "dustRedstone");
 	add("shaped", it("kineng:transducer") * 2, "010/232/444", it("kineng:shaft_iron"), it("minecraft:light_weighted_pressure_plate"), it("minecraft:redstone_torch"), "dustRedstone", it("minecraft:stone_slab"));
 	add("shaped", it("kineng:mob_grinder"), "111/101/111", it("kineng:gear_iron"):1, it("minecraft:iron_sword"));
 	
@@ -123,9 +127,9 @@ INIT() {
 	add("shaped", it("kineng:lake_valve"), "111/2 0/111", it("minecraft:iron_bars"), it("minecraft:stone_slab"):5, it("minecraft:bucket"));
 	add("shaped", it("kineng:lake_gate"), "101/121/1 1", it("minecraft:piston"), it("minecraft:stone_slab"):5, "slabWood");
 	
-	add("shaped", it("kineng:anemometer"), " 2 /212/02 ", it("minecraft:stick"), "gearWood", it("minecraft:feather"));
+	add("shaped", it("kineng:anemometer"), " 2 /212/02 ", it("minecraft:stick"), it("m.gear_wood"), it("minecraft:feather"));
 	add("shaped", it("m.wood_rotor"), "010/010/010", it("minecraft:stick"), it("m.fabric"));
-	add("shaped", it("m.wood_wheel"), " 0 / 0 /010", "slabWood", "gearWood");
+	add("shaped", it("m.wood_wheel"), " 0 / 0 /010", "slabWood", it("m.gear_wood"));
 	add("shaped", it("m.transformer"), "0/1/0", "plateIron", it("minecraft:paper"));
 	add("shaped", it("m.magnet"), "  1/ 0 /1  ", it("m.hot_iron"), "dustRedstone");
 	add("shapeless", it("m.raw_fluxalloy"), "ingotGold", "dustRedstone", "dustRedstone");
@@ -137,6 +141,8 @@ INIT() {
 	add("smelt", it("m.raw_fluxalloy"), it("m.ingot_fluxalloy"));
 	add("smelt", it("minecraft:iron_ingot"), it("m.hot_iron"));
 	add("smelt", it("m.flour"), it("minecraft:bread"));
+	add("smelt", it("m.oredust_iron"), it("minecraft:iron_ingot"));
+	add("smelt", it("m.oredust_gold"), it("minecraft:gold_ingot"));
 	
 	!stats of animals leashed to Hand Wheel: [force(N), power(W)]#
 	animal_power:"player" = [1000, 5000]#;
@@ -150,6 +156,30 @@ INIT() {
 }
 
 POST_INIT() {
+	! metal processing integration
+	process("Iron", 15000);
+	process("Gold", 10000);
+	process("Copper", 15000);
+	process("Tin", 10000);
+	process("Lead", 12000);
+	process("Silver", 12500);
+	process("Uranium", 18000);
+	process("Aluminum", 12500);
+	process("Nickel", 14000);
+	process("Osmium", 18000);
+	process("Platinum", 20000);
+	process("Iridium", 20000);
+	process("Steel", 18000);
+	process("Bronze", 15000);
+	process("Constantan", 16000);
+	process("Electrum", 12500);
+	process("Invar", 15000);
+	process("Draconium", 25000);
+	process("Signalum", 15000);
+	process("Luminum", 12500);
+	process("Enderium", 20000);
+	if(hasmod("ic2")) {integrateIC2();}
+	
 	!block drops for Flint Knive:
 	!add("knive_cutting", <brokenBlock>, <metaBitMask>, <breakSpeed>, <droppedItem>);
 	add("knife_cutting", "minecraft:log", -1, 0.25, it("kineng:shaft_wood"));
@@ -165,9 +195,9 @@ POST_INIT() {
 	add("lathe", ore("stoneGranite"),      2000, 10, it("m.stone_roller"));
 	add("lathe", it("minecraft:string", 4), 100, 25, it("m.fabric"));
 	add("lathe", it("m.ingot_fluxalloy", 3),2000, 25, it("m.fluxwinding"));
+	add("lathe", ore("ingotEnergeticAlloy", 3),2000, 20, it("m.fluxwinding"));
 	
 	add("press", it("minecraft:reeds"), 500, 2.5, it("minecraft:paper"));
-	add("press", ore("ingotIron"),    15000, 2.5, it("m.plate_iron"));
 	add("press", it("m.hot_iron"),     3000, 2.5, it("m.plate_iron"));
 	
 	add("grinder", ore("cobblestone"),          5000, 10, it("minecraft:gravel"));
@@ -175,6 +205,7 @@ POST_INIT() {
 	add("grinder", ore("oreCoal"),             10000, 10, it("minecraft:coal", 2), it("minecraft:gravel"));
 	add("grinder", ore("oreRedstone"),         12500, 10, it("minecraft:redstone", 8), it("minecraft:gravel"));
 	add("grinder", ore("oreLapis"),            12500, 10, it("minecraft:dye", 8, 4), it("minecraft:gravel"));
+	add("grinder", ore("oreQuartz"),           15000, 10, it("minecraft:quartz", 2), it("minecraft:netherrack"));
 	add("grinder", ore("oreDiamond"),          20000, 10, it("minecraft:diamond", 2), it("minecraft:gravel"));
 	add("grinder", ore("oreEmerald"),          20000, 10, it("minecraft:emerald", 2), it("minecraft:gravel"));
 	add("grinder", ore("bone"),                 2500,  4, it("minecraft:dye", 6, 15));
@@ -240,4 +271,55 @@ POST_INIT() {
 	for (i : 16) {
 		add("sawmill", it("minecraft:wool"):i, 500, 4, it("minecraft:carpet", 2, i));
 	}
+	
+	for(gem : listore("(?:gem|crystal)(\\w+)")) {
+		Loc dust = it(["ore:dust", gem:1]$);
+		if(dust) {
+			add("grinder", ore(gem:0), 7500, 4, dust);
+		}
+	}
+}
+
+process(name, hardn) {
+	Loc crushed = it(["ore:crushed", name]$),
+		dust = it(["ore:dust", name]$),
+		plate = it(["ore:plate", name]$),
+		ingot = hasit(["ore:ingot", name]$),
+		gear = it(["ore:gear", name]$),
+		dense = it(["ore:dense", name]$);
+	if(~crushed) {crushed = dust;}
+	if(crushed & hasit(["ore:ore", name]$)) {
+		add("grinder", ore(["ore", name]$), hardn, 10, crushed*2, it("minecraft:gravel"));
+	}
+	if(dust & ingot) {
+		add("grinder", ore(["ingot", name]$), hardn, 2.5, dust);
+	}
+	if(dust & plate) {
+		add("grinder", ore(["plate", name]$), hardn, 2.5, dust);
+	}
+	if(plate & ingot) {
+		add("press", ore(["ingot", name]$), hardn, 2.5, plate);
+	}
+	if(plate & dense) {
+		add("press", ore(["plate", name]$, 9), hardn, 20, dense);
+		add("saw", ore(["dense", name]$), hardn/5, 20, plate * 9);
+	}
+	if(plate & gear) {
+		add("lathe", ore(["plate", name]$, 4), hardn/2.5, 10, gear);
+	}
+}
+
+integrateIC2() {
+	add("saw", ore("plateBronze"), 3000, 4, it("ic2:casing", 2, 0));
+	add("saw", ore("plateCopper"), 3000, 4, it("ic2:casing", 2, 1));
+	add("saw", ore("plateGold"), 2000, 4, it("ic2:casing", 2, 2));
+	add("saw", ore("plateIron"), 3000, 4, it("ic2:casing", 2, 3));
+	add("saw", ore("plateLead"), 2400, 4, it("ic2:casing", 2, 4));
+	add("saw", ore("plateSteel"), 3600, 4, it("ic2:casing", 2, 5));
+	add("saw", ore("plateTin"), 2000, 4, it("ic2:casing", 2, 6));
+	add("press", ore("dustLapis"), 8000, 5, it("ore:plateLapis"));
+	add("press", it("ic2:ingot"), 20000, 2.5, it("ic2:crafting"):3); !advanced alloy
+	add("press", it("ic2:crafting"):14, 25000, 2.5, it("ic2:crafting"):15); !carbon plate
+	add("lathe", ore("blockSteel"), 5000, 10, it("ic2:crafting"):29); !iron shaft
+	add("lathe", ore("blockSteel"), 8000, 10, it("ic2:crafting"):30); !steel shaft
 }

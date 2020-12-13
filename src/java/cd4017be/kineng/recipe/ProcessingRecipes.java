@@ -48,7 +48,7 @@ public class ProcessingRecipes implements IRecipeHandler {
 			o = ((OreDictStack)param.param[1]).getItems();
 		else o = param.get(1);
 		for (Object e : o instanceof Object[] ? (Object[])o : new Object[] {o})
-			if (e instanceof ItemStack) {
+			if (e instanceof ItemStack && !((ItemStack)e).isEmpty()) {
 				if (rcp.io[0] == null) rcp.io[0] = (ItemStack)e;
 				recipes.put(new ItemKey((ItemStack)e), rcp);
 			}

@@ -1,123 +1,131 @@
 #PARSE_ESCAPES
+#Creative Tab
 itemGroup.kineng=Mechanical Engineering
-death.attack.kineng.grinder=%s got sliced in %s's Mob Blender
 
 #Blocks
 tile.kineng.shaft_wood.name=Wooden Shaft
+tile.kineng.shaft_wood.tip=Connects shaft components along a straight axis.
+tile.kineng.shaft_iron.name=Iron Shaft
+tile.kineng.shaft_iron.tip=Connects shaft components along a straight axis.
 tile.kineng.gear_wood\:1.name=Wooden Gear 1m ⦰
 tile.kineng.gear_wood\:2.name=Wooden Gear 2m ⦰
 tile.kineng.gear_wood\:3.name=Wooden Gear 3m ⦰
 tile.kineng.gear_wood\:4.name=Wooden Gear 4m ⦰
 tile.kineng.gear_wood\:5.name=Wooden Gear 5m ⦰
-
-# Messages
-msg.kineng.chain_link0=Linking ...
-msg.kineng.chain_link1=§cGear axes must be aligned!
-msg.kineng.chain_link2=§cToo far away / not enough chain!
-msg.kineng.chain_link3=§cLink failed!
-msg.kineng.chain_link4=§aLink successfull!
-
-#added by ingame editor:
-gui.kineng.debug.mode3=Friction Force
-gui.kineng.debug.name=Debug Shaft Force
-gui.kineng.debug.par0=No mode selected!
-gui.kineng.debug.par1=Power supply\n"Zero" velocity
-gui.kineng.debug.par2=Target Velocity\nStrength
-gui.kineng.debug.par3=Friction Torque\n"Zero" Velocity
-gui.kineng.debug.reset=Reset Counters
-gui.kineng.debug.mode1=Constant Power
-gui.kineng.debug.mode2=Target Velocity
-tile.kineng.shaft_debug.name=§dDebug Force Supply Shaft
-tile.kineng.gear_iron\:5.name=Iron Gear 5m ⦰
-tile.kineng.shaft_iron.name=Iron Shaft
+tile.kineng.gear_wood\:i.tip=Connects to other gears along the two perpendicular axes.\nOdd diameter gears [1,3,5] only connect straight with other odd diameters.\nLikewise, even diameters [2,4] connect with other even diameters but\ndo so also at 90° angles.\n\nAngular velocity and transmitted torque are transformed according to the diameter ratio of the connected gears.
+tile.kineng.gear_iron\:1.name=Iron Gear 1m ⦰
 tile.kineng.gear_iron\:2.name=Iron Gear 2m ⦰
 tile.kineng.gear_iron\:3.name=Iron Gear 3m ⦰
 tile.kineng.gear_iron\:4.name=Iron Gear 4m ⦰
-tile.kineng.gear_iron\:1.name=Iron Gear 1m ⦰
-gui.kineng.pr_mode4=Grinder
-gui.kineng.pr_status0=§4no valid recipe!
-gui.kineng.pr_mode-1=§4no tool connected!
-tile.kineng.processing.name=Mechanical Processing Case
-gui.kineng.processing.name=Mechanical Processing
-tile.kineng.grindstone.name=Grindstone
-gui.kineng.pr_status1=missing input or output full\n§oclick to cancel recipe
-gui.kineng.pr_status2=Running\n§oclick to cancel recipe
-tile.kineng.sawblade.name=Sawblade
-tile.kineng.shaft_man.name=Hand Wheel
-gui.kineng.pr_mode5=Saw
-tile.kineng.lathe.name=Lathe
-gui.kineng.pr_mode0=Lathe
-info.kineng.shaftstats=§nShaft\:§7 J \= %.3ugm², §cmax M§7 \= %.3uNm, §cmax ω§7 \= %.3ur/s
-info.kineng.gear=§nGear\:§7 r \= %.3um, §cmax F§7 \= %.3uN, §9friction§7 \= %.1f%%
-info.kineng.toolstats=§nTool\:§7 r \= %.3um, §cmax F§7 \= %.3uN
-item.cd4017be.m\:gear_wood.name=Wooden Gear Ring
-item.kineng.flint_knive.name=Flint Knive
-item.cd4017be.m\:flour.name=Flour
-item.cd4017be.m\:gear_iron.name=Iron Gear Ring
-item.kineng.flint_knife.name=Flint Knife
-tile.kineng.gear_wood\:i.tip=Connects to other gears along the two perpendicular axes.\nOdd diameter gears [1,3,5] only connect straight with other odd diameters.\nLikewise, even diameters [2,4] connect with other even diameters but\ndo so also at 90° angles.\n\nAngular velocity and transmitted torque are transformed according to the diameter ratio of the connected gears.
-tile.kineng.shaft_iron.tip=Connects shaft components along a straight axis.
+tile.kineng.gear_iron\:5.name=Iron Gear 5m ⦰
 tile.kineng.gear_iron\:i.tip=Connects to other gears along the two perpendicular axes.\nOdd diameter gears [1,3,5] only connect straight with other odd diameters.\nLikewise, even diameters [2,4] connect with other even diameters but\ndo so also at 90° angles.\n\nAngular velocity and transmitted torque are transformed according to the diameter ratio of the connected gears.
-tile.kineng.shaft_wood.tip=Connects shaft components along a straight axis.
-tile.kineng.shaft_man.tip=Powers a shaft by manual work. Alternatively you can leash animals to a fence above or below the wheel to work for you.
+tile.kineng.shaft_debug.name=§dDebug Force Supply Shaft
 tile.kineng.shaft_debug.tip=Unlimited shaft power generator for testing in creative mode.
-tile.kineng.sawblade.tip=Used as a Saw with the §6Mechanical Processing Case§7.
-tile.kineng.grindstone.tip=Used as a Grinder with the §6Mechanical Processing Case§7.
-tile.kineng.lathe.tip=Used for item processing [see §9JEI§7].
+tile.kineng.processing.name=Mechanical Processing Case
 tile.kineng.processing.tip=Used for mechanical item processing [see §9JEI§7]. Must be placed next to a shaft powered tool.
-item.kineng.flint_knife.tip=Used to make shafts and gears when you don't have a §6Lathe§7\:\nbreak §6Log§7 -> §6Wooden Shaft\nbreak §6Planks§7 -> §6Wooden Gear Ring
-tile.kineng.magnets.name=Magnetic Core
-tile.kineng.rf_coil.name=Flux Coil
-tile.kineng.magnets.tip=Turns angular motion into oscillating magnetic fields.
-tile.kineng.rf_coil.tip=Converts between §9Kinetic Energy§7 and §9Forge Energy / Redstone Flux§7\:\n1 RF <-> \\<energy_conv_RF> J  §oassuming 100% efficiency\nMust be placed next to a §6Magnetic Core§7.
-gui.kineng.fluxcoil.eff=Efficiency\: %.1f%%\\n%2$.3uRF/t %s %3$.3uW
-gui.kineng.fluxcoil.target=Target Speed\:\\n%.1fm/s
-gui.kineng.fluxcoil.name=Energy Conversion
-gui.kineng.fluxcoil.charge=Coil Charge\:\\n%.0f / %.0f RF
-gui.kineng.fluxcoil.vel=Magnet Speed\:\\n%.3um/s
-gui.kineng.fluxcoil.force=Magnetic Force\:\\n%.3uN
-item.cd4017be.m\:fluxwinding.name=Flux Winding
-item.cd4017be.m\:ingot_fluxalloy.name=Flux Alloy Ingot
-item.cd4017be.m\:raw_fluxalloy.name=Raw Flux Alloy
-item.cd4017be.m\:magnet.name=Magnet
-item.cd4017be.m\:transformer.name=Transformer Core
-gui.kineng.fluxcoil.on1=Coil Engaged
-gui.kineng.fluxcoil.on0=Coil disengaged
+tile.kineng.grindstone.name=Grindstone
+tile.kineng.grindstone.tip=Used as a Grinder with the §6Mechanical Processing Case§7.
+tile.kineng.sawblade.name=Sawblade
+tile.kineng.sawblade.tip=Used as a Saw with the §6Mechanical Processing Case§7.
+tile.kineng.lathe.name=Lathe
+tile.kineng.lathe.tip=Used for item processing [see §9JEI§7].
 tile.kineng.press.name=Rolling Press
-gui.kineng.pr_mode1=Rolling Press
-item.cd4017be.m\:hot_iron.name=Hot Iron Ingot
-item.cd4017be.m\:plate_iron.name=Iron Plate
-item.cd4017be.m\:stone_roller.name=Stone Roller
+tile.kineng.press.tip=Used for item processing [see §9JEI§7].
+tile.kineng.shaft_man.name=Crank Wheel
+tile.kineng.shaft_man.tip=Powers a shaft by manual work. Alternatively you can leash animals to a fence above or below the wheel to work for you.
+tile.kineng.magnets.name=Magnetic Core
+tile.kineng.magnets.tip=Turns angular motion into oscillating magnetic fields.
+tile.kineng.rf_coil.name=Flux Coil
+tile.kineng.rf_coil.tip=Converts between §9Kinetic Energy§7 and §9Forge Energy / Redstone Flux§7\:\n1 RF <-> \\<energy_conv_RF> J  §oassuming 100% efficiency\nMust be placed next to a §6Magnetic Core§7.
 tile.kineng.lake.name=Storage Lake
 tile.kineng.lake.tip=Must be placed at the lowest point of the a valley in terrain to use for liquid storage.\n§oLake should be convex shaped, or it might miss some Blocks!\n\nWhen filled with Water, it will collect rain from the sourrounding area to refill itself.
 tile.kineng.lake_valve.name=Lake Valve
 tile.kineng.lake_valve.tip=Used to pump liquid in and out of a §6Storage Lake§7.
 tile.kineng.lake_gate.name=Water Gate
+tile.kineng.lake_gate.tip=Lets liquid flow out of a §6Storage Lake§7 to drive §6Water Wheels§7.\nUnless the liquid path ends in another lake (at lower height), the liquid is voided.\nLiquid will pickup speed as it flows downhill, providing more power to Water Wheels.\n§oPath length and shape don't affect efficiency (no friction).
 tile.kineng.water_wheel.name=Water Wheel
-tile.kineng.wind_mill\:4.name=Wind Turbine 20m ⦰
-tile.kineng.wind_mill\:3.name=Wind Turbine 15m ⦰
-tile.kineng.wind_mill\:5.name=Wind Turbine 25m ⦰
+tile.kineng.water_wheel.tip=Driven by water flowing downhill and passing over or under it, which\nwill be slowed down in the process.\nThe water must be supplied from a §6Water Gate§7!
 tile.kineng.wind_mill\:1.name=Wind Turbine 5m ⦰
 tile.kineng.wind_mill\:2.name=Wind Turbine 10m ⦰
-item.kineng.anemometer.name=Anemometer
-item.kineng.anemometer.tip=Displays the base wind speed along view direction at the current position.\n§oDoes not account for obstructions!
-item.cd4017be.m\:wood_rotor.name=Wind Sail
-item.cd4017be.m\:fabric.name=Fabric
-tile.kineng.water_wheel.tip=Driven by water flowing downhill and passing over or under it, which\nwill be slowed down in the process.\nThe water must be supplied from a §6Water Gate§7!
-tile.kineng.lake_gate.tip=Lets liquid flow out of a §6Storage Lake§7 to drive §6Water Wheels§7.\nUnless the liquid path ends in another lake (at lower height), the liquid is voided.\nLiquid will pickup speed as it flows downhill, providing more power to Water Wheels.\n§oPath length and shape don't affect efficiency (no friction).
-item.kineng.chain.name=Chain Link
-item.kineng.chain.tip=Mechanically connects §6gears§7 that are further apart. The gears must have parallel oriented shafts and not be touching any other gears.\n§oEach item of chain covers a distance of 1m.
-item.cd4017be.m\:wood_wheel.name=Wooden Wheel Bucket
-gui.kineng.ang_vel.tip=Current Angular\nVelocity [rad/sec]
-gui.kineng.rs_out.tip=Emitted Redstone Signal
-gui.kineng.ref_vel=Reference Velocity\nfor signal \= 1
-gui.kineng.tachometer.name=Tachometer
+tile.kineng.wind_mill\:3.name=Wind Turbine 15m ⦰
+tile.kineng.wind_mill\:4.name=Wind Turbine 20m ⦰
+tile.kineng.wind_mill\:5.name=Wind Turbine 25m ⦰
+tile.kineng.wind_mill\:i.tip=Extracts kinetic power from wind currents. The windspeed is dependent on location and direction and can be measured with an §6Anemometer§7. Furthermore windspeed is reduced by obstructions close to the Turbine and increased during thunderstorms.\nNote: the maximum power extracted under ideal load is proportional to windspeed ^ 3, so finding a place with 2x windspeed would give you 8x power output.
 tile.kineng.tachometer.name=Shaft Tachometer
 tile.kineng.tachometer.tip=Emits a Redstone Signal proportional to the Shaft's angular velocity.\nThe signal scale factor can be adjusted in its GUI.
 tile.kineng.transducer.name=Torque Transducer
 tile.kineng.transducer.tip=Emits a Redstone Signal proportional to the torque transmitted trough the shaft.\nThe signal scale factor can be adjusted in its GUI.
-gui.kineng.transducer.name=Transducer
-gui.kineng.ref_trq=Reference Torque\nfor signal \= 1
-gui.kineng.torque.tip=Current Torque [kNm]
 tile.kineng.mob_grinder.name=Mob Blender
 tile.kineng.mob_grinder.tip=Deals damage proportional to it's velocity to all living beings within range. Higher max health increases damage and friction force slightly §8O(log2(N))§7.\nMobs are killed as if attacked by a player.\n\nCan be enchanted\:\n§a+25% damage§7 per lvl of §aSharpness§7,\n§a+100% max F§7 per lvl of §aUnbreaking§7,\n§aFire Aspect§7 and §aLooting§7 act as usual.
+
+#Items
+item.kineng.flint_knife.name=Flint Knife
+item.kineng.flint_knife.tip=Used to make shafts and gears when you don't have a §6Lathe§7\:\nbreak §6Log§7 -> §6Wooden Shaft\nbreak §6Planks§7 -> §6Wooden Gear Ring
+item.kineng.anemometer.name=Anemometer
+item.kineng.anemometer.tip=Displays the base wind speed along view direction at the current position.\n§oDoes not account for obstructions!
+item.kineng.chain.name=Chain Link
+item.kineng.chain.tip=Mechanically connects §6gears§7 that are further apart. The gears must have parallel oriented shafts and not be touching any other gears.\n§oEach item of chain covers a distance of 1m.
+item.cd4017be.m\:gear_wood.name=Wooden Gear Ring
+item.cd4017be.m\:gear_iron.name=Iron Gear Ring
+item.cd4017be.m\:flour.name=Flour
+item.cd4017be.m\:raw_fluxalloy.name=Raw Flux Alloy
+item.cd4017be.m\:ingot_fluxalloy.name=Flux Alloy Ingot
+item.cd4017be.m\:fluxwinding.name=Flux Winding
+item.cd4017be.m\:magnet.name=Magnet
+item.cd4017be.m\:transformer.name=Transformer Core
+item.cd4017be.m\:hot_iron.name=Hot Iron Ingot
+item.cd4017be.m\:plate_iron.name=Iron Plate
+item.cd4017be.m\:stone_roller.name=Stone Roller
+item.cd4017be.m\:wood_rotor.name=Wind Sail
+item.cd4017be.m\:fabric.name=Fabric
+item.cd4017be.m\:wood_wheel.name=Wooden Wheel Bucket
+item.cd4017be.m\:oredust_iron.name=Iron Ore Dust
+item.cd4017be.m\:oredust_gold.name=Gold Ore Dust
+
+#Tooltip
+info.kineng.shaftstats=§nShaft\:§7 J \= %.3ugm², §cmax M§7 \= %.3uNm, §cmax ω§7 \= %.3ur/s
+info.kineng.gear=§nGear\:§7 r \= %.3um, §cmax F§7 \= %.3uN, §9friction§7 \= %.1f%%
+info.kineng.toolstats=§nTool\:§7 r \= %.3um, §cmax F§7 \= %.3uN
+
+#Messages
+msg.kineng.chain_link0=Linking ...
+msg.kineng.chain_link1=§cGear axes must be aligned!
+msg.kineng.chain_link2=§cToo far away / not enough chain!
+msg.kineng.chain_link3=§cLink failed!
+msg.kineng.chain_link4=§aLink successfull!
+death.attack.kineng.grinder=%s got shred to pieces in %s's Mob Blender
+
+#Gui
+gui.kineng.debug.name=Debug Shaft Force
+gui.kineng.debug.mode1=Constant Power
+gui.kineng.debug.mode2=Target Velocity
+gui.kineng.debug.mode3=Friction Force
+gui.kineng.debug.par0=No mode selected!
+gui.kineng.debug.par1=Power supply\n"Zero" velocity
+gui.kineng.debug.par2=Target Velocity\nStrength
+gui.kineng.debug.par3=Friction Torque\n"Zero" Velocity
+gui.kineng.debug.reset=Reset Counters
+gui.kineng.processing.name=Mechanical Processing
+gui.kineng.pr_status0=§4no valid recipe!
+gui.kineng.pr_status1=missing input or output full\n§oclick to cancel recipe
+gui.kineng.pr_status2=Running\n§oclick to cancel recipe
+gui.kineng.pr_mode-1=§4no tool connected!
+gui.kineng.pr_mode0=Lathe
+gui.kineng.pr_mode1=Rolling Press
+gui.kineng.pr_mode4=Grinder
+gui.kineng.pr_mode5=Saw
+gui.kineng.fluxcoil.name=Energy Conversion
+gui.kineng.fluxcoil.eff=Efficiency\: %.1f%%\\n%2$.3uRF/t %s %3$.3uW
+gui.kineng.fluxcoil.target=Target Speed\:\\n%.1fm/s
+gui.kineng.fluxcoil.charge=Coil Charge\:\\n%.0f / %.0f RF
+gui.kineng.fluxcoil.vel=Magnet Speed\:\\n%.3um/s
+gui.kineng.fluxcoil.force=Magnetic Force\:\\n%.3uN
+gui.kineng.fluxcoil.on0=Coil disengaged
+gui.kineng.fluxcoil.on1=Coil engaged
+gui.kineng.tachometer.name=Tachometer
+gui.kineng.ang_vel.tip=Current Angular\nVelocity [rad/sec]
+gui.kineng.ref_vel=Reference Velocity\nfor signal \= 1
+gui.kineng.rs_out.tip=Emitted Redstone Signal
+gui.kineng.transducer.name=Torque
+gui.kineng.torque.tip=Current Torque [kNm]
+gui.kineng.ref_trq=Reference Torque\nfor signal \= 1
