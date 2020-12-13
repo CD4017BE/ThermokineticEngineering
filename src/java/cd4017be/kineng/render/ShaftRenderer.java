@@ -3,6 +3,7 @@ package cd4017be.kineng.render;
 import static net.minecraft.client.renderer.GlStateManager.*;
 import org.lwjgl.opengl.GL11;
 import cd4017be.kineng.physics.*;
+import cd4017be.kineng.tileentity.IGear;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.render.Util;
 import net.minecraft.client.Minecraft;
@@ -104,7 +105,7 @@ public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRendere
 
 	@Override
 	public boolean isGlobalRenderer(T te) {
-		return global && te.block().radius(te.getBlockState()) > 0.5;
+		return global && (te instanceof IGear || te.block().radius(te.getBlockState()) > 0.5);
 	}
 
 }
