@@ -1,3 +1,12 @@
+v0.0.6
+Changes:
+- add metal processing and other mod integration recipes
+- make mob grinder enchantable
+- improved models
+- fix model orientation on Processing Case and Flux Coil
+- fix render clipping with chains on 1m gears
+- other bug fixes
+
 v0.0.5
 Changes:
 - make chains break on connect additional gears & fix creative placement
