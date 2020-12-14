@@ -1,4 +1,4 @@
-VERSION = 44;
+VERSION = 45;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
@@ -310,16 +310,16 @@ process(name, hardn) {
 }
 
 integrateIC2() {
-	add("saw", ore("plateBronze"), 3000, 4, it("ic2:casing", 2, 0));
-	add("saw", ore("plateCopper"), 3000, 4, it("ic2:casing", 2, 1));
-	add("saw", ore("plateGold"), 2000, 4, it("ic2:casing", 2, 2));
-	add("saw", ore("plateIron"), 3000, 4, it("ic2:casing", 2, 3));
-	add("saw", ore("plateLead"), 2400, 4, it("ic2:casing", 2, 4));
-	add("saw", ore("plateSteel"), 3600, 4, it("ic2:casing", 2, 5));
-	add("saw", ore("plateTin"), 2000, 4, it("ic2:casing", 2, 6));
+	add("sawmill", ore("plateBronze"), 3000, 4, it("ic2:casing", 2, 0));
+	add("sawmill", ore("plateCopper"), 3000, 4, it("ic2:casing", 2, 1));
+	add("sawmill", ore("plateGold"), 2000, 4, it("ic2:casing", 2, 2));
+	add("sawmill", ore("plateIron"), 3000, 4, it("ic2:casing", 2, 3));
+	add("sawmill", ore("plateLead"), 2400, 4, it("ic2:casing", 2, 4));
+	add("sawmill", ore("plateSteel"), 3600, 4, it("ic2:casing", 2, 5));
+	add("sawmill", ore("plateTin"), 2000, 4, it("ic2:casing", 2, 6));
 	add("press", ore("dustLapis"), 8000, 5, it("ore:plateLapis"));
 	add("press", it("ic2:ingot"), 20000, 2.5, it("ic2:crafting"):3); !advanced alloy
 	add("press", it("ic2:crafting"):14, 25000, 2.5, it("ic2:crafting"):15); !carbon plate
-	add("lathe", ore("blockSteel"), 5000, 10, it("ic2:crafting"):29); !iron shaft
+	add("lathe", ore("blockIron"), 5000, 10, it("ic2:crafting"):29); !iron shaft
 	add("lathe", ore("blockSteel"), 8000, 10, it("ic2:crafting"):30); !steel shaft
 }
