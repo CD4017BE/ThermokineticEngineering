@@ -30,6 +30,7 @@ public class CommonProxy {
 		M_WOOD.setFromConfig(c, "wood", 750, 50e6, 0.05);
 		M_STONE.setFromConfig(c, "stone", 2500, 20e6, 0.1);
 		M_IRON.setFromConfig(c, "iron", 7860, 150e6, 0.01);
+		M_ALUMINUM.setFromConfig(c, "aluminum", 2700, 300e6, 0.02);
 		M_BEDROCK.setFromConfig(c, "bedrock", 1000, Double.POSITIVE_INFINITY, 0);
 		
 		GRINDSTONE.setMaterials(M_STONE, 1.0, 0.625);
@@ -49,13 +50,13 @@ public class CommonProxy {
 		setFromConfig(WATER_WHEEL, c, 50000);
 		MOB_GRINDER.setMaterials(M_IRON, 1.5, 0.125);
 		setFromConfig(MOB_GRINDER, c, 50000);
-		double[] F = c.getVect("maxF_wind_mill", new double[] {50000, 50000, 250000, 250000, 250000});
-		double[] str = c.getVect("str_wind_mill", new double[] {0.25, 0.125, 0.25, 0.20, 0.16});
+		double[] F = c.getVect("maxF_wind_mill", new double[] {50000, 50000, 250000, 400000, 400000});
+		double[] str = c.getVect("str_wind_mill", new double[] {0.25, 0.125, 0.25, 0.25, 0.20});
 		WIND_MILL.setMaterial(1, M_WOOD, M_WOOD, 0.5, str[0], F[0]);
 		WIND_MILL.setMaterial(2, M_WOOD, M_WOOD, 0.5, str[1], F[1]);
 		WIND_MILL.setMaterial(3, M_IRON, M_IRON, 0.5, str[2], F[2]);
-		WIND_MILL.setMaterial(4, M_IRON, M_IRON, 0.5, str[3], F[3]);
-		WIND_MILL.setMaterial(5, M_IRON, M_IRON, 0.5, str[4], F[4]);
+		WIND_MILL.setMaterial(4, M_IRON, M_ALUMINUM, 0.5, str[3], F[3]);
+		WIND_MILL.setMaterial(5, M_IRON, M_ALUMINUM, 0.5, str[4], F[4]);
 		Object[] scr = c.getArray("scrap_wind_mill", 5);
 		for (int i = 0; i < 5; i++)
 			WIND_MILL.scrap[i+1] = scr[i] instanceof ItemStack ? (ItemStack)scr[i] : ItemStack.EMPTY;

@@ -30,6 +30,7 @@ public class Objects {
 	public static ShaftMaterial M_WOOD = new ShaftMaterial(Material.WOOD, SoundType.WOOD);
 	public static ShaftMaterial M_STONE = new ShaftMaterial(Material.ROCK, SoundType.STONE);
 	public static ShaftMaterial M_IRON = new ShaftMaterial(Material.IRON, SoundType.METAL);
+	public static ShaftMaterial M_ALUMINUM = new ShaftMaterial(Material.IRON, SoundType.METAL);
 	public static ShaftMaterial M_BEDROCK = new ShaftMaterial(Material.ROCK, SoundType.STONE);
 
 	// Creative Tabs

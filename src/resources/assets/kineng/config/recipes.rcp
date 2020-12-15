@@ -1,4 +1,4 @@
-VERSION = 45;
+VERSION = 47;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
@@ -50,11 +50,14 @@ PRE_INIT() {
 	add("item", 516, "flour");
 	add("item", 517, "oredust_iron");
 	add("item", 518, "oredust_gold");
+	add("item", 519, "large_steel");
+	add("item", 520, "large_aluminum");
 	
 	!material properties used to derive part properties from: [density(kg/m³), strength(N/m²), friction]#
-	mat_wood = [750, 50e6, 0.05]#;
+	mat_wood = [750, 40e6, 0.05]#;
 	mat_stone = [2500, 20e6, 0.1]#;
 	mat_iron = [7860, 150e6, 0.01]#;
+	mat_aluminum = [2700, 300e6, 0.02]#;
 	!tool force limits (N):
 	maxF_grindstone = 50e3;
 	maxF_sawblade = 10e3;
@@ -63,8 +66,8 @@ PRE_INIT() {
 	maxF_magnets = 2.5e6;
 	maxF_shaft_man = 5e3;
 	maxF_water_wheel = 50e3;
-	maxF_wind_mill = [50e3, 50e3, 250e3, 250e3, 250e3]#;
-	str_wind_mill = [0.25, 0.125, 0.25, 0.2, 0.16]#; !structural strength (scales max angular velocity)
+	maxF_wind_mill = [50e3, 50e3, 250e3, 400e3, 400e3]#;
+	str_wind_mill = [0.25, 0.2, 0.25, 0.25, 0.2]#; !structural strength (scales max angular velocity)
 	maxF_mob_grinder = 50e3;
 	!scrap item dropped if a shaft of given material or a machine is destroyed:
 	scrap_wood = it("minecraft:stick", 2);
@@ -93,6 +96,8 @@ INIT() {
 	add("ore", "dustWheat", it("m.flour"));
 	add("ore", "crushedIron", it("m.oredust_iron"));
 	add("ore", "crushedGold", it("m.oredust_gold"));
+	add("ore", "denseSteel", it("m.large_steel"));
+	add("ore", "denseAluminum", it("m.large_aluminum"));
 	
 	add("shaped", it("kineng:flint_knife"), "01", it("minecraft:flint"), it("minecraft:stick"));
 	add("shaped", it("kineng:gear_wood"):1, "1/0", it("kineng:shaft_wood"), it("m.gear_wood"));
@@ -118,6 +123,9 @@ INIT() {
 	add("shaped", it("kineng:rf_coil"), "010/010/1 1", it("m.fluxwinding"), it("m.transformer"));
 	add("shaped", it("kineng:wind_mill"):1, "121/202/121", it("kineng:shaft_wood"), it("m.wood_rotor"), it("m.gear_wood"));
 	add("shaped", it("kineng:wind_mill"):2, "111/101/111", it("kineng:wind_mill"):1, it("m.wood_rotor"));
+	add("shaped", it("kineng:wind_mill"):3, "111/101/111", it("kineng:gear_iron"):2, "denseSteel");
+	add("shaped", it("kineng:wind_mill"):4, "111/101/111", it("kineng:wind_mill"):3, "denseAluminum");
+	add("shaped", it("kineng:wind_mill"):5, "111/101/111", it("kineng:wind_mill"):4, "denseAluminum");
 	add("shaped", it("kineng:water_wheel"), "111/101/111", it("kineng:shaft_wood"), it("m.wood_wheel"));
 	add("shaped", it("kineng:tachometer"), " 0 /213/445", it("kineng:shaft_wood"), it("m.gear_wood"), "dustGlowstone", "gemQuartz", it("minecraft:stone_slab"), "dustRedstone");
 	add("shaped", it("kineng:transducer") * 2, "010/232/444", it("kineng:shaft_iron"), it("minecraft:light_weighted_pressure_plate"), it("minecraft:redstone_torch"), "dustRedstone", it("minecraft:stone_slab"));
@@ -199,6 +207,9 @@ POST_INIT() {
 	
 	add("press", it("minecraft:reeds"), 500, 2.5, it("minecraft:paper"));
 	add("press", it("m.hot_iron"),     3000, 2.5, it("m.plate_iron"));
+	if (~hasit("ore:plateSteel")) {
+		add("press", ore("plateIron", 9), 18000, 20, it("m.large_steel"));
+	}
 	
 	add("grinder", ore("cobblestone"),          5000, 10, it("minecraft:gravel"));
 	add("grinder", ore("gravel", 2),            5000, 20, it("minecraft:sand", 2), it("minecraft:flint"));
@@ -322,4 +333,7 @@ integrateIC2() {
 	add("press", it("ic2:crafting"):14, 25000, 2.5, it("ic2:crafting"):15); !carbon plate
 	add("lathe", ore("blockIron"), 5000, 10, it("ic2:crafting"):29); !iron shaft
 	add("lathe", ore("blockSteel"), 8000, 10, it("ic2:crafting"):30); !steel shaft
+	add("shaped", it("kineng:wind_mill"):3, "111/101/111", it("kineng:gear_iron"):2, it("ic2:crafting"):33);
+	add("shaped", it("kineng:wind_mill"):4, "111/101/111", it("kineng:gear_iron"):3, it("ic2:crafting"):34);
+	add("shaped", it("kineng:wind_mill"):5, " 1 /101/ 1 ", it("kineng:wind_mill"):4, it("ic2:crafting"):34);
 }

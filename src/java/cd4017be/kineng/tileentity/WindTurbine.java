@@ -29,6 +29,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** 
  * @author CD4017BE */
@@ -135,6 +137,12 @@ public class WindTurbine extends ShaftPart implements ITickableServerOnly, IInte
 
 	@Override
 	public void onClicked(EntityPlayer player) {}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int[] capModel(boolean end) {
+		return null;
+	}
 
 	static class Turbine extends DynamicForce {
 

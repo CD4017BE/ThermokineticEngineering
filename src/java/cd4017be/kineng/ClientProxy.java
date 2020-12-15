@@ -61,6 +61,7 @@ public class ClientProxy extends CommonProxy {
 		M_WOOD.texture = registerTexture(new ResourceLocation("blocks/planks_oak"));
 		M_IRON.texture = registerTexture(new ResourceLocation("blocks/iron_block"));
 		M_STONE.texture = registerTexture(new ResourceLocation("blocks/stone_granite"));
+		M_ALUMINUM.texture = registerTexture(new ResourceLocation(Main.ID, "blocks/aluminum"));
 		M_BEDROCK.texture = registerTexture(new ResourceLocation("blocks/bedrock"));
 		int[]
 		m = new int[] {PartModels.SHAFT, 0, 4};
@@ -85,7 +86,7 @@ public class ClientProxy extends CommonProxy {
 		MAGNETS.model = new int[] {PartModels.WHEEL, 0, 4, t, 8, 10, t1};
 		WATER_WHEEL.model = new int[] {PartModels.WATER_WHEEL, 0, 4, 40, 56};
 		t = registerTexture(new ResourceLocation("blocks/wool_colored_white"));
-		WIND_MILL.bladeTex = new int[] {0, t, t, M_IRON.texture, M_IRON.texture, M_IRON.texture};
+		WIND_MILL.bladeTex = new int[] {0, t, t, M_IRON.texture, M_ALUMINUM.texture, M_ALUMINUM.texture};
 		WIND_MILL.model = new int[] {PartModels.TURBINE, 0, 4, 0, 0, 16};
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/tachometer"));
 		t1 = registerTexture(new ResourceLocation(Main.ID, "blocks/tachometer1"));

@@ -81,6 +81,8 @@ item.cd4017be.m\:fabric.name=Fabric
 item.cd4017be.m\:wood_wheel.name=Wooden Wheel Bucket
 item.cd4017be.m\:oredust_iron.name=Iron Ore Dust
 item.cd4017be.m\:oredust_gold.name=Gold Ore Dust
+item.cd4017be.m\:large_steel.name=Large Steel Plate
+item.cd4017be.m\:large_aluminum.name=Large Aluminum Plate
 
 #Tooltip
 info.kineng.shaftstats=§nShaft\:§7 J \= %.3ugm², §cmax M§7 \= %.3uNm, §cmax ω§7 \= %.3ur/s
@@ -129,3 +131,4 @@ gui.kineng.rs_out.tip=Emitted Redstone Signal
 gui.kineng.transducer.name=Torque
 gui.kineng.torque.tip=Current Torque [kNm]
 gui.kineng.ref_trq=Reference Torque\nfor signal \= 1
+#added by ingame editor:

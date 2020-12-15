@@ -32,7 +32,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@SuppressWarnings("unchecked")
 	public <T extends BlockShaft> T block() {
-		return (T)getBlockState().getBlock();
+		return (T)blockType;
 	}
 
 	protected ShaftMaterial material() {
@@ -41,17 +41,17 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@Override
 	public double J() {
-		return block().J(getBlockState());
+		return block().J(blockState);
 	}
 
 	@Override
 	public double maxTorque() {
-		return block().maxM(getBlockState());
+		return block().maxM(blockState);
 	}
 
 	@Override
 	public double maxSpeed() {
-		return block().maxAv(getBlockState());
+		return block().maxAv(blockState);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@Override
 	public Axis axis() {
-		return getBlockState().getValue(AXIS);
+		return blockState.getValue(AXIS);
 	}
 
 	@Override
@@ -120,7 +120,6 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 
 	@Override
 	protected void onUnload() {
-		if (!unloaded) getBlockState();
 		super.onUnload();
 		vSave = setShaft(null);
 	}
@@ -156,7 +155,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int[] model() {
-		return unloaded ? null : block().model(getBlockState());
+		return unloaded ? null : block().model(blockState);
 	}
 
 	@Override
@@ -168,7 +167,7 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return unloaded ? super.getRenderBoundingBox() : block().getSize(pos, getBlockState());
+		return unloaded ? super.getRenderBoundingBox() : block().getSize(pos, blockState);
 	}
 
 }

@@ -19,9 +19,7 @@ public class PartModels {
 	private static final CplxF ROTATE45 = C_pol(1.0, Math.PI / 4.0);
 	private static final CplxF ROTATE_32 = C_pol(1.0, Math.PI / 16.0);
 
-	/** model arguments: [id, texture, radius*16]
-	 * <br> radius < 0: -z cap, radius > 0: +z cap */
-	public static final int SHAFT_CAPS = registerModel((qb, args, z) -> {
+	private static final IPartModel shaft_caps = (qb, args, z) -> {
 		texture(qb, args[1]).all(EC, -1);
 		z += Math.copySign(0.5F, args[2]);
 		CplxF xy = C_(args[2] * 0.0625F);
@@ -35,7 +33,10 @@ public class PartModels {
 			xy.mul(rot);
 			qb.xyz(xy.r, xy.i, z).uv(0, v + 4).next();
 		}
-	});
+	};
+	/** model arguments: [id, texture, radius*16]
+	 * <br> radius < 0: -z cap, radius > 0: +z cap */
+	public static final int SHAFT_CAPS = registerModel(shaft_caps);
 
 	private static final IPartModel shaft = (qb, args, z0) -> {
 		texture(qb, args[1]).all(EC, -1);
@@ -233,15 +234,17 @@ public class PartModels {
 
 	/** model arguments: [id, shaft_texture, shaft_radius*16, blade_radius*16, blade_texture, blade_width*16] */
 	public static final int TURBINE = registerModel((qb, args, z0) -> {
+		args[2] = -args[3] / 10;
+		shaft_caps.render(qb, args, z0);
+		args[2] = -args[2];
+		shaft_caps.render(qb, args, z0);
 		shaft.render(qb, args, z0);
-		texture(qb, args[4]);
+		texture(qb, args[4]).uv(0, 0, 16, 16);
 		float z1 = z0 + args[5] * 0.03125F; z0 -= args[5] * 0.03125F;
 		CplxF xy0 = ROTATE_32.clone();
 		CplxF xy1 = xy0.clone().conj().mul(ROTATE45);
 		float r0 = args[2] * 0.0625F, r1 = args[3] * 0.0625F;
 		for (int i = 0; i < 8; i++) {
-			int v = (i & 3) << 2;
-			qb.uv(0, v, 16, v + 4);
 			for (float r = r1; r > r0;) {
 				float r_ = r * 0.5F;
 				qb.xyz(xy0.r * r, xy0.i * r, z0).next();
