@@ -119,7 +119,7 @@ public class ShaftAxis extends IndexedSet.Element {
 	public void onSpeedSync(double av, double ang) {
 		if (!struct.client()) throw new IllegalStateException("Shaft.onSpeedSync() called server side!");
 		struct.av = Double.isNaN(av) ? 0 : av / x;
-		struct.ang = Double.isNaN(ang) ? 0 : ang / x;
+		//struct.ang = Double.isNaN(ang) ? 0 : ang / x;
 	}
 
 	/**@param aacc [r/s²] shaft acceleration */

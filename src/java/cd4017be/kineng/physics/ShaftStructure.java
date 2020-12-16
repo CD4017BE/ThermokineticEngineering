@@ -16,7 +16,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 	/** [r] angle */
 	public double ang;
 	/** [r/s] angular velocity */
-	public double av, old_av;
+	public double av;
 	/** [kg*m²] moment of inertia */
 	public double J;
 	/** 1: structure invalid, 2: axes invalid, 4: flowMat invalid, 8:needs register */
@@ -27,6 +27,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 	double[] flowMat;
 	/** total shaft and gear friction */
 	private double M_fr;
+	private int counter;
 
 	public ShaftStructure(boolean client) {
 		super(new ShaftAxis[4]);
@@ -117,11 +118,12 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 		if(ang > LOOP || ang < -LOOP) ang %= LOOP;
 		if(Double.isNaN(av)) av = 0;
 		if(Double.isNaN(ang)) ang = 0;
-		if(Math.abs((av - old_av) / (av + old_av)) > SYNC_THRESHOLD) {
-			old_av = av;
-			ShaftAxis shaft = array[Ticking.RAND.nextInt(size())];
-			shaft.parts.get(Ticking.RAND.nextInt(shaft.parts.size())).syncToClient();
-		}
+		//synchronize to client: Because the structure might only be partially within
+		//loading distance of the client, we cycle through all axes sequentially
+		//and pick a random shaft block each tick to send the packet to.
+		if (++counter >= size()) counter = 0;
+		ShaftAxis shaft = array[counter];
+		shaft.parts.get(Ticking.RAND.nextInt(shaft.parts.size())).syncToClient();
 	}
 
 	public static void merge(ShaftStructure A, ShaftStructure B, double xA, double xB) {

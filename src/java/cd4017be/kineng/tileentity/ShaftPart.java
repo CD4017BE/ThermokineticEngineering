@@ -13,12 +13,13 @@ import cd4017be.lib.util.Orientation;
 import cd4017be.lib.util.Utils;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.*;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -139,7 +140,16 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 		super.storeState(nbt, mode);
 		if(shaft != null) {
 			nbt.setDouble("v", shaft.av());
-			if(mode == SYNC) nbt.setDouble("s", shaft.ang());
+			if(mode == SYNC) {
+				nbt.setDouble("s", shaft.ang());
+				if (!shaft.cons.isEmpty()) {
+					NBTTagList list = new NBTTagList();
+					for (Connection con : shaft.cons)
+						list.appendTag(new NBTTagFloat((float)con.M));
+					nbt.setTag("M", list);
+				}
+				
+			}
 		} else nbt.setDouble("v", vSave);
 	}
 
@@ -148,8 +158,14 @@ public class ShaftPart extends BaseTileEntity implements IShaftPart {
 		super.loadState(nbt, mode);
 		if(mode < SYNC)
 			vSave = nbt.getDouble("v");
-		else if(shaft != null)
+		else if(shaft != null) {
 			shaft.onSpeedSync(nbt.getDouble("v"), nbt.getDouble("s"));
+			NBTTagList list = nbt.getTagList("M", NBT.TAG_FLOAT);
+			int n = list.tagCount();
+			if (n == shaft.cons.size())
+				for (int i = 0; i < n; i++)
+					shaft.cons.get(i).M = list.getFloatAt(i);
+		}
 	}
 
 	@Override

@@ -1,16 +1,21 @@
 package cd4017be.kineng.render;
 
+import static cd4017be.lib.util.TooltipUtil.formatNumber;
 import static net.minecraft.client.renderer.GlStateManager.*;
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import cd4017be.kineng.physics.*;
 import cd4017be.kineng.tileentity.IGear;
 import cd4017be.kineng.tileentity.ShaftPart;
 import cd4017be.lib.render.Util;
+import cd4017be.lib.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -21,8 +26,6 @@ import net.minecraft.util.math.Vec3d;
  *
  */
 public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRenderer<T> {
-
-	public static boolean motionBlur = false, global = true;
 
 	@Override
 	public void render(T te, double x, double y, double z, float t, int destroyStage, float alpha) {
@@ -39,73 +42,111 @@ public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRendere
 		y += pos.getY();
 		z += pos.getZ();
 		pushMatrix();
-		Util.moveAndOrientToBlock(x, y, z, te.getOrientation());
-		if (motionBlur) t += Util.FakeMotionBlur;
+		Orientation o = te.getOrientation();
+		Util.moveAndOrientToBlock(x, y, z, o);
+		pushMatrix();
 		rotate((float)Math.toDegrees(shaft.ang() + t * Ticking.dt * shaft.av()), 0, 0, -1);
 		disableLighting();
 		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		tess.draw();
 		popMatrix();
 		if (Minecraft.getMinecraft().gameSettings.showDebugInfo)
-			drawDebug(shaft, te.axis(), x, y, z);
+			drawDebug(shaft, te.axis(), o, t);
+		popMatrix();
 	}
 
-	private void drawDebug(ShaftAxis shaft, Axis axis, double x, double y, double z) {
+	private void drawDebug(ShaftAxis shaft, Axis axis, Orientation o, float t) {
 		BlockPos pos = shaft.renderInfo.origin;
 		double d0 = rendererDispatcher.entity.getDistanceSqToCenter(pos);
-		if (d0 > 1024D) return; 
-		float f = this.rendererDispatcher.entityYaw;
-		float f1 = this.rendererDispatcher.entityPitch;
+		if (d0 > 1024D) return;
+		Vec3d look = o.invRotate(rendererDispatcher.entity.getLook(t));
 		FontRenderer fr = getFontRenderer();
 		int l = shaft.parts.size();
-		float X = (float)x + 0.5F, Y = (float)y + 0.5F, Z = (float)z + 0.5F;
 		disableDepth();
-		disableTexture2D();
-		glBegin(GL11.GL_LINES);
+		BufferBuilder vb = Tessellator.getInstance().getBuffer();
+		vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 		int c = shaft.struct.hashCode();
-		color((c & 0xff) / 255F, (c >> 8 & 0xff) / 255F, (c >> 16 & 0xff) / 255F, 1);
-		switch(axis) {
-		case X:
-			glVertex3f(X - .25F, Y, Z);
-			glVertex3f(X - .75F + l, Y, Z);
-			break;
-		case Y:
-			glVertex3f(X, Y - .25F, Z);
-			glVertex3f(X, Y - .75F + l, Z);
-			break;
-		default:
-			glVertex3f(X, Y, Z - .25F);
-			glVertex3f(X, Y, Z - .75F + l);
-		}
-		for (Connection con : shaft.cons)
+		double y = axis == Axis.Y ? -1 : 1, x = axis == Axis.X ? -1 : 1;
+		Vec3d[] dirs = {
+			new Vec3d(0, -y, 0),
+			new Vec3d(0, y, 0),
+			new Vec3d(-x, 0, 0),
+			new Vec3d(x, 0, 0),
+		};
+		vert(vb, c, 0, 0, -.25);
+		vert(vb, c, 0, 0, l - .75);
+		pushMatrix();
+		translate(0, 0, l * 0.5F - 0.5F);
+		GL11.glMultMatrix(Util.matrices[9]);
+		y = 1.0 / 64.0; x = Math.copySign(y, look.x);
+		scale(x, y, x);
+		print(fr, "J= " + formatNumber(shaft.J * 1000D, 3, 1, false, false) + "gm²", 0, -9, 0xffffffff);
+		print(fr, String.format("x= %.3g", shaft.x), 0, 0, 0xffffffff);
+		print(fr, "\u03C9= " + formatNumber(shaft.av(), 3, 1, true, false) + "r/s", 0, 9, 0xffffffff);
+		popMatrix();
+		IShaftPart host = null;
+		int i = 0;
+		for (Connection con : shaft.cons) {
+			if (con.host != host) {
+				host = con.host;
+				i = 0;
+			} else i++;
+			BlockPos pos1 = ((TileEntity)host).getPos();
+			int j = Utils.coord(pos1.subtract(pos), axis);
+			Vec3d dp;
 			if (con instanceof GearLink) {
 				GearLink s2s = (GearLink)con;
 				if (s2s.other == null) continue;
-				color(0, 1, 0, 1);
-				BlockPos pos1 = ((TileEntity)con.host).getPos().subtract(pos);
-				glVertex3f(pos1.getX() + X, pos1.getY() + Y, pos1.getZ() + Z);
-				Vec3d dp = new Vec3d(((TileEntity)s2s.other.host).getPos().subtract(pos).subtract(pos1)).normalize().scale(Math.abs(s2s.r) * 0.95);
-				glVertex3f(pos1.getX() + X + (float)dp.x, pos1.getY() + Y + (float)dp.y, pos1.getZ() + Z + (float)dp.z);
-			} else if (con instanceof ForceCon && ((ForceCon)con).force != null) {
-				color(0, 0, 1, 1);
-				BlockPos pos1 = ((TileEntity)con.host).getPos().subtract(pos);
-				glVertex3f(pos1.getX() + X, pos1.getY() + Y, pos1.getZ() + Z);
-				glVertex3f(pos1.getX() + X + (float)con.r, pos1.getY() + Y + (float)con.r, pos1.getZ() + Z + (float)con.r);
+				c = 0xff00ffff;
+				dp = o.invRotate(new Vec3d(
+					((TileEntity)s2s.other.host).getPos().subtract(pos1)
+				)).normalize();
+			} else {
+				c = 0xff0000ff;
+				dp = dirs[i&3];
 			}
-		glEnd();
-		enableDepth();
+			pushMatrix();
+			translate(0, 0, j);
+			double r = Math.abs(con.r);
+			float s = (float)r / 64F, s1 = Math.copySign(s, -(float)look.z);
+			GL11.glMultMatrix((FloatBuffer)BufferUtils.createFloatBuffer(16).put(new float[] {
+				(float)dp.x * s1, (float)dp.y * s1, 0, 0,
+				(float)dp.y * s, -(float)dp.x * s, 0, 0,
+				0, 0, s1, 0,
+				(float)(dp.x * r * 0.5), (float)(dp.y * r * 0.5), 0, 1
+			}).flip());
+			dp = dp.scale(Math.abs(con.r) * 0.95);
+			vert(vb, c, 0, 0, j);
+			vert(vb, c, dp.x, dp.y, dp.z + j);
+			print(fr, String.format("r= %.1fm", r), 0, -6, c);
+			float M = (float)(con.M / (con.maxF * Math.abs(shaft.x * con.r)));
+			Vec3d dd = new Vec3d(dp.y, -dp.x, dp.z).scale(M / r).add(dp);
+			M = Math.abs(M) * 255F;
+			c = (int)M << 16 | 255 - (int)M << 8;
+			vert(vb, c, dp.x, dp.y, dp.z + j);
+			vert(vb, c, dd.x, dd.y, dd.z + j);
+			print(fr, "F= " + formatNumber(con.M / (shaft.x * r), 3, 1, true, false) + "N", 0, 6, c);
+			popMatrix();
+		}
+		disableTexture2D();
+		glLineWidth(2F);
+		Tessellator.getInstance().draw();
+		glLineWidth(1F);
 		enableTexture2D();
-		EntityRenderer.drawNameplate(fr, String.format("%.3g x%.3g", shaft.J, shaft.x), X, Y + 0.5F, Z, 0, f, f1, false, false);
-		/*for (IShaftPart part : shaft.parts) {
-			if (!(part instanceof ShaftPart)) continue;
-			BlockPos pos1 = ((ShaftPart)part).getPos().subtract(pos);
-			EntityRenderer.drawNameplate(fr, String.format("%.3g kg*m", part.mass()), X + pos1.getX(), Y + pos1.getY() + 0.5F, Z + pos1.getZ(), 0, f, f1, false, false);
-		}*/
+		enableDepth();
+	}
+
+	private static void vert(BufferBuilder vb, int c, double x, double y, double z) {
+		vb.pos(x, y, z).color(c >> 16 & 0xff, c >> 8 & 0xff, c & 0xff, 0xff).endVertex();
+	}
+
+	private static void print(FontRenderer fr, String s, int x, int y, int c) {
+		fr.drawString(s, x - (fr.getStringWidth(s) >> 1), y - (fr.FONT_HEIGHT >> 1), c);
 	}
 
 	@Override
 	public boolean isGlobalRenderer(T te) {
-		return global && (te instanceof IGear || te.block().radius(te.getBlockState()) > 0.5);
+		return te instanceof IGear || te.block().radius(te.getBlockState()) > 0.5;
 	}
 
 }
