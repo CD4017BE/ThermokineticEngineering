@@ -15,6 +15,7 @@ import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.network.Sync;
 import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.Utils;
+import cd4017be.math.cplx.CplxD;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -154,10 +155,11 @@ public class WindTurbine extends ShaftPart implements ITickableServerOnly, IInte
 		}
 
 		@Override
-		public void work(double dE, double ds, double v) {
+		public ForceCon getM(CplxD M, double av) {
 			//Fdv = -abs((v_air - v) * A)
-			Fdv = longBitsToDouble(doubleToRawLongBits((v_air - v) * A) | 0x80000000_00000000L);
+			Fdv = longBitsToDouble(doubleToRawLongBits((v_air - av * r) * A) | 0x80000000_00000000L);
 			F = -v_air * Fdv;
+			return super.getM(M, av);
 		}
 
 	}

@@ -126,9 +126,6 @@ public class ManualPower extends KineticMachine implements IInteractiveTile, INe
 
 	static class Worker extends DynamicForce {
 
-		@Override
-		public void work(double dE, double ds, double v) {}
-
 		public void updateF(double F_max, double v_max) {
 			this.F = Math.copySign(F_max, v_max);
 			this.Fdv = -F_max / Math.abs(v_max);

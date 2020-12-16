@@ -5,6 +5,7 @@ import static java.lang.Math.*;
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
+import cd4017be.math.cplx.CplxD;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -62,13 +63,18 @@ public class WaterWheel extends KineticMachine implements IWaterWheel, IInteract
 
 		@Override
 		public void work(double dE, double ds, double v) {
-			Fdv = -0.5 * m / dt;
-			F = Ekin == 0 ? 0 :
-				Ekin / ((abs(v) + sqrt(abs(Ekin / m))) * dt);
 			vsq = v * v;
 			p_Ekin = Ekin;
 			p_m = m;
 			Ekin = m = 0;
+		}
+
+		@Override
+		public ForceCon getM(CplxD M, double av) {
+			Fdv = -0.5 * m / dt;
+			F = Ekin == 0 ? 0 :
+				Ekin / ((abs(av * r) + sqrt(abs(Ekin / m))) * dt);
+			return super.getM(M, av);
 		}
 
 	}

@@ -9,10 +9,12 @@ import java.util.*;
 import com.mojang.authlib.GameProfile;
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.DynamicForce;
+import cd4017be.kineng.physics.ForceCon;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.network.Sync;
 import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.SaferFakePlayer;
+import cd4017be.math.cplx.CplxD;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -135,7 +137,12 @@ public class MobGrinder extends KineticMachine implements ITickableServerOnly, I
 		@Override
 		public void work(double dE, double ds, double v) {
 			Eacc -= dE;
-			Fdv = -F1 / (Math.abs(v) + FRICTION_V0);
+		}
+
+		@Override
+		public ForceCon getM(CplxD M, double av) {
+			Fdv = -F1 / (Math.abs(av * r) + FRICTION_V0);
+			return super.getM(M, av);
 		}
 
 	}

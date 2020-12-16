@@ -4,6 +4,7 @@ import static cd4017be.kineng.physics.Ticking.dt;
 import java.util.*;
 import cd4017be.kineng.Main;
 import cd4017be.lib.util.IndexedSet;
+import cd4017be.math.cplx.CplxD;
 
 /** @author CD4017BE */
 public class ShaftStructure extends IndexedSet<ShaftAxis> {
@@ -11,7 +12,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 	public static final double LOOP = 720 * Math.PI;
 	public static double FRICTION_V0, SYNC_THRESHOLD;
 	
-	final ArrayList<DynamicForce> forces;
+	final ArrayList<IForce> forces;
 	final ArrayList<GearLink> links;
 	/** [r] angle */
 	public double ang;
@@ -21,7 +22,7 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 	public double J;
 	/** 1: structure invalid, 2: axes invalid, 4: flowMat invalid, 8:needs register */
 	private byte state = 8;
-	/** stores a row major ({@link #links}.size() + 1) * {@link #size() - 1} matrix
+	/** stores a row major ({@link #links}.size() + 1) * ({@link #size()} - 1) matrix
 	 * where the first row stores the excess axis torque vector and
 	 * the remaining rows, when multiplied with this vector, produce the gear link torques */
 	double[] flowMat;
@@ -67,17 +68,14 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 		if (flowMat == null) recalculateFlowMat();
 		else Arrays.fill(flowMat, 0, l, 0F);
 		// sum up kinetic forces
-		double M = 0, M_av = 0;
-		for(DynamicForce f : forces) {
-			double M1 = f.F * f.r, M_av1 = f.Fdv * f.r * f.r;
-			M += M1;
-			M_av += M_av1;
-			M1 += M_av1 * av;
-			int i = f.con.updateTorque(M1);
-			if (i < l) flowMat[i] += M1;
+		CplxD acc = new CplxD(), M = new CplxD();
+		for(IForce f : forces) {
+			f.getM(M, av).updateTorque(M.i * av + M.r, flowMat, l);
+			acc.add(M);
 		}
+		acc.sca(1D / J);
 		// subtract axis inertia from excess axis torques
-		double aacc = (M_av * av + M) / J;
+		double aacc = acc.i * av + acc.r;
 		for (int i = 0; i < l; i++) {
 			ShaftAxis axis = array[i];
 			flowMat[i] -= aacc * axis.J * axis.x;
@@ -91,29 +89,27 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 				M_ += flowMat[i] * flowMat[k];
 			M_fr += links.get(j).dynamicFriction(M_);
 		}
-		M_av -= M_fr / (Math.abs(av) + FRICTION_V0);
+		acc.i -= M_fr / ((Math.abs(av) + FRICTION_V0) * J);
 		if (checkOverload)
 			for (ShaftAxis axis : this)
 				axis.checkOverload(aacc);
 		// compute new velocity after applying force, average velocity and average force
 		double av0 = av, av_, dan;
-		if(M_av == 0) {
+		if(acc.i == 0) {
 			// apply static force (needs special case to avoid NaN)
-			av += M / J * dt;
+			av += acc.r * dt;
 			av_ = (av0 + av) * .5;
 			dan = av_ * dt;
 		} else {
 			// apply dynamic force
-			double exp = Math.exp(M_av / J * dt), av8 = M / M_av;
-			av = exp * (av0 + av8) - av8;
-			dan = J / M_av * (av - av0) - av8 * dt; 
+			double av8 = acc.r / acc.i;
+			av = Math.exp(acc.i * dt) * (av0 + av8) - av8;
+			double dav = av - av0 - acc.r * dt;
+			dan = dav / acc.i;
 			av_ = Math.getExponent(dan) < -64 ? dan / dt
-				: (av * av - av0 * av0) * 0.5 * J / (M_av * dan) - av8;
+				: (av * av - av0 * av0) * 0.5 / dav - av8;
 		}
-		for(DynamicForce f : forces) {
-			double ds = dan * f.r;
-			f.work((av_ * f.r * f.Fdv + f.F) * ds, ds, av * f.r);
-		}
+		for(IForce f : forces) f.move(dan, av_, av);
 		ang += dan;
 		if(ang > LOOP || ang < -LOOP) ang %= LOOP;
 		if(Double.isNaN(av)) av = 0;
@@ -155,8 +151,8 @@ public class ShaftStructure extends IndexedSet<ShaftAxis> {
 		}
 		addAll(other);
 		if(forces != null) {
-			for(DynamicForce force : other.forces)
-				force.r *= x;
+			for(IForce force : other.forces)
+				force.onStructureChanged();
 			forces.addAll(other.forces);
 			other.forces.clear();
 		}

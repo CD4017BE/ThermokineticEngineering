@@ -9,6 +9,7 @@ import cd4017be.lib.Gui.AdvancedContainer.IStateInteractionHandler;
 import cd4017be.lib.Gui.ModularGui;
 import cd4017be.lib.Gui.comp.*;
 import cd4017be.lib.network.*;
+import cd4017be.math.cplx.CplxD;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
@@ -144,13 +145,18 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 		@Override
 		public void work(double dE, double ds, double v1) {
 			E += c0 * dt - dE;
-			double v_ = c1 * (Math.abs(v1 / c1) + 1.0);
-			F = E / (v_ * dt);
-			Fdv = -F / v_;
 			v = (float)v1;
 			P = (float)(dE / dt);
 			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
+		}
+
+		@Override
+		public ForceCon getM(CplxD M, double av) {
+			double v_ = c1 * (Math.abs(av * r / c1) + 1.0);
+			F = E / (v_ * dt);
+			Fdv = -F / v_;
+			return super.getM(M, av);
 		}
 
 	}
@@ -159,17 +165,22 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 
 		@Override
 		public void work(double dE, double ds, double v1) {
-			if (c1 <= 0) {
-				Fdv = 0;
-				F = c0;
-			} else {
-				Fdv = -c0 / (Math.abs(v1) + c1);
-				F = 0;
-			}
 			v = (float)v1;
 			P = (float)(dE / dt);
 			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
+		}
+
+		@Override
+		public ForceCon getM(CplxD M, double av) {
+			if (c1 <= 0) {
+				Fdv = 0;
+				F = c0;
+			} else {
+				Fdv = -c0 / (Math.abs(av * r) + c1);
+				F = 0;
+			}
+			return super.getM(M, av);
 		}
 
 	}
@@ -178,12 +189,17 @@ public class MechanicalDebug extends ShaftPart implements IGuiHandlerTile, IStat
 
 		@Override
 		public void work(double dE, double ds, double v1) {
-			F = c0 * c1;
-			Fdv = -c1;
 			v = (float)v1;
 			P = (float)(dE / dt);
 			MechanicalDebug.this.F = (float)(dE / ds);
 			Eacc += dE;
+		}
+
+		@Override
+		public ForceCon getM(CplxD M, double av) {
+			F = c0 * c1;
+			Fdv = -c1;
+			return super.getM(M, av);
 		}
 
 	}

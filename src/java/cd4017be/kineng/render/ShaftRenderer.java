@@ -80,9 +80,10 @@ public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRendere
 		GL11.glMultMatrix(Util.matrices[9]);
 		y = 1.0 / 64.0; x = Math.copySign(y, look.x);
 		scale(x, y, x);
+		double av = shaft.av();
 		print(fr, "J= " + formatNumber(shaft.J * 1000D, 3, 1, false, false) + "gm²", 0, -9, 0xffffffff);
-		print(fr, String.format("x= %.3g", shaft.x), 0, 0, 0xffffffff);
-		print(fr, "\u03C9= " + formatNumber(shaft.av(), 3, 1, true, false) + "r/s", 0, 9, 0xffffffff);
+		print(fr, String.format("x= %.3g", Double.isNaN(av) ? av : shaft.x), 0, 0, 0xffffffff);
+		print(fr, "\u03C9= " + formatNumber(Double.isNaN(av) ? 0 : av, 3, 1, true, false) + "r/s", 0, 9, 0xffffffff);
 		popMatrix();
 		IShaftPart host = null;
 		int i = 0;
@@ -119,8 +120,8 @@ public class ShaftRenderer<T extends ShaftPart> extends TileEntitySpecialRendere
 			vert(vb, c, 0, 0, j);
 			vert(vb, c, dp.x, dp.y, dp.z + j);
 			print(fr, String.format("r= %.1fm", r), 0, -6, c);
-			float M = (float)(con.M / (con.maxF * Math.abs(shaft.x * con.r)));
-			Vec3d dd = new Vec3d(dp.y, -dp.x, dp.z).scale(M / r).add(dp);
+			float M = (float)(con.M / (con.maxF * shaft.x * r));
+			Vec3d dd = new Vec3d(dp.y, -dp.x, dp.z).scale(M / r * 2D).add(dp);
 			M = Math.abs(M) * 255F;
 			c = (int)M << 16 | 255 - (int)M << 8;
 			vert(vb, c, dp.x, dp.y, dp.z + j);

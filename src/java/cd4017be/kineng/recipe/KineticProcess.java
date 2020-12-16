@@ -6,10 +6,12 @@ import static net.minecraftforge.items.ItemHandlerHelper.copyStackWithSize;
 import java.util.Arrays;
 import java.util.List;
 import cd4017be.kineng.physics.DynamicForce;
+import cd4017be.kineng.physics.ForceCon;
 import cd4017be.lib.Gui.*;
 import cd4017be.lib.Gui.AdvancedContainer.IStateInteractionHandler;
 import cd4017be.lib.Gui.comp.*;
 import cd4017be.lib.network.*;
+import cd4017be.math.cplx.CplxD;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -119,7 +121,6 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 	private void updateState() {
 		if (recipes == null) return;
 		working = (byte)(rcp == null ? -1 : limit() > 0 ? 1 : 0);
-		if (working <= 0) Fdv = 0;
 	}
 
 	protected int limit() {
@@ -150,20 +151,23 @@ implements IItemHandlerModifiable, IStateInteractionHandler, INBTSerializable<NB
 	@Override
 	public void work(double dE, double ds, double v) {
 		this.v = v;
-		if (working <= 0) return;
-		if ((s -= dE / rcp.F) > rcp.s) {
-			int l = limit();
-			int n = (int)Math.floor(s / rcp.s);
-			if (n >= l) {
-				n = l;
-				working = 0;
-			}
-			s -= rcp.s * n;
-			inv[0].shrink(n * rcp.io[0].getCount());
-			for (int i = rcp.io.length - 1; i > 0; i--)
-				output(i, rcp.io[i], n);
+		if (working <= 0 || (s -= dE / rcp.F) < rcp.s) return;
+		int l = limit();
+		int n = (int)Math.floor(s / rcp.s);
+		if (n >= l) {
+			n = l;
+			working = 0;
 		}
-		Fdv = working > 0 ? -rcp.F / (Math.abs(v) + FRICTION_V0) : 0;
+		s -= rcp.s * n;
+		inv[0].shrink(n * rcp.io[0].getCount());
+		for (int i = rcp.io.length - 1; i > 0; i--)
+			output(i, rcp.io[i], n);
+	}
+
+	@Override
+	public ForceCon getM(CplxD M, double av) {
+		Fdv = working > 0 ? -rcp.F / (Math.abs(av * r) + FRICTION_V0) : 0;
+		return super.getM(M, av);
 	}
 
 	private static final StateSynchronizer.Builder ssb = StateSynchronizer.builder().addFix(4, 4, 4, 4, 2, 1);

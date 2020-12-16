@@ -6,6 +6,7 @@ import static cd4017be.lib.network.Sync.Type.F32;
 import static net.minecraftforge.energy.CapabilityEnergy.ENERGY;
 import cd4017be.kineng.Main;
 import cd4017be.kineng.physics.DynamicForce;
+import cd4017be.kineng.physics.ForceCon;
 import cd4017be.lib.Gui.AdvancedContainer;
 import cd4017be.lib.Gui.AdvancedContainer.IStateInteractionHandler;
 import cd4017be.lib.Gui.ModularGui;
@@ -14,6 +15,7 @@ import cd4017be.lib.network.*;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.tileentity.BaseTileEntity.ITickableServerOnly;
 import cd4017be.lib.util.Utils;
+import cd4017be.math.cplx.CplxD;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
@@ -127,18 +129,23 @@ public class FluxCoil extends BaseTileEntity implements IForceProvider, IGuiHand
 
 		@Override
 		public void work(double dE, double ds, double v1) {
-			v = v1;
+			this.v = v1;
+			this.E -= dE0 = v1 != 0 ? dE * v0 / v1 : 0;
+			if (this.E < 0) this.E = 0;
+			dE1 = dE;
+		}
+
+		@Override
+		public ForceCon getM(CplxD M, double av) {
 			if (engaged) {
-				double E = MathHelper.clamp(this.E, v1 / v0 > 1.0 ? 1 : 0, Emax);
+				double E = MathHelper.clamp(this.E, av * r / v0 > 1.0 ? 1 : 0, Emax);
 				Fdv = -E * (Emax - E) / (Emax * dt * (v0 * v0 + 5.0));
 				F = -v0 * Fdv;
 			} else {
 				Fdv = 0;
 				F = 0;
 			}
-			this.E -= dE0 = v1 != 0 ? dE * v0 / v1 : 0;
-			if (this.E < 0) this.E = 0;
-			dE1 = dE;
+			return super.getM(M, av);
 		}
 
 		@Override
