@@ -1,5 +1,6 @@
 package cd4017be.kineng.tileentity;
 
+import static net.minecraftforge.fluids.FluidRegistry.WATER;
 import static net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 import cd4017be.lib.block.AdvancedBlock.ISelfAwareTile;
 import cd4017be.lib.network.Sync;
@@ -15,6 +16,7 @@ import net.minecraftforge.fluids.capability.*;
  * @author CD4017BE */
 public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwareTile {
 
+	public static boolean NO_WATER_IN = true;
 	public static int CAP;
 
 	@Sync public FluidStack tank;
@@ -35,8 +37,10 @@ public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwa
 			int pressure = amount() - (CAP >> 1);
 			if (pressure > 0)
 				drainTo(acc, pressure);
-			else if (pressure < 0)
-				fillFrom(acc, -pressure);
+			else if (pressure < 0 && !(NO_WATER_IN && (
+				(stack = tank != null ? tank : acc.drain(-pressure, false)) == null
+				|| stack.getFluid() == WATER
+			))) fillFrom(acc, -pressure);
 		}
 	}
 
@@ -62,7 +66,7 @@ public class LakeValve extends LakeConnection implements IFluidHandler, ISelfAwa
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if (resource == null) return 0;
+		if (resource == null || NO_WATER_IN && resource.getFluid() == WATER) return 0;
 		if (tank == null) {
 			int n = Math.min(resource.amount, CAP);
 			if (doFill) tank = new FluidStack(resource, n);

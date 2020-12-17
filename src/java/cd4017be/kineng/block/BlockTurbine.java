@@ -48,7 +48,7 @@ public class BlockTurbine extends BlockGear {
 	@Override
 	protected void addInformation(IBlockState state, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(TooltipUtil.format("info.kineng.shaftstats", J(state) * 1000.0, maxM(state), maxAv(state)));
-		tooltip.add(TooltipUtil.format("info.kineng.toolstats", radius(state), maxF[state.getValue(DIAMETER)]));
+		tooltip.add(TooltipUtil.format("info.kineng.toolstats", r, maxF[state.getValue(DIAMETER)]));
 	}
 
 	@Override

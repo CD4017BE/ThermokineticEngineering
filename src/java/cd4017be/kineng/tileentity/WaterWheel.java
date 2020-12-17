@@ -2,6 +2,7 @@ package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.physics.Ticking.dt;
 import static java.lang.Math.*;
+import static net.minecraftforge.fluids.FluidRegistry.WATER;
 import cd4017be.kineng.block.BlockRotaryTool;
 import cd4017be.kineng.physics.*;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
@@ -11,17 +12,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 
 /** 
  * @author CD4017BE */
 public class WaterWheel extends KineticMachine implements IWaterWheel, IInteractiveTile {
+
+	public static boolean WATER_ONLY = true;
 
 	double vsq;
 
 	@Override
 	public double passLiquid(double vsq, FluidStack liquid, EnumFacing dir) {
 		if (con == null || dir.getAxis() == axis()) return vsq;
+		if (WATER_ONLY && liquid.getFluid() != WATER) return vsq;
 		Wheel wheel = getForce();
 		int d = dir.ordinal();
 		wheel.add(

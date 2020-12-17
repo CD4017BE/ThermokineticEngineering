@@ -101,6 +101,7 @@ public class LakeGate extends LakeConnection implements INeighborAwareTile, IInt
 			EnumFacing dir = getOrientation().front;
 			pos1 = pos.offset(dir);
 			if (!isSolidOrSource(world, pos1)) {
+				if (lake.content == null || lake.content.amount < 1000 && lake.level == 0) return;
 				FluidStack stack = lake.drain(1000, true);
 				if (stack == null) return;
 				Block liq = stack.getFluid().getBlock();

@@ -72,11 +72,13 @@ public class CommonProxy {
 		ManualPower.EXHAUSTION_TICK = (float)c.getNumber("manual_power_exhaustion", 0.02);
 		FluxCoil.J_RF = c.getNumber("energy_conv_RF", 10);
 		FluxCoil.E_MAX = c.getNumber("flux_coil_cap", 10000) * FluxCoil.J_RF;
-		Gear.A_CONTACT = c.getNumber("gear_maxF_area", 0.0625);
+		Gear.A_CONTACT = c.getNumber("gear_maxF_area", 0.0125);
 		LakeGate.g2 = c.getNumber("gravity", 9.81) * 2.0;
 		LakeGate.A = c.getNumber("lake_gate_crsA", 1) * dt * 1000D/15D;
 		LakeValve.CAP = (int)c.getNumber("lake_valve_cap", 1000);
 		StorageLake.RAIN_MULT = (float)c.getNumber("lake_rain_mult", 0.25);
+		LakeValve.NO_WATER_IN = c.getNumber("cheaty_water_supply", 0.0) < 1.0;
+		WaterWheel.WATER_ONLY = c.getNumber("any_liquid_on_wheel", 0.0) < 1.0;
 		WindTurbine.AIR_DENSITY = c.getNumber("air_density", 1.29);
 		WindTurbine.WIND_SCALE = (float)c.getNumber("wind_scale", 1000);
 		MobGrinder.T_CHECK = (int)c.getNumber("mob_grinder_tidle", 50);

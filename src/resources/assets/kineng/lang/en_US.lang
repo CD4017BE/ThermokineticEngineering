@@ -33,30 +33,34 @@ tile.kineng.press.name=Rolling Press
 tile.kineng.press.tip=Used for item processing [see §9JEI§7].
 tile.kineng.shaft_man.name=Crank Wheel
 tile.kineng.shaft_man.tip=Powers a shaft by manual work. Alternatively you can leash animals to a fence above or below the wheel to work for you.
+tile.kineng.shaft_man.tipA=Provided force\: §aF§7(§av§7) \= §aF_max§7 * (1.0 - §av§7/§av_max§7)\nWhere §av§7 \= current velocity, §aF_max§7 \= maximum force, §av_max§7 \= maximum velocity.\nWhen player powered\: §aF_max§7 \= §a1000N§7, §av_max§7 \= §a5m/s
 tile.kineng.magnets.name=Magnetic Core
 tile.kineng.magnets.tip=Turns angular motion into oscillating magnetic fields.
 tile.kineng.rf_coil.name=Flux Coil
 tile.kineng.rf_coil.tip=Converts between §9Kinetic Energy§7 and §9Forge Energy / Redstone Flux§7\:\n1 RF <-> \\<energy_conv_RF> J  §oassuming 100% efficiency\nMust be placed next to a §6Magnetic Core§7.
 tile.kineng.lake.name=Storage Lake
-tile.kineng.lake.tip=Must be placed at the lowest point of the a valley in terrain to use for liquid storage.\n§oLake should be convex shaped, or it might miss some Blocks!\n\nWhen filled with Water, it will collect rain from the sourrounding area to refill itself.
+tile.kineng.lake.tip=Must be placed at the lowest point of the a valley in terrain to use for liquid storage.\n§oLake should be convex shaped, or it might miss some Blocks!\n§6Lake Valve§7s can be used for liquid I/O.\n\nWhen filled with §6Water§7, it will collect rain from the sourrounding area to refill itself.\n§oPlace next to a water source block to get it initially filled.
 tile.kineng.lake_valve.name=Lake Valve
-tile.kineng.lake_valve.tip=Used to pump liquid in and out of a §6Storage Lake§7.
+tile.kineng.lake_valve.tip=Must be placed within range of a §6Storage Lake§7 to pump liquids in and out of it.\nIt will actively drain or fill connected pipes depending on liquid level relative to placement height.\n\n§4§oWon't accept §6§oWater§4§o input, unless enabled in config!
 tile.kineng.lake_gate.name=Water Gate
-tile.kineng.lake_gate.tip=Lets liquid flow out of a §6Storage Lake§7 to drive §6Water Wheels§7.\nUnless the liquid path ends in another lake (at lower height), the liquid is voided.\nLiquid will pickup speed as it flows downhill, providing more power to Water Wheels.\n§oPath length and shape don't affect efficiency (no friction).
+tile.kineng.lake_gate.tip=Lets liquid flow out of a §6Storage Lake§7 to drive §6Water Wheels§7.\nUnless the liquid path ends in another lake (at lower height), the liquid is voided.\nLiquid will pickup speed as it flows downhill, providing more power to Water Wheels.\n§oPath length and shape don't affect efficiency (no friction).\n\nOutput flow rate depends on the liquid pressure according to the lake's fill level and the opened crossection of the gate according to the supplied redstone level\:\n§e0§7 \= fully closed ... §e15§7 \= fully open [§a\\<lake_gate_crsA>m²§7]
 tile.kineng.water_wheel.name=Water Wheel
-tile.kineng.water_wheel.tip=Driven by water flowing downhill and passing over or under it, which\nwill be slowed down in the process.\nThe water must be supplied from a §6Water Gate§7!
+tile.kineng.water_wheel.tip=Driven by water flowing downhill and passing over or under it, which will be slowed down in the process.\n\nThe water must be supplied from a §6Water Gate§7!
+tile.kineng.water_wheel.tipA=Provided force\: §aF§7(§av§7) \= (§av_liq§7 - §av§7) * §am_liq§7 / 2§aΔt\nWhere §av§7 \= wheel velocity, §av_liq§7 \= liquid velocity, §am_liq§7 \= liquid mass, §aΔt§7 \= 50ms per tick.\nFor Water\: §am_liq§7 \= 1kg per mB
 tile.kineng.wind_mill\:1.name=Wind Turbine 5m ⦰
 tile.kineng.wind_mill\:2.name=Wind Turbine 10m ⦰
 tile.kineng.wind_mill\:3.name=Wind Turbine 15m ⦰
 tile.kineng.wind_mill\:4.name=Wind Turbine 20m ⦰
 tile.kineng.wind_mill\:5.name=Wind Turbine 25m ⦰
 tile.kineng.wind_mill\:i.tip=Extracts kinetic power from wind currents. The windspeed is dependent on location and direction and can be measured with an §6Anemometer§7. Furthermore windspeed is reduced by obstructions close to the Turbine and increased during thunderstorms.\nNote: the maximum power extracted under ideal load is proportional to windspeed ^ 3, so finding a place with 2x windspeed would give you 8x power output.
+tile.kineng.wind_mill\:i.tipA=Provided force\: §aF§7(§av§7) \= π§ar§7² * §aρ§7 * (§av_air§7 - §av§7)² / 2\nWhere §av§7 \= turbine velocity, §av_air§7 \= air velocity, §ar§7 \= turbine radius, §aρ§7 \= \\<air_density>kg/m³ air density.
 tile.kineng.tachometer.name=Shaft Tachometer
 tile.kineng.tachometer.tip=Emits a Redstone Signal proportional to the Shaft's angular velocity.\nThe signal scale factor can be adjusted in its GUI.
 tile.kineng.transducer.name=Torque Transducer
 tile.kineng.transducer.tip=Emits a Redstone Signal proportional to the torque transmitted trough the shaft.\nThe signal scale factor can be adjusted in its GUI.
 tile.kineng.mob_grinder.name=Mob Blender
-tile.kineng.mob_grinder.tip=Deals damage proportional to it's velocity to all living beings within range. Higher max health increases damage and friction force slightly §8O(log2(N))§7.\nMobs are killed as if attacked by a player.\n\nCan be enchanted\:\n§a+25% damage§7 per lvl of §aSharpness§7,\n§a+100% max F§7 per lvl of §aUnbreaking§7,\n§aFire Aspect§7 and §aLooting§7 act as usual.
+tile.kineng.mob_grinder.tip=Deals damage proportional to it's velocity to all living beings within range. Higher max health increases damage and friction force slightly.\nMobs are killed as if attacked by a player.\n\nCan be enchanted\:\n§a+25% damage§7 per lvl of §aSharpness§7,\n§a+100% max F§7 per lvl of §aUnbreaking§7,\n§aFire Aspect§7 and §aLooting§7 act as usual.
+tile.kineng.mob_grinder.tipA=Force per mob\: §aF§7 \= §a\\<mob_grinder_F0>N§7 * max(1, 1 + log2(§ah§7 / §a\\<mob_grinder_HP0>HP§7))\nDamage caused\: §aDPS§7 \= §av§7 * §aF§7 * §a\\<mob_grinder_DPJ>DP/J\nWhere §ah§7 \= mob max health, §av§7 \= blade velocity.
 
 #Items
 item.kineng.flint_knife.name=Flint Knife

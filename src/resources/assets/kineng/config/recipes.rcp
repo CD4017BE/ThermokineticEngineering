@@ -1,15 +1,17 @@
-VERSION = 47;
+VERSION = 48;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
 
-gear_maxF_area = 0.0625;! m² contact area = gear force limit multiplier
+gear_maxF_area = 0.0125;! m² contact area = gear force limit multiplier
 
 ! regenerative power balancing:
 gravity = 9.81; ! m/s² gravity strength used for water gates / wheels
 lake_gate_crsA = 1.0; ! m² crossection area of Lake Gate when fully opened (rs = 15) 
 lake_valve_cap = 1000; ! mB internal tank capacity of Lake Valves
 lake_rain_mult = 0.25; ! mB/t/m² amount of rain water collected by Storage Lakes (multiplied by biome rainfall value)
+cheaty_water_supply = false; !Whether Lake Valves will accept water from modded devices. Should be disabled to prevent use of infinite water supplies for power generation.
+any_liquid_on_wheel = false; !Whether the Water Wheel also works with other fluid types. Just for fun, should be disabled for normal gameplay.
 air_density = 1.29; ! kg/m³ air density used for wind power
 wind_scale = 1000.0; ! (m/s)² multiplier for wind strength
 ! manual power:
