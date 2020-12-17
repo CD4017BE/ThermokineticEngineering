@@ -1,3 +1,13 @@
+v0.0.7
+Changes:
+- make large wind turbines craftable
+- fix shaft speed synchronization
+- improved shaft debug view to show all velocities and forces in the structure
+- fix torque-stalled machines no longer explode when connected with moving shaft
+- disable water input to Lake Valves (can be re-enabled in config)
+- reduced gear transmission force limits so they're no longer above shaft torque limit
+- include force formulas in tool-tips
+
 v0.0.6
 Changes:
 - add metal processing and other mod integration recipes
