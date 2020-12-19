@@ -286,8 +286,8 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 		return new FluidStack(content, maxDrain);
 	}
 
-	private void fillLayer() {
-		if (level >= layers.length || content.amount < 1000 || layers[level+1] < 0) return;
+	private boolean fillLayer() {
+		if (level >= layers.length || content.amount < 1000 || layers[level+1] < 0) return false;
 		MutableBlockPos p = new MutableBlockPos();
 		World w = world;
 		int x = pos.getX(), y = pos.getY() + (level >> 1), z = pos.getZ();
@@ -299,11 +299,12 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 				int f = blockMap[i] & 0xff;
 				if (f == 0) continue;
 				f = visitBlocks(f, b, r, x, y, z, w, p, this::fillBlock);
-				if (f != 0) return;
+				if (f != 0) return false;
 			}
 		if ((level += 2) >= layers.length || layers[level] == 0)
 			scan(level);
 		markDirty(SYNC);
+		return true;
 	}
 
 	private void drainLayer() {
@@ -368,8 +369,7 @@ implements IFluidHandler, ITilePlaceHarvest, ISelfAwareTile, ITickableServerOnly
 	@Override
 	public void breakBlock() {
 		if (content == null) return;
-		while(content.amount >= 1000 && level < layers.length)
-			fillLayer();
+		while(fillLayer());
 	}
 
 	@Override
