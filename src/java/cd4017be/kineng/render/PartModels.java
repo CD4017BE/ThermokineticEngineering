@@ -21,7 +21,7 @@ public class PartModels {
 
 	private static final IPartModel shaft_caps = (qb, args, z) -> {
 		texture(qb, args[1]).all(EC, -1);
-		z += Math.copySign(0.5F, args[2]);
+		z += Math.copySign(0.501F, args[2]);
 		CplxF xy = C_(args[2] * 0.0625F);
 		CplxF rot = args[2] > 0 ? ROTATE45 : ROTATE45.clone().conj();
 		for (int i = 0; i < 4; i++) {

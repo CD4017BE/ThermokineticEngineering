@@ -126,7 +126,7 @@ public class ClientProxy extends CommonProxy {
 		registerRender(lake_valve);
 		registerRender(lake_gate);
 		registerRender(anemometer);
-		registerRender(chain);
+		registerRender(chain, 0, 1);
 	}
 
 	static final StateMap SHAFT_MAPPER = new StateMap.Builder().ignore(AXIS, DIAMETER, FACING, ORIENT, HALF).build();

@@ -1,6 +1,7 @@
 package cd4017be.kineng.tileentity;
 
 import static cd4017be.kineng.block.BlockGear.*;
+import cd4017be.kineng.item.ItemChain;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -10,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import cd4017be.kineng.physics.*;
+import cd4017be.lib.TickRegistry;
 import cd4017be.lib.network.Sync;
 import cd4017be.lib.util.ItemFluidUtil;
 
@@ -20,6 +22,11 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 	private final GearLink[] cons = new GearLink[4];
 
 	@Sync(to = 0x23, tag = "cs") public ItemStack chainStack = ItemStack.EMPTY;
+	@Sync public void chainStack(ItemStack stack) {
+		chainStack = stack;
+		if (shaft != null && world.isRemote)
+			configureLink(getCon(null));
+	}
 	@Sync(to = 0x23, tag = "cl") public BlockPos chainLink;
 	@Sync public void chainLink(BlockPos pos) {
 		if (shaft != null && world.isRemote && (chainLink != null || pos != null)) {
@@ -34,6 +41,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 		}
 		chainLink = pos;
 	}
+	boolean noOverload;
 
 	@Override
 	public double setShaft(ShaftAxis shaft, double v0) {
@@ -55,11 +63,17 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 		GearLink con = cons[i];
 		if (con != null) return con;
 		con = new GearLink(this, diameter() * d * 0.5);
+		configureLink(con);
+		return cons[i] = con;
+	}
+
+	private void configureLink(GearLink con) {
 		ShaftMaterial mat = material();
 		con.maxF = mat.strength * A_CONTACT;
 		con.fricD = mat.friction;
 		con.fricS = mat.friction * F_FRICTION;
-		return cons[i] = con;
+		if (chainStack.getItem() instanceof ItemChain)
+			((ItemChain)chainStack.getItem()).configureLink(chainStack, con);
 	}
 
 	@Override
@@ -80,6 +94,7 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 		chainStack = stack;
 		chainLink = pos1;
 		markDirty(0x20);
+		configureLink(getCon(null));
 		if (ocl == null) return;
 		getCon(null).connect(null);
 		TileEntity te = world.getTileEntity(ocl);
@@ -88,6 +103,13 @@ public class Gear extends ShaftPart implements IGear, ISelfAwareTile {
 			if (pos.equals(g.chainLink()))
 				g.linkChain(null, ItemStack.EMPTY);
 		}
+	}
+
+	@Override
+	public void handleOverload() {
+		if (chainLink != null)
+			TickRegistry.schedule(()-> linkChain(null, ItemStack.EMPTY));
+		else super.handleOverload();
 	}
 
 	@Override

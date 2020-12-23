@@ -131,7 +131,7 @@ public class Objects {
 			new ItemMobGrinder(MOB_GRINDER).setCreativeTab(tabKinetic),
 			new ItemBreakRecipe("flint_knife").setMaxDamage(32).setCreativeTab(tabKinetic),
 			new ItemAerometer("anemometer").setCreativeTab(tabKinetic),
-			new ItemChain("chain").setCreativeTab(tabKinetic)
+			new ItemChain("chain", 2).setCreativeTab(tabKinetic)
 		);
 	}
 

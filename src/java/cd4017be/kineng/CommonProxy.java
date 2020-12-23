@@ -60,6 +60,8 @@ public class CommonProxy {
 		Object[] scr = c.getArray("scrap_wind_mill", 5);
 		for (int i = 0; i < 5; i++)
 			WIND_MILL.scrap[i+1] = scr[i] instanceof ItemStack ? (ItemStack)scr[i] : ItemStack.EMPTY;
+		c.getVect("maxF_chains", chain.maxF);
+		c.getVect("fric_chains", chain.friction);
 		
 		KineticProcess.FRICTION_V0 = c.getNumber("machine_fric_v0", 0.001);
 		ShaftStructure.FRICTION_V0 = c.getNumber("shaft_fric_v0", 0.2);

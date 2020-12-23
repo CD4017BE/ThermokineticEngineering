@@ -67,8 +67,9 @@ item.kineng.flint_knife.name=Flint Knife
 item.kineng.flint_knife.tip=Used to make shafts and gears when you don't have a §6Lathe§7\:\nbreak §6Log§7 -> §6Wooden Shaft\nbreak §6Planks§7 -> §6Wooden Gear Ring
 item.kineng.anemometer.name=Anemometer
 item.kineng.anemometer.tip=Displays the base wind speed along view direction at the current position.\n§oDoes not account for obstructions!
-item.kineng.chain.name=Chain Link
-item.kineng.chain.tip=Mechanically connects §6gears§7 that are further apart. The gears must have parallel oriented shafts and not be touching any other gears.\n§oEach item of chain covers a distance of 1m.
+item.kineng.chain\:0.name=Iron Chain Link
+item.kineng.chain\:1.name=Leather Chain Link
+item.kineng.chain\:i.tip=Mechanically connects §6gears§7 that are further apart. The gears must have parallel oriented shafts and not be touching any other gears.\n§oEach item of chain covers a distance of 1m.
 item.cd4017be.m\:gear_wood.name=Wooden Gear Ring
 item.cd4017be.m\:gear_iron.name=Iron Gear Ring
 item.cd4017be.m\:flour.name=Flour
@@ -92,6 +93,7 @@ item.cd4017be.m\:large_aluminum.name=Large Aluminum Plate
 info.kineng.shaftstats=§nShaft\:§7 J \= %.3ugm², §cmax M§7 \= %.3uNm, §cmax ω§7 \= %.3ur/s
 info.kineng.gear=§nGear\:§7 r \= %.3um, §cmax F§7 \= %.3uN, §9friction§7 \= %.1f%%
 info.kineng.toolstats=§nTool\:§7 r \= %.3um, §cmax F§7 \= %.3uN
+info.kineng.chain=§nGear\:§c max F§7 \= %.3uN, %.2gx §9friction
 
 #Messages
 msg.kineng.chain_link0=Linking ...

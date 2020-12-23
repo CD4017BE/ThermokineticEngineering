@@ -1,4 +1,4 @@
-VERSION = 48;
+VERSION = 50;
 
 energy_conv_RF = 10.0; ! J/RF energy conversion in Flux Coil
 flux_coil_cap = 10000; ! RF coil charge capacity (max I/O power ~ flux_coil_cap / 4 ticks)
@@ -71,6 +71,9 @@ PRE_INIT() {
 	maxF_wind_mill = [50e3, 50e3, 250e3, 400e3, 400e3]#;
 	str_wind_mill = [0.25, 0.2, 0.25, 0.25, 0.2]#; !structural strength (scales max angular velocity)
 	maxF_mob_grinder = 50e3;
+	maxF_chains = [250e3, 50e3]#;
+	!chain friction factor (multiplied with gear friction):
+	fric_chains = [0.25, 0.5]#;
 	!scrap item dropped if a shaft of given material or a machine is destroyed:
 	scrap_wood = it("minecraft:stick", 2);
 	scrap_stone = it("minecraft:cobblestone");
@@ -143,6 +146,7 @@ INIT() {
 	add("shaped", it("m.transformer"), "0/1/0", "plateIron", it("minecraft:paper"));
 	add("shaped", it("m.magnet"), "  1/ 0 /1  ", it("m.hot_iron"), "dustRedstone");
 	add("shapeless", it("m.raw_fluxalloy"), "ingotGold", "dustRedstone", "dustRedstone");
+	add("shaped", it("kineng:chain", 6, 1), "0 0/111/0 0", it("minecraft:leather"), it("minecraft:stick"));
 	add("shaped", it("minecraft:chainmail_helmet"), "000/0 0", it("kineng:chain"));
 	add("shaped", it("minecraft:chainmail_chestplate"), "0 0/000/000", it("kineng:chain"));
 	add("shaped", it("minecraft:chainmail_leggings"), "000/0 0/0 0", it("kineng:chain"));
