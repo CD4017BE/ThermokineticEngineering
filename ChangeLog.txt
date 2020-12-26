@@ -1,3 +1,7 @@
+v0.0.8
+Changes:
+
+
 v0.0.7
 Changes:
 - make large wind turbines craftable
