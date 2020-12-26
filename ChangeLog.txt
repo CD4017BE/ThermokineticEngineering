@@ -1,6 +1,8 @@
 v0.0.8
 Changes:
-
+- fix infinite loop when breaking Lake
+- add Leather Chains and put force limits on chains
+- make regular shafts coverable
 
 v0.0.7
 Changes:
