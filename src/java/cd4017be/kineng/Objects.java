@@ -78,8 +78,8 @@ public class Objects {
 	public static void registerBlocks(RegistryEvent.Register<Block> ev) {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
-			new BlockShaft("shaft_wood", M_WOOD, 0.25, ShaftPart.class).setHardness(0.5F),
-			new BlockShaft("shaft_iron", M_IRON, 0.25, ShaftPart.class).setHardness(1.5F),
+			new BlockShaft("shaft_wood", M_WOOD, 0.25, CoverableShaft.class).setHardness(0.5F),
+			new BlockShaft("shaft_iron", M_IRON, 0.25, CoverableShaft.class).setHardness(1.5F),
 			new BlockGear("gear_wood", M_WOOD, 0.5, Gear.class).setShape(0.25, 0.25).setHardness(0.5F),
 			new BlockGear("gear_iron", M_IRON, 0.5, Gear.class).setShape(0.25, 0.25).setHardness(1.5F),
 			new BlockShaft("shaft_debug", M_BEDROCK, 0.25, MechanicalDebug.class).setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY),

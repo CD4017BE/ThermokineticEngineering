@@ -7,7 +7,9 @@ import static net.minecraft.block.BlockDirectional.FACING;
 import static cd4017be.kineng.block.BlockFillShared.ORIENT;
 import static cd4017be.kineng.block.BlockFillDirected.HALF;
 import static cd4017be.lib.BlockItemRegistry.registerRender;
+import static cd4017be.lib.render.SpecialModelLoader.overrideBlockModel;
 import static cd4017be.lib.render.SpecialModelLoader.setMod;
+import static java.util.Collections.singletonMap;
 import static net.minecraft.block.BlockRotatedPillar.AXIS;
 import static net.minecraftforge.client.model.ModelLoader.setCustomStateMapper;
 import static net.minecraftforge.fml.client.registry.ClientRegistry.bindTileEntitySpecialRenderer;
@@ -17,7 +19,10 @@ import cd4017be.kineng.physics.ShaftRenderInfo;
 import cd4017be.kineng.render.*;
 import cd4017be.kineng.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
-import net.minecraft.client.renderer.block.statemap.StateMap;
+import cd4017be.lib.render.model.BlockMimicModel;
+import cd4017be.lib.render.model.MultipartModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumBlockRenderType;
@@ -95,8 +100,9 @@ public class ClientProxy extends CommonProxy {
 		TRANSDUCER.setModel(PartModels.SHAFT, t, 4);
 		t = registerTexture(new ResourceLocation(Main.ID, "blocks/blade"));
 		MOB_GRINDER.model = new int[] {PartModels.BLADES, 0, 4, 32, t, 4};
+		setCoverableShaft(SHAFT_WOOD, SHAFT_IRON);
 		setShaftRender(
-			SHAFT_WOOD, SHAFT_IRON, SHAFT_DEBUG, SHAFT_MAN,
+			SHAFT_DEBUG, SHAFT_MAN,
 			GEAR_WOOD, GEAR_IRON,
 			GRINDSTONE, SAWBLADE, MAGNETS,
 			WATER_WHEEL, WIND_MILL,
@@ -135,6 +141,16 @@ public class ClientProxy extends CommonProxy {
 		for (AdvancedBlock block : blocks) {
 			block.setRenderType(EnumBlockRenderType.ENTITYBLOCK_ANIMATED);
 			setCustomStateMapper(block, SHAFT_MAPPER);
+		}
+	}
+
+	private static void setCoverableShaft(AdvancedBlock... blocks) {
+		for (AdvancedBlock block : blocks) {
+			block.setBlockLayer(null);
+			overrideBlockModel(block, new MultipartModel(block, singletonMap(
+				block.getDefaultState(), new ModelResourceLocation(block.getRegistryName(), "base")
+			), true, BlockMimicModel.provider));
+			registerRender(block);
 		}
 	}
 

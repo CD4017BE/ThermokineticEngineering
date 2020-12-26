@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"normal": {"model": "iron_block"},
-		"inventory0": {"model": "iron_block"}
+		"base": {"model": "kineng:_shaft_iron"},
+		"inventory0": {"model": "kineng:_shaft_iron"}
 	}
 }

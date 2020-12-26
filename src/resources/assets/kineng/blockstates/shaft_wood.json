@@ -1,6 +1,6 @@
 {
 	"variants": {
-		"normal": {"model": "oak_planks"},
-		"inventory0": {"model": "oak_planks"}
+		"base": {"model": "kineng:_shaft_wood"},
+		"inventory0": {"model": "kineng:_shaft_wood"}
 	}
 }

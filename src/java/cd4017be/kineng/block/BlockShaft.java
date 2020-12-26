@@ -88,7 +88,8 @@ public class BlockShaft extends AdvancedBlock implements IFillBlockSrc {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, AXIS);
+		L_PROPERTIES.add(AXIS);
+		return super.createBlockState();
 	}
 
 	@Override
